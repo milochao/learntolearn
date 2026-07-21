@@ -1,0 +1,2114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="description" content="MOVE. Coach your kid’s studying in ten minutes, twice a week. No subject expertise needed. The skill stays in the kid.">
+<title>MOVE · coach your kid’s studying</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF; --surface:#F6F7F9; --surface-2:#EDEFF3;
+    --line:rgba(0,0,0,.10); --line-2:rgba(0,0,0,.16);
+    --ink:#1A1D23; --ink-dim:#565C68; --ink-faint:#8A909C;
+    --now:#1A1D23; --guess:#8A909C; --got:#1A1D23; --good:#3F8452;
+    --display:'Instrument Serif',Georgia,'Times New Roman',serif;
+    --ui:'Inter',system-ui,-apple-system,sans-serif;
+    --maxw:480px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  button{font-family:inherit}
+  button:focus-visible,.btn:focus-visible{outline:2px solid var(--now); outline-offset:2px}
+  .btn:disabled{opacity:.55; cursor:default}
+  h1.display,.prompt{text-wrap:balance}
+  .ring .time{font-variant-numeric:tabular-nums}
+  html,body{height:100%}
+  body{
+    background:var(--bg); color:var(--ink); font-family:var(--ui);
+    font-weight:450; line-height:1.5; -webkit-font-smoothing:antialiased;
+    font-size:16px; overflow-x:hidden;
+  }
+  #app{min-height:100dvh; max-width:var(--maxw); margin:0 auto; padding:0 22px;
+    display:flex; flex-direction:column; position:relative}
+  .scr{flex:1; display:flex; flex-direction:column; padding:26px 0 40px; animation:rise .42s cubic-bezier(.2,.7,.2,1)}
+  @keyframes rise{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+  @media (prefers-reduced-motion:reduce){.scr{animation:none} *{transition:none!important}}
+  .top{display:flex; align-items:center; justify-content:space-between; padding:18px 0 0; min-height:38px}
+  .brand{font-family:var(--display); font-size:25px; letter-spacing:.06em}
+  .brand .dot{color:var(--now)}
+  .chip{font-size:13px; color:var(--ink-dim); background:var(--surface); border:1px solid var(--line);
+    border-radius:100px; padding:9px 15px; cursor:pointer; font-weight:500; min-height:38px}
+  .chip:hover{border-color:var(--line-2)}
+  .eyebrow{font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); font-weight:600}
+  .display{font-family:var(--display); font-weight:400; line-height:1.08; letter-spacing:.01em}
+  h1.display{font-size:46px}
+  .prompt{font-family:var(--display); font-size:33px; line-height:1.16; font-weight:400}
+  .lede{color:var(--ink-dim); font-size:15.5px; max-width:36ch}
+  .muted{color:var(--ink-dim)} .faint{color:var(--ink-faint)}
+  .spacer{flex:1}
+  .btn{font-family:var(--ui); font-weight:600; font-size:16px; border:none; border-radius:14px;
+    padding:16px 20px; cursor:pointer; width:100%; transition:transform .12s, background .2s, border-color .2s;
+    display:flex; align-items:center; justify-content:center; gap:9px}
+  .btn:active{transform:scale(.985)}
+  .btn-primary{background:var(--now); color:#fff}
+  .btn-primary:hover{background:#000000}
+  .btn-ghost{background:transparent; color:var(--ink); border:1px solid var(--line-2)}
+  .btn-ghost:hover{border-color:var(--ink-dim)}
+  .btn-quiet{background:var(--surface); color:var(--ink-dim); border:1px solid var(--line)}
+  .btn-quiet:hover{color:var(--ink)}
+  .btn-sm{padding:11px 15px; font-size:14px; width:auto; border-radius:11px}
+  .row{display:flex; gap:11px}
+  .linklist{display:flex; flex-wrap:wrap; gap:14px 20px; margin-top:6px}
+  .tlink{background:none; border:none; color:var(--ink-faint); font:inherit; font-size:14px;
+    font-weight:500; cursor:pointer; padding:6px 0}
+  .tlink:hover{color:var(--ink-dim)}
+  textarea,input[type=text]{width:100%; background:var(--surface); border:1px solid var(--line);
+    color:var(--ink); font-family:var(--ui); font-size:16px; border-radius:13px; padding:14px;
+    resize:none; line-height:1.5}
+  textarea:focus,input:focus{outline:none; border-color:var(--now)}
+  textarea{min-height:120px}
+  ::placeholder{color:var(--ink-faint)}
+  .field-lab{font-size:13px; color:var(--ink-dim); margin-bottom:8px; font-weight:500}
+  .betbox{display:flex; flex-direction:column; align-items:center; gap:18px; margin:8px 0}
+  .stepper{display:flex; align-items:center; gap:0; background:var(--surface); border:1px solid var(--line-2);
+    border-radius:18px; overflow:hidden}
+  .stepper button{background:none; border:none; color:var(--ink); width:62px; height:74px;
+    font-size:28px; cursor:pointer; font-family:var(--ui); font-weight:300}
+  .stepper button:hover{background:var(--surface-2)}
+  .stepper .val{min-width:84px; text-align:center; font-family:var(--display); font-size:52px; color:var(--now)}
+  .scale{display:flex; gap:10px}
+  .scale button{width:54px; height:60px; border-radius:14px; background:var(--surface);
+    border:1px solid var(--line); color:var(--ink-dim); font-size:20px; font-family:var(--display); cursor:pointer; transition:.15s}
+  .scale button:hover{border-color:var(--line-2); color:var(--ink)}
+  .scale button[aria-pressed=true]{background:var(--now); color:#fff; border-color:var(--now)}
+  .scale-ends{display:flex; justify-content:space-between; font-size:12px; color:var(--ink-faint); margin-top:7px}
+  .ringwrap{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; flex:1}
+  .ring{position:relative; width:248px; height:248px}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .track{fill:none; stroke:var(--line); stroke-width:6}
+  .ring .arc{fill:none; stroke:var(--now); stroke-width:6; stroke-linecap:round; transition:stroke .3s}
+  .ring .mid{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px}
+  .ring .time{font-family:var(--display); font-size:44px; letter-spacing:.02em}
+  .ring .midlab{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); font-weight:600}
+  .chips{display:flex; flex-wrap:wrap; gap:9px; margin:4px 0}
+  .cov{background:var(--surface); border:1px solid var(--line); color:var(--ink-dim);
+    border-radius:11px; padding:11px 13px; cursor:pointer; font-size:14.5px; transition:.15s; text-align:left; line-height:1.35}
+  .cov:hover{border-color:var(--line-2)}
+  .cov[aria-pressed=true]{background:rgba(26,29,35,.06); border-color:var(--now); color:var(--ink)}
+  .cov[aria-pressed=true]::before{content:"✓ "; color:var(--now); font-weight:700}
+  .qcard{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:22px; margin:6px 0}
+  .qnum{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; margin-bottom:11px}
+  .qtext{font-family:var(--display); font-size:25px; line-height:1.2}
+  .answer{margin-top:16px; padding-top:16px; border-top:1px solid var(--line); color:var(--good); font-size:16px}
+  .answer .alab{font-size:12px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.12em; display:block; margin-bottom:5px; font-weight:600}
+  .gap{margin:14px 0 6px}
+  .gaptrack{position:relative; height:3px; background:var(--line); border-radius:3px; margin:54px 8px 16px}
+  .pin{position:absolute; top:50%; width:15px; height:15px; border-radius:50%; transform:translate(-50%,-50%); transition:left .7s cubic-bezier(.2,.7,.2,1)}
+  .pin.g{background:var(--guess); box-shadow:0 0 0 4px rgba(100,116,139,.16)}
+  .pin.r{background:var(--got); box-shadow:0 0 0 4px rgba(26,29,35,.15)}
+  .pinlab{position:absolute; font-size:11px; letter-spacing:.04em; transform:translateX(-50%); white-space:nowrap; font-weight:600}
+  .pinlab.g{top:-30px; color:var(--guess)} .pinlab.r{bottom:-26px; color:var(--got)}
+  .gapnum{font-family:var(--display); font-size:15px}
+  .stat{display:flex; align-items:baseline; gap:10px}
+  .statbig{font-family:var(--display); font-size:40px; color:var(--now)}
+  .sub{font-size:14px; color:var(--ink-dim)}
+  .spark{display:flex; align-items:flex-end; gap:5px; height:46px; margin:10px 0}
+  .spark .bar{flex:1; background:var(--surface-2); border-radius:3px 3px 0 0; min-height:4px; transition:height .4s}
+  .spark .bar.last{background:var(--now)}
+  .rowcard{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 17px; margin-bottom:11px}
+  .rowcard .rt{font-family:var(--display); font-size:22px; line-height:1.1}
+  .rowcard .rd{color:var(--ink-dim); font-size:14px; margin-top:6px; line-height:1.45}
+  .rowhead{display:flex; align-items:center; justify-content:space-between; gap:12px}
+  .tag{font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; padding:4px 9px; border-radius:7px}
+  .tag.active{color:var(--now); background:rgba(26,29,35,.08)}
+  .tag.grad{color:var(--good); background:rgba(143,185,150,.12)}
+  .tag.dud{color:var(--ink-faint); background:rgba(0,0,0,.04)}
+  details.rowcard summary{list-style:none; cursor:pointer; outline:none}
+  details.rowcard summary::-webkit-details-marker{display:none}
+  details[open] .rd{margin-top:10px}
+  .section-lab{font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; margin:26px 0 13px}
+  .note{font-size:13.5px; color:var(--ink-faint); line-height:1.5; border-left:2px solid var(--line-2); padding-left:13px; margin:4px 0 8px}
+  .mic{background:var(--surface); border:1px solid var(--line-2); color:var(--ink-dim); border-radius:11px;
+    padding:11px 14px; font:inherit; font-size:14px; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:8px}
+  .mic[aria-pressed=true]{color:var(--now); border-color:var(--now)}
+  .mic .pulse{width:8px; height:8px; border-radius:50%; background:currentColor}
+  .mic[aria-pressed=true] .pulse{animation:pulse 1s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .toast{position:fixed; left:50%; bottom:30px; transform:translateX(-50%) translateY(20px); opacity:0;
+    background:var(--surface-2); border:1px solid var(--line-2); color:var(--ink); padding:13px 18px;
+    border-radius:12px; font-size:14px; pointer-events:none; transition:.3s; z-index:50; max-width:90vw; box-shadow:0 10px 34px rgba(0,0,0,.13)}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  .celebrate{text-align:center; padding:30px 0}
+  .celebrate .big{font-family:var(--display); font-size:40px; color:var(--good); line-height:1.1}
+  .pgrid{display:flex; flex-direction:column; gap:8px; margin-top:10px}
+  .ptt{font-size:12px; color:var(--ink-faint); letter-spacing:.08em; text-transform:uppercase; font-weight:600}
+  hr.div{border:none; border-top:1px solid var(--line); margin:22px 0}
+  .tmap{margin-top:20px; width:100%}
+  .tmap svg{width:100%; height:auto; display:block}
+  .thit{cursor:pointer}
+  .tkey{margin-top:30px}
+  .tkey-h{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-dim); font-weight:600; margin-bottom:14px}
+  .tkey-line{display:flex; gap:12px; align-items:flex-start; margin-bottom:14px; cursor:pointer}
+  .tkey-sw{width:12px; height:12px; border-radius:4px; flex:none; margin-top:4px}
+  .tkey-nm{font-family:var(--ui); font-weight:600; font-size:14.5px; color:var(--ink); margin-bottom:2px}
+  .tkey-ds{font-size:13px; color:var(--ink-dim); line-height:1.5}
+  .tlaws{margin-top:28px}
+  .tlaw-chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+  .tlaw{background:rgba(127,167,201,.07); border:1px solid rgba(127,167,201,.2); color:var(--ink); border-radius:9px; padding:7px 11px; font-size:13px; cursor:pointer; font-family:var(--ui)}
+  .tlaw:hover{border-color:rgba(127,167,201,.45)}
+  .tskip{margin-top:26px}
+  .tskip-h{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; margin-bottom:12px}
+  .tskip-chips{display:flex; flex-wrap:wrap; gap:8px}
+  .tskip .d{background:rgba(0,0,0,.02); border:1px dashed var(--line-2); color:var(--ink-dim); border-radius:9px; padding:7px 11px; font-size:13px; cursor:pointer; font-family:var(--ui)}
+  .sheet{position:fixed; left:0; right:0; bottom:0; z-index:60; margin:0 auto; max-width:var(--maxw);
+    background:var(--surface); border-top:1px solid var(--line-2); border-radius:18px 18px 0 0;
+    padding:18px 20px calc(26px + env(safe-area-inset-bottom)); box-shadow:0 -16px 44px rgba(0,0,0,.16);
+    transform:translateY(115%); transition:transform .22s cubic-bezier(.2,.7,.2,1)}
+  .sheet.show{transform:translateY(0)}
+  .sheet-top{display:flex; align-items:flex-start; justify-content:space-between; gap:12px}
+  .sheet-nm{font-family:var(--display); font-size:25px; color:var(--ink); line-height:1.08}
+  .sheet-x{flex:none; width:30px; height:30px; border-radius:50%; border:1px solid var(--line-2); background:transparent; color:var(--ink-dim); font-size:15px; cursor:pointer; line-height:1}
+  .sheet-line{font-family:var(--ui); font-size:11.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; margin-top:5px}
+  .sheet-desc{font-size:15px; color:var(--ink-dim); line-height:1.55; margin-top:13px}
+  .sheet-src{display:block; color:var(--ink-faint); font-size:12.5px; margin-top:9px}
+  .mt-a{margin-top:auto}
+  .mb{margin-bottom:14px} .mb-s{margin-bottom:8px} .mt{margin-top:16px}
+  .center{text-align:center}
+  .libtoggle{display:flex; gap:8px; margin-top:16px}
+  .libtoggle button{flex:none; padding:8px 14px; border-radius:100px; font:inherit; font-size:13px; font-weight:600;
+    background:var(--surface); border:1px solid var(--line); color:var(--ink-dim); cursor:pointer}
+  .libtoggle button[aria-pressed=true]{background:var(--now); color:#fff; border-color:var(--now)}
+  #cubeHost{margin-top:4px; height:600px; position:relative; background:transparent}
+  .cubeview{
+    --cbg:#F6F7F9; --cink:#1A1D23; --cdim:#565C68; --cfaint:#8A909C;
+    --cdark:#1A1D23;
+    --cedge:rgba(0,0,0,.16);
+    --chairline:rgba(0,0,0,.10);
+  }
+  .cubeview *{box-sizing:border-box}
+  .cubeview{background:transparent; color:var(--cink);
+    font-family:'Inter',system-ui,-apple-system,sans-serif; overflow:hidden; -webkit-font-smoothing:antialiased;
+    user-select:none; -webkit-user-select:none; height:100%; width:100%; position:relative}
+  .cubeview #wrap{height:100%; display:flex; flex-direction:column; align-items:center; position:relative}
+
+  .cubeview header{display:none}
+  .cubeview .brand{font-family:'Instrument Serif',Georgia,serif; font-size:21px; letter-spacing:.04em}
+  .cubeview .brand b{font-weight:400}
+  .cubeview .brand .d{color:#b8863b}
+  .cubeview .ctx{font-size:12.5px; color:var(--cdim); text-align:right}
+
+  .cubeview #stage{flex:1; width:100%; display:flex; align-items:center; justify-content:center;
+    padding-bottom:64px;
+    perspective:1300px; perspective-origin:50% 42%; cursor:grab; position:relative;
+    touch-action:none}
+  .cubeview #stage.grab{cursor:grabbing}
+
+  .cubeview .cube{position:relative; width:var(--sz); height:var(--sz); transform-style:preserve-3d; will-change:transform}
+  .cubeview .cube.hide{display:none}
+  .cubeview .face{position:absolute; width:var(--sz); height:var(--sz); backface-visibility:hidden; -webkit-backface-visibility:hidden;
+    border-radius:.6em; box-shadow:inset 0 0 0 1px var(--cedge)}
+
+  .cubeview .fam{cursor:pointer; padding:1.45em; display:flex; flex-direction:column; justify-content:space-between}
+  .cubeview .fam .fnum{font-size:.66em; font-weight:600; letter-spacing:.16em; text-transform:uppercase; opacity:.65}
+  .cubeview .fam .fnm{font-family:'Instrument Serif',Georgia,serif; font-size:2.4em; line-height:1.0; margin:.18em 0 .24em}
+  .cubeview .fam .fbl{font-size:.84em; line-height:1.45; opacity:.88; font-weight:400}
+  .cubeview .fam .fopen{font-size:.66em; font-weight:600; letter-spacing:.14em; text-transform:uppercase; opacity:.7; margin-top:.8em}
+
+  .cubeview .tgrid{display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:.45em; padding:.45em; width:100%; height:100%}
+  .cubeview .cell{border:none; border-radius:.4em; cursor:pointer; font-family:'Inter',system-ui,-apple-system,sans-serif; font-weight:500; font-size:.8em;
+    line-height:1.2; padding:.75em; display:flex; align-items:flex-end; text-align:left;
+    box-shadow:inset 0 0 0 1px var(--chairline);
+    position:relative; overflow:hidden}
+  @media (hover:hover){ .cubeview .cell:hover{filter:brightness(1.05)} }
+  .cubeview .cell .ic{position:absolute; top:.6em; left:.6em; width:2.2em; height:2.2em; opacity:.78; display:block}
+  .cubeview .cell .ic svg{width:100%; height:100%; stroke-width:1.8}
+  .cubeview .startface{box-shadow:inset 0 0 0 1px var(--cedge), inset 0 0 0 3px rgba(255,255,255,.35)}
+  .cubeview .startpill{position:absolute; bottom:1.35em; right:1.45em; z-index:3;
+    padding:.45em .85em; border-radius:3px;
+    background:rgba(24,23,21,.82); color:#f1eee6; font-family:'Inter',system-ui,-apple-system,sans-serif; font-weight:600; font-size:.6em; letter-spacing:.18em; text-transform:uppercase; white-space:nowrap}
+  .cubeview .startcell{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.7)}
+  .cubeview .stag{position:absolute; top:.75em; right:.75em; z-index:3; padding:.35em .65em; border-radius:3px;
+    background:rgba(24,23,21,.82); color:#f1eee6; font-family:'Inter',system-ui,-apple-system,sans-serif; font-weight:600; font-size:.62em; letter-spacing:.16em; text-transform:uppercase; white-space:nowrap}
+  .cubeview .cell.empty{pointer-events:none; background:transparent !important;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.09)}
+
+  .cubeview .hint{position:absolute; bottom:64px; left:0; right:0; text-align:center;
+    font-size:12.5px; color:var(--cfaint); z-index:5; pointer-events:none; transition:opacity .5s}
+  .cubeview .hint.fade{opacity:0}
+  .cubeview .legend{position:absolute; bottom:14px; left:0; right:0;
+    display:flex; flex-wrap:wrap; gap:6px 14px; justify-content:center; padding:0 18px; z-index:5}
+  .cubeview .legend.hide{display:none}
+  .cubeview .lg{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--cdim)}
+  .cubeview .sw{width:10px; height:10px; border-radius:3px; box-shadow:inset 0 0 0 1px var(--cedge)}
+
+  .cubeview .back{position:absolute; top:50px; left:16px; z-index:16; display:none; align-items:center; gap:8px;
+    background:rgba(0,0,0,.05); border:1px solid rgba(0,0,0,.12); color:var(--cink);
+    border-radius:22px; padding:9px 15px; font-size:13.5px; font-weight:600; cursor:pointer}
+  .cubeview .back.on{display:inline-flex}
+  @media (hover:hover){ .cubeview .back:hover{background:rgba(0,0,0,.09)} }
+
+  .cubeview .panel{position:relative; border-radius:.6em; padding:.45em; box-shadow:inset 0 0 0 1px var(--cedge)}
+  .cubeview .panel.hide{display:none}
+  .cubeview .pgrid{display:grid; grid-template-columns:1fr 1fr; gap:.45em}
+  .cubeview .pgrid .cell{height:10.5em}
+
+  .cubeview .ground{position:absolute; left:50%; transform:translateX(-50%); pointer-events:none;
+    background:radial-gradient(50% 50% at 50% 50%, rgba(35,32,28,.20), rgba(35,32,28,0) 72%)}
+
+  .cubeview .dots{position:absolute; bottom:40px; left:0; right:0; display:flex; gap:7px; justify-content:center; z-index:5; pointer-events:none}
+  .cubeview .dots.hide{display:none}
+  .cubeview .dot{width:6px; height:6px; border-radius:50%; background:rgba(0,0,0,.18); transition:background .2s, transform .2s}
+  .cubeview .dot.on{background:var(--cink); transform:scale(1.25)}
+
+  .cubeview #cardWrap{position:absolute; inset:0; z-index:40; display:none; align-items:center; justify-content:center;
+    background:rgba(238,235,228,.6); backdrop-filter:blur(4px); padding:18px}
+  .cubeview #cardWrap.on{display:flex}
+  .cubeview .card{--c:#4a5fa5; --cs:#37477c;
+    position:relative; width:22em; max-width:min(340px, calc(100% - 36px)); max-height:min(88%, calc(100% - 36px)); overflow:auto;
+    -webkit-overflow-scrolling:touch; overscroll-behavior:contain; touch-action:pan-y;
+    background:#fdfcf8; border-radius:12px; padding:1.5em 1.5em 1.3em;
+    border:1px solid rgba(0,0,0,.10); border-top:3px solid var(--c);
+    box-shadow:0 24px 60px -12px rgba(30,28,24,.28), 0 4px 14px rgba(30,28,24,.10);
+    display:flex; flex-direction:column; animation:cubepop .24s cubic-bezier(.3,1,.4,1)}
+  @keyframes cubepop{from{transform:scale(.96) translateY(10px); opacity:0}to{transform:none; opacity:1}}
+  @media (prefers-reduced-motion:reduce){ .cubeview .card{animation:none} }
+  .cubeview .card::-webkit-scrollbar{width:0}
+  .cubeview .c-head{display:flex; align-items:center; margin-bottom:1em}
+  .cubeview .c-av{width:3.6em; height:3.6em; border-radius:9px; background:color-mix(in srgb, var(--c) 14%, #fdfcf8); flex-shrink:0; display:flex; align-items:center; justify-content:center; color:var(--c)}
+  .cubeview .c-nm{margin-left:.8em; font-family:'Instrument Serif',Georgia,serif; font-size:1.6em; font-weight:400; color:var(--cink); line-height:1.02}
+  .cubeview .c-badge{align-self:flex-start; font-size:.62em; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--cs); background:color-mix(in srgb, var(--c) 10%, transparent); border-radius:3px; padding:.45em .8em; margin-bottom:1.1em}
+  .cubeview .c-band{height:1px; background:rgba(0,0,0,.10); margin-bottom:1.1em}
+  .cubeview .c-lab{font-size:.62em; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--cs); margin:.2em 0 .35em}
+  .cubeview .c-txt{font-size:.9em; line-height:1.55; color:var(--cink); font-weight:400; margin-bottom:1.1em}
+  .cubeview .c-src{font-size:.78em; line-height:1.5; color:#8b857a; font-style:italic; font-weight:400; margin-top:.2em}
+  .cubeview .c-btn{margin-top:1.3em; align-self:stretch; background:var(--c); border:none; border-radius:8px; padding:.75em; cursor:pointer;
+    font-family:'Inter',system-ui,-apple-system,sans-serif; font-weight:600; font-size:.92em; color:#fdfcf8; letter-spacing:.03em;
+    transition:background .12s, transform .08s}
+  .cubeview .c-btn:active{transform:translateY(1px); background:var(--cs)}
+  .cubeview .c-btn2{margin-top:.6em; align-self:stretch; background:transparent; border:1.5px solid var(--c); border-radius:8px; padding:.7em; cursor:pointer;
+    font-family:'Inter',system-ui,-apple-system,sans-serif; font-weight:600; font-size:.88em; color:var(--c); letter-spacing:.03em;
+    transition:background .12s, transform .08s}
+  .cubeview .c-btn2:active{transform:translateY(1px); background:rgba(0,0,0,.04)}
+
+</style>
+
+<style>
+/* coach shell */
+.coachcard{background:var(--ink); color:#F4F5F7; border-radius:18px; padding:26px 22px 24px; margin-top:26px}
+.coachcard .eyebrow{color:rgba(255,255,255,.55)}
+.coachcard .say{font-family:var(--display); font-size:27px; line-height:1.22; margin-top:10px; text-wrap:balance}
+.coachcard .why{color:rgba(255,255,255,.66); font-size:14px; margin-top:14px; line-height:1.5}
+.coachcard .why b{color:#fff; font-weight:600}
+.coachcard.thin{padding:20px 22px 18px; margin-top:18px}
+.coachcard.thin .say{font-size:20px}
+.btn-onink{display:block; width:100%; padding:15px; border:0; border-radius:12px; background:#FFFFFF; color:var(--ink);
+  font-size:16px; font-weight:600; cursor:pointer; margin-top:22px}
+.btn-onink:active{transform:scale(.99)}
+.holder{font-size:12px; letter-spacing:.16em; text-transform:uppercase; font-weight:600; color:rgba(255,255,255,.55)}
+.phaser{display:flex; gap:8px; margin-top:18px}
+.phaser .ph{flex:1; border:1px solid var(--line); border-radius:12px; padding:12px 12px 11px; background:var(--surface)}
+.phaser .ph.on{border-color:var(--ink); background:#fff}
+.phaser .ph .n{font-family:var(--display); font-size:20px; line-height:1}
+.phaser .ph .t{font-size:11.5px; color:var(--ink-dim); margin-top:5px; line-height:1.3}
+.phaser .ph.on .t{color:var(--ink)}
+.repnum{font-family:var(--display); font-size:44px; line-height:1}
+.doorline{border-top:1px solid var(--line); margin-top:26px; padding-top:18px}
+.kicker{font-size:13px; color:var(--ink-faint); margin-top:34px; padding-bottom:6px}
+.citerow{border-top:1px solid var(--line); padding:14px 0}
+.citerow .c-claim{font-size:15.5px; line-height:1.45}
+.citerow .c-src{font-size:12.5px; color:var(--ink-faint); margin-top:5px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+window.MoveCube = (function(){
+  "use strict";
+
+  /* Fixed map: cube technique name -> app move id. Only these 12
+     techniques get a "Try it on your material" button; the other 35
+     (Stuck family, Why It Works, Skip These, and non-drillable extras)
+     are reference only, deliberately, with no button and no apology. */
+  const MOVE_MAP = {
+    "Write Everything Down": "braindump",
+    "Tell Me Without Looking": "tellme",
+    "Space It Out": "space",
+    "Draw It": "drawit",
+    "Teach It Simple": "teach",
+    "Connect It to What You Know": "elaborate",
+    "Map It": "mapit",
+    "Mix Up the Problems": "mixit",
+    "Try It First": "tryfirst",
+    "Make Your Own Example": "concrete",
+    "Memory Walk": "palace",
+    "Break the Word Apart": "crackword"
+  };
+
+  const HTML_MARKUP = '<div id="wrap">\n  <header>\n    <span class="brand"><b>MOVE</b><span class="d">.</span> the techniques</span>\n    <span class="ctx" id="ctx"></span>\n  </header>\n  <button class="back" id="back">&larr; Back</button>\n  <div id="stage">\n    <div class="ground" id="ground"></div>\n    <div class="cube" id="cubeF"></div>\n    <div class="cube hide" id="cubeT"></div>\n    <div class="panel hide" id="panelEl"></div>\n  </div>\n  <div class="hint" id="hint">Drag to spin. Tap a family to open it.</div>\n  <div class="dots hide" id="dots"></div>\n  <div class="legend" id="legend"></div>\n</div>\n\n<div id="cardWrap"><div class="card" id="card"></div></div>';
+
+/* families: index -> face of level-1 cube (0 front,1 right,2 left,3 top,4 bottom,5 back) */
+const FAM=[
+  {n:"Learn It",    c:"#4a5fa5", bl:"When you're learning something new. Guess first, try it before you study, turn it into a picture, then try to remember it on your own."},
+  {n:"Keep It",     c:"#4e7d5b", bl:"Bring old material back after some time so it stays in your head. Guess, wait, then review."},
+  {n:"Exam",        c:"#a35248", bl:"Get ready for a test. Mix up the problem types, start with the hardest one, then check your mistakes after."},
+  {n:"Stuck",       c:"#b8863b", bl:"When you can't start or you're frozen. This shows you what to do first."},
+  {n:"Why It Works",c:"#6d5a94", bl:"How your brain actually learns. The reasons behind the other moves."},
+  {n:"Skip These", c:"#75787c", bl:"These feel like studying but don't work. Do the better move instead."},
+];
+
+/* every technique. fam = family indices it belongs to. content pulled from the app. */
+const T=[
+  {n:`Guess First`, fam:[0,1,2], what:`Before you try to remember something, guess how much you think you'll get right. Then find out. The gap between your guess and the real answer shows you what to study next.`, src:`Make It Stick (calibration)`},
+  {n:`What's Still Fuzzy`, fam:[0,1,2], what:`Before you stop studying, write down the one thing you still don't understand. That's the first thing to check next time.`, src:`Range (Lovett); Neuroteach (exit ticket)`},
+
+  {n:`Try It First`, fam:[0], what:`Try to answer before you've studied. Getting it wrong first helps you remember the right answer later.`, src:`Make It Stick (generation); pretest before a lecture ~10% better later (E. Bjork); 30% study + 70% reciting beats 100% study (Gates 1917)`},
+  {n:`Draw It`, fam:[0], what:`Turn the idea into a picture or a drawing. No words.`, how:`Draw it on paper. Use boxes, arrows, or a simple sketch. Then check the book to see what you missed.`, src:`Dual Coding with Teachers; drawing aids retention (Fernandes 2018, Hu 2015)`},
+  {n:`Draw Your Notes`, fam:[0], what:`Take notes using drawings and arrows instead of full sentences. Your hand can draw faster than it can write, so pictures keep up with your thinking.`, src:`profile EC-001 Strategy 04; Dual Coding with Teachers`},
+  {n:`Map It`, fam:[0], what:`Lay the material out on paper. Put each piece where it belongs, and draw lines to connect them.`, how:`Build the map on paper. Use space and arrows only. Do this after you've already tried to remember everything on your own.`, src:`Make It Stick; spatial structures file material`},
+  {n:`Memory Walk`, fam:[0], what:`Picture a path you know well, like your walk to school. Place each thing you're trying to remember at a spot along that path. Then walk the path in your head to bring them back.`, how:`Pick one clear picture for each spot on the path. Walk through it in your head. Any spot you can't remember is one to study again.`, src:`Learning How to Learn (Ch 8); Make It Stick (mnemonics)`},
+  {n:`Break the Word Apart`, fam:[0], what:`Break a hard word into smaller pieces. The meaning is usually hiding inside the parts.`, how:`Split the word into its pieces and write what each piece means. Put the meaning back together.`, src:`Executive Skills in Reading Comprehension (morphology); profile EC-001 Strategy 03`},
+  {n:`Group It Together`, fam:[0], what:`Group a long list into a few small groups with labels. Your brain can only hold about seven things at once, so a group counts as just one thing.`, src:`Learning How to Learn (Miller 1956)`},
+  {n:`Write Everything Down`, fam:[0], what:`Close the book and write down everything you remember. Don't stop to check or fix anything.`, how:`Write until you run out. Don't stop to fix mistakes. Then check what you got right, whatever's missing is what to study.`, src:`Powerful Teaching; free recall 67% vs concept-map 45% (Karpicke & Blunt 2011)`},
+  {n:`Tell Me Without Looking`, fam:[0], what:`Close the book. Answer questions one at a time, using only your memory.`, src:`Make It Stick; retrieval 71 to 61% vs reread 83 to 40% over a week (Roediger & Karpicke 2006)`},
+  {n:`Teach It Simple`, fam:[0], what:`Say it out loud in the simplest words you can, like you're teaching a little kid. No notes.`, how:`Teach it out loud. If you have to check the book, that's the part you don't know yet.`, src:`Protege effect (Stanford teachable agents); output beats input`},
+  {n:`Explain Each Step`, fam:[0], what:`Go through it step by step. For each step, say out loud why it's right. Naming it doesn't count. This shows you fast where you're confused.`, src:`Learn Better; Understanding How We Learn`},
+  {n:`Compare It to Something`, fam:[0], what:`Think about what the idea is like. Finish the sentence: "This is the same as ___." Comparing two things helps you understand both.`, src:`Why Don't Students Like School (Holyoak)`},
+  {n:`Make Your Own Example`, fam:[0], what:`Turn the idea into your own real example.`, how:`Write your example on paper. Then write a second, different example. Check that both really fit the rule.`, src:`Understanding How We Learn; Why Don't Students Like School`},
+  {n:`Connect It to What You Know`, fam:[0], what:`Connect the new thing to something you already know.`, how:`Finish this sentence with a real connection: "X is like ___ because ___." A matching word alone doesn't hold.`, src:`Make It Stick; elaboration multiplies the cues you can recall by`},
+
+  {n:`Space It Out`, fam:[1], what:`Go back to older material after some time has passed, so you forget a little before you review it.`, src:`Make It Stick; spacing doubles retention at 4 weeks (Rohrer & Taylor 2006)`},
+  {n:`Look Back Today`, fam:[1], what:`Look back over what you learned today, the same day, just for a few minutes. A short review now saves a lot of time later.`, src:`Brain Train (RAYL; Ebbinghaus)`},
+
+  {n:`Mix Up the Problems`, fam:[2], what:`Practice different types of problems mixed together. Figure out which type each one is before you solve it.`, src:`Make It Stick; 77% interleaved vs 38% blocked at 24h (Taylor & Rohrer 2010); similar types only`},
+  {n:`Start With the Hard One`, fam:[2], what:`On a test, start the hardest question first. Then leave it and do the easy ones. Your brain keeps working on the hard one in the background while you finish the rest.`, src:`Uncommon Sense Teaching (hard-start)`},
+  {n:`Check Your Mistakes`, fam:[2], what:`After a test, look at what you got wrong and sort the mistakes into groups. The pattern shows you exactly what to fix next time.`, src:`Ace Your Exam (five error types)`},
+
+  {n:`Get Started`, fam:[3], what:`Starting is the hardest part. Do just the first two minutes, even if you do them badly on purpose. Once you start, it gets easier to keep going.`, src:`Smart but Scattered Teens (task initiation)`},
+  {n:`Plan It`, fam:[3], what:`Break the work into steps. Put the steps in order before you start. A plan works better than just trying hard.`, src:`Smart but Scattered Teens (planning)`},
+  {n:`Find a Reason to Care`, fam:[3], what:`Before you start, find one reason this matters to you. You remember things better when you care about them.`, src:`Learn Better (learn crafting)`},
+  {n:`Set a Goal You Control`, fam:[3], what:`Aim for something you control, like "do ten problems," instead of something you don't, like "get an A."`, src:`Learn Better (process vs outcome goals)`},
+  {n:`Study Somewhere New`, fam:[3], what:`Change where you study sometimes. Studying in different places gives your memory more ways to find the answer later.`, src:`How We Learn (context variability)`},
+  {n:`Work, Then Rest`, fam:[3], what:`Work hard for about 25 minutes. Then take a real break. The break is when your brain locks in what you learned, it's not wasted time.`, src:`Uncommon Sense Teaching (Pomodoro; brain breaks)`},
+  {n:`Take a Walk`, fam:[3], what:`If you're stuck, stop and move around. Your brain keeps working in the background and often hands you the answer later.`, src:`How We Learn (incubation; focused vs diffuse)`},
+  {n:`Calm Down First`, fam:[3], what:`When you go from feeling challenged to feeling panicked, stop and take a breath. Feeling challenged is normal, panic isn't. The way out isn't a big push, it's one small first step.`, src:`Neuroteach (amygdala; zone of proximal discomfort); Ace Your Exam`},
+
+  {n:`Fast Brain, Slow Brain`, fam:[4], what:`Some brains work fast but miss small details, like a race car. Some work slower but notice more, like a hiker. Neither one is smarter. If your brain is the fast kind, slowing down on purpose is your advantage.`, src:`Uncommon Sense Teaching`},
+  {n:`Two Tricks Your Brain Plays`, fam:[4], what:`Rereading feels easy, so it feels like it's working, but that's a trick. Feeling sure of yourself isn't the same as being right, that's another trick. Guessing before you check catches both.`, src:`Powerful Teaching`},
+  {n:`A Little Forgetting Helps`, fam:[4], what:`Forgetting a bit between study sessions isn't a bad sign. The work it takes to remember it again is what makes it stick.`, src:`How We Learn (Bjork)`},
+  {n:`New Facts Need Old Facts`, fam:[4], what:`Memory works by making connections. A new fact sticks when it hooks onto something you already know.`, src:`Uncommon Sense Teaching (Hebbian learning)`},
+  {n:`Two Kinds of Learning`, fam:[4], what:`Facts and skills are learned in different ways. Skills need practice spread out over time, you can't learn a skill in one night.`, src:`Uncommon Sense Teaching (declarative vs procedural)`},
+  {n:`Look Past the Surface`, fam:[4], what:`Beginners sort problems by how they look on the outside. Experts sort by what's really happening underneath. Mixing up problem types trains you to think like an expert.`, src:`Learn Better`},
+  {n:`Practice Changes Your Brain`, fam:[4], what:`Practicing something over and over actually speeds up the wiring in your brain. Getting faster is real, it's real; the wiring physically changes.`, src:`Neuroteach (myelination)`},
+  {n:`Breaks Help You Solve It`, fam:[4], what:`Your brain has a focused mode and a relaxed background mode. A problem you're stuck on often gets solved in the relaxed mode, like on a walk.`, src:`Learning How to Learn (focused vs diffuse)`},
+  {n:`You Remember the Start and End`, fam:[4], what:`You remember the beginning and the end of a study session best. Put the most important stuff there; the middle is where things get lost.`, src:`Neuroteach (primacy-recency)`},
+  {n:`Why School Feels Hard`, fam:[4], what:`Your brain grew up on talking and reading faces; books and algebra arrived too recently to be wired in. Those skills take real practice. Struggling with them is normal.`, src:`Uncommon Sense Teaching (biologically primary vs secondary)`},
+  {n:`Mistakes Help You Learn`, fam:[4], what:`Taking a real guess and getting it wrong actually helps your brain remember the right answer later. The wrong try is part of the learning.`, src:`Learn Better (productive failure, Kapur)`},
+  {n:`Learn Facts First`, fam:[4], what:`You can't think deeply about something you barely know. Learning the facts first is what makes deeper thinking possible.`, src:`Why Don't Students Like School`},
+  {n:`Smart Grows With Practice`, fam:[4], what:`Being smart isn't something you're born with and stuck with. Effort and the right kind of practice grow it. Your brain actually changes when you push it.`, src:`Neuroteach (growth mindset)`},
+  {n:`Sleep Locks In Learning`, fam:[4], what:`Sleep is when your brain files away what you learned that day into long-term memory. Cramming late without sleeping on it barely helps.`, src:`Neuroteach (sleep)`},
+  {n:`Leaving It Half-Done Helps`, fam:[4], what:`If you leave a problem half-finished, your brain keeps working on it in the background. You can use that on purpose by stepping away before you're totally stuck.`, src:`How We Learn (Zeigarnik; percolation)`},
+
+  {n:`Reading It Again`, fam:[5], what:`Reading your notes over and over feels like studying, but it mostly isn't. In one study, people who reread scored 40% on a test a week later, and they thought they'd remember more than they actually did. Trying to remember with the book closed is what actually works.`, instead:`Write Everything Down`, src:`Do this instead: Brain Dump`},
+  {n:`Highlighting`, fam:[5], what:`Coloring the page with a highlighter feels active, but marking words isn't the same as learning them. A bright page can trick you into thinking you know more than you do.`, instead:`Tell Me Without Looking`, src:`Do this instead: Tell Me Without Looking`},
+  {n:`Copying Notes Over`, fam:[5], what:`Rewriting your notes to make them neat is copying. A pretty page can trick you into thinking you know more than you do.`, instead:`Map It`, src:`Do this instead: Map It`},
+];
+
+/* ---------- one icon per technique (simple monoline glyphs) ---------- */
+function svg(inner,sz){ sz=sz||20; return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(inner||'<circle cx="12" cy="12" r="3"/>')+'</svg>'; }
+const ICON={
+  "Guess First":`<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>`,
+  "What's Still Fuzzy":`<line x1="5" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="19" y2="12"/><line x1="5" y1="16" x2="14" y2="16"/>`,
+  "Write Everything Down":`<path d="M4 14v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/><line x1="12" y1="3" x2="12" y2="14"/><polyline points="8 10 12 14 16 10"/>`,
+  "Tell Me Without Looking":`<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6"/><circle cx="12" cy="12" r="2.5"/><line x1="3" y1="3" x2="21" y2="21"/>`,
+  "Space It Out":`<line x1="3" y1="12" x2="21" y2="12"/><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="10" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="18" cy="12" r="1.4" fill="currentColor" stroke="none"/>`,
+  "Try It First":`<polygon points="13 2 4 14 11 14 10 22 20 10 13 10 13 2"/>`,
+  "Draw It":`<path d="M4 20l3-1 11-11-2-2L5 17l-1 3z"/><line x1="14" y1="6" x2="18" y2="10"/>`,
+  "Draw Your Notes":`<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 9c2 2 4-2 6 0s3-1 4 0"/>`,
+  "Map It":`<circle cx="6" cy="6" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="10" cy="18" r="2"/><line x1="7.4" y1="7.4" x2="8.6" y2="16.6"/><line x1="7.8" y1="6.4" x2="16" y2="7.6"/>`,
+  "Memory Walk":`<path d="M4 11l8-6 8 6"/><path d="M6 10v9h12v-9"/>`,
+  "Break the Word Apart":`<rect x="3" y="9" width="18" height="6" rx="1"/><line x1="9" y1="9" x2="9" y2="15"/><line x1="15" y1="9" x2="15" y2="15"/>`,
+  "Group It Together":`<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>`,
+  "Teach It Simple":`<path d="M2 9l10-4 10 4-10 4-10-4z"/><path d="M6 11v4c0 1 3 2 6 2s6-1 6-2v-4"/>`,
+  "Explain Each Step":`<path d="M4 5h16v10H9l-4 4v-4H4z"/><circle cx="9" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1" fill="currentColor" stroke="none"/>`,
+  "Compare It to Something":`<circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/>`,
+  "Make Your Own Example":`<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5l8 4.5 8-4.5"/><line x1="12" y1="12" x2="12" y2="21"/>`,
+  "Connect It to What You Know":`<rect x="3" y="9" width="11" height="6" rx="3"/><rect x="10" y="9" width="11" height="6" rx="3"/>`,
+  "Look Back Today":`<path d="M20 12a8 8 0 1 1-2.3-5.6"/><polyline points="20 4 20 8 16 8"/>`,
+  "Mix Up the Problems":`<path d="M4 7h4l8 10h4"/><path d="M4 17h4l8-10h4"/><polyline points="17 4 20 7 17 10"/><polyline points="17 14 20 17 17 20"/>`,
+  "Start With the Hard One":`<path d="M3 19l6-11 4 6 2-3 6 8z"/>`,
+  "Check Your Mistakes":`<circle cx="10" cy="10" r="6"/><line x1="15" y1="15" x2="20" y2="20"/>`,
+  "Get Started":`<polygon points="7 4 20 12 7 20 7 4"/>`,
+  "Plan It":`<rect x="5" y="4" width="14" height="17" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/>`,
+  "Find a Reason to Care":`<path d="M12 20s-7-4.5-7-9a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 4.5-7 9-7 9z"/>`,
+  "Set a Goal You Control":`<line x1="6" y1="3" x2="6" y2="21"/><path d="M6 4h11l-2.5 3.5L17 11H6"/>`,
+  "Study Somewhere New":`<path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>`,
+  "Work, Then Rest":`<circle cx="12" cy="13" r="7"/><line x1="12" y1="13" x2="12" y2="9"/><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="2" x2="12" y2="4"/>`,
+  "Take a Walk":`<circle cx="13" cy="4" r="2"/><path d="M13 6l-2 6 3 3"/><path d="M11 12l-3 2"/><path d="M13 8l3 2"/>`,
+  "Calm Down First":`<path d="M3 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/>`,
+  "Fast Brain, Slow Brain":`<path d="M3 14l2-4h14l2 4v3H3z"/><circle cx="7" cy="17" r="1.6"/><circle cx="17" cy="17" r="1.6"/>`,
+  "Two Tricks Your Brain Plays":`<circle cx="10" cy="12" r="6"/><circle cx="14" cy="12" r="6" stroke-dasharray="2 2"/>`,
+  "A Little Forgetting Helps":`<circle cx="12" cy="12" r="8" stroke-dasharray="3 3"/><polyline points="12 7 12 12 16 14"/>`,
+  "New Facts Need Old Facts":`<circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="12" r="2.5"/><line x1="8.5" y1="12" x2="15.5" y2="12"/>`,
+  "Two Kinds of Learning":`<path d="M12 20v-5l-5-5V4"/><path d="M12 15l5-5V4"/>`,
+  "Look Past the Surface":`<line x1="3" y1="9" x2="21" y2="9"/><path d="M8 9l4-4 4 4-1.5 9h-5z"/>`,
+  "Practice Changes Your Brain":`<polyline points="4 16 9 11 13 15 20 6"/><polyline points="15 6 20 6 20 11"/>`,
+  "Breaks Help You Solve It":`<path d="M5 8h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8z"/><path d="M16 9h2a2 2 0 0 1 0 4h-2"/>`,
+  "You Remember the Start and End":`<line x1="5" y1="5" x2="5" y2="19"/><line x1="10" y1="13" x2="10" y2="19"/><line x1="14" y1="13" x2="14" y2="19"/><line x1="19" y1="5" x2="19" y2="19"/>`,
+  "Why School Feels Hard":`<path d="M4 20h4v-4h4v-4h4v-4h4"/>`,
+  "Mistakes Help You Learn":`<path d="M4 8l4 4"/><path d="M8 8l-4 4"/><polyline points="12 11 15 14 20 7"/>`,
+  "Learn Facts First":`<rect x="6" y="14" width="12" height="5" rx="1"/><rect x="8" y="9" width="8" height="5" rx="1"/><rect x="10" y="4" width="4" height="5" rx="1"/>`,
+  "Smart Grows With Practice":`<path d="M12 21v-8"/><path d="M12 13c-3 0-5-2-5-5 3 0 5 2 5 5z"/><path d="M12 15c3 0 5-2 5-5-3 0-5 2-5 5z"/>`,
+  "Sleep Locks In Learning":`<path d="M20 14a8 8 0 1 1-9-11 6 6 0 0 0 9 11z"/>`,
+  "Leaving It Half-Done Helps":`<path d="M12 4a8 8 0 1 1-6 3"/>`,
+  "Reading It Again":`<path d="M4 5h6a2 2 0 0 1 2 2v11a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v11a2 2 0 0 1 2-2h6z"/><line x1="3" y1="21" x2="21" y2="3"/>`,
+  "Highlighting":`<rect x="4" y="10" width="14" height="5" rx="1"/><line x1="3" y1="20" x2="20" y2="4"/>`,
+  "Copying Notes Over":`<rect x="4" y="5" width="10" height="13" rx="1"/><rect x="9" y="8" width="10" height="13" rx="1"/><line x1="3" y1="21" x2="21" y2="4"/>`,
+};
+const CTX_ALL = "All " + T.length + " \u00b7 " + FAM.length + " families";
+
+  /* mount(): builds the cube fresh inside `host` every call (all state
+     below is local to this function, so toggling Map -> Cube -> Map ->
+     Cube always gets a clean instance). Returns {unmount}. */
+  function mount(host, opts){
+    opts = opts || {};
+    host.innerHTML = '<div class="cubeview">' + HTML_MARKUP + '</div>';
+    document.getElementById("ctx").textContent = CTX_ALL;
+
+"use strict";
+
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const inkFor = hex => { const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return (0.299*r+0.587*g+0.114*b)/255 > 0.5 ? "#3a3733" : "#ffffff"; };
+const shade = (hex,f)=>{ let r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  r=Math.round(r*f); g=Math.round(g*f); b=Math.round(b*f);
+  return "#"+[r,g,b].map(x=>Math.max(0,Math.min(255,x)).toString(16).padStart(2,"0")).join(""); };
+
+
+
+/* ---------- responsive sizing: one number drives geometry and type ---------- */
+const stage=document.getElementById("stage");
+const cubeF=document.getElementById("cubeF"), cubeT=document.getElementById("cubeT"), panelEl=document.getElementById("panelEl");
+let SZ=280, FACE_TF=[];
+function sizeCube(){
+  const r=stage.getBoundingClientRect();
+  /* face-on the cube fits with margin; mid-drag corners may kiss the edges, which reads fine */
+  SZ=Math.round(Math.max(190, Math.min(310, (r.width-28)/1.42, (r.height-20)*0.52)));
+  stage.style.perspective=(SZ*4.7)+"px";
+  const h=SZ/2;
+  FACE_TF=[
+    `translateZ(${h}px)`,`rotateY(90deg) translateZ(${h}px)`,`rotateY(-90deg) translateZ(${h}px)`,
+    `rotateX(90deg) translateZ(${h}px)`,`rotateX(-90deg) translateZ(${h}px)`,`rotateY(180deg) translateZ(${h}px)`
+  ];
+  [cubeF,cubeT].forEach(c=>{
+    c.style.setProperty("--sz",SZ+"px");
+    c.style.fontSize=(SZ/280*16)+"px";
+  });
+  [...cubeF.children].forEach((f,i)=>f.style.transform=FACE_TF[i]);
+}
+
+/* ---------- build level-1 (families) cube ---------- */
+FAM.forEach((fam,ci)=>{
+  const face=document.createElement("div"); face.className="face fam"+(ci===0?" startface":"");
+  face.style.background=fam.c; face.style.color=inkFor(fam.c);
+  const count=T.filter(t=>t.fam.includes(ci)).length;
+  const startPill=ci===0?`<div class="startpill">Start here</div>`:"";
+  face.innerHTML=`${startPill}<div><div class="fnum">Family ${ci+1} · ${count} techniques</div>
+    <div class="fnm">${fam.n}</div><div class="fbl">${fam.bl}</div></div>
+    <div class="fopen">Tap to open &rarr;</div>`;
+  face.addEventListener("click",()=>{ if(moved) return; openFamily(ci); });
+  cubeF.appendChild(face);
+});
+
+/* legend + pager dots */
+const legend=document.getElementById("legend");
+FAM.forEach(f=>{ const l=document.createElement("div"); l.className="lg";
+  l.innerHTML=`<span class="sw" style="background:${f.c}"></span>${f.n}`; legend.appendChild(l); });
+const dotsEl=document.getElementById("dots");
+function buildDots(n){
+  dotsEl.innerHTML="";
+  for(let i=0;i<n;i++){ const d=document.createElement("div"); d.className="dot"; dotsEl.appendChild(d); }
+  lastDot=-1;
+}
+
+/* ---------- level-2: shape follows the count ----------
+   <=6 items: flat panel, everything visible, no spin
+   <=8 items: flip card, two faces of four
+   more:      square prism, four faces of four, one swipe axis */
+function makeCell(t,fam,first,ci){
+  const cell=document.createElement("button");
+  if(t){ cell.className="cell"+(t===first?" startcell":""); cell.style.background=fam.c; cell.style.color=inkFor(fam.c);
+    cell.innerHTML=(t===first?'<span class="stag">START HERE</span>':'')+'<span class="ic">'+svg(ICON[t.n])+'</span>'+t.n;
+    cell.addEventListener("click",()=>{ if(moved) return; openCard(t,ci); });
+  } else { cell.className="cell empty"; cell.style.background=shade(fam.c,0.82); }
+  return cell;
+}
+function openFamily(ci){
+  const fam=FAM[ci]; curFam=ci;
+  const items=T.filter(t=>t.fam.includes(ci));
+  const first=FAM[ci].n==="Skip These"?null:items[0];   /* anti-patterns get no start marker */
+  level="family";
+  cubeF.classList.add("hide"); legend.classList.add("hide");
+
+  if(items.length<=6){
+    /* flat panel */
+    shape="panel"; faceCount=1;
+    panelEl.innerHTML=""; panelEl.style.background=shade(fam.c,0.9);
+    panelEl.style.width=Math.min(SZ*1.18, stage.clientWidth-28)+"px";
+    panelEl.style.fontSize=(SZ/280*16)+"px";
+    const grid=document.createElement("div"); grid.className="pgrid";
+    const slots=Math.ceil(items.length/2)*2;
+    for(let k=0;k<slots;k++) grid.appendChild(makeCell(items[k],fam,first,ci));
+    panelEl.appendChild(grid);
+    cubeT.classList.add("hide"); panelEl.classList.remove("hide");
+    stage.style.cursor="default";
+    document.getElementById("hint").textContent="Tap a technique for its card.";
+  } else {
+    /* 3D: flip card (2 faces) or prism (4 faces) */
+    const nFaces=items.length<=8?2:4;
+    shape=nFaces===2?"flip":"prism"; faceCount=nFaces;
+    const depth=nFaces===4?SZ/2:1;
+    cubeT.innerHTML="";
+    for(let fi=0; fi<nFaces; fi++){
+      const face=document.createElement("div"); face.className="face";
+      face.style.background=shade(fam.c,0.9);
+      face.style.transform=`rotateY(${fi*(360/nFaces)}deg) translateZ(${depth}px)`;
+      const grid=document.createElement("div"); grid.className="tgrid";
+      for(let k=0;k<4;k++) grid.appendChild(makeCell(items[fi*4+k],fam,first,ci));
+      face.appendChild(grid); cubeT.appendChild(face);
+    }
+    cubeT.classList.remove("hide"); panelEl.classList.add("hide");
+    stage.style.cursor="grab";
+    document.getElementById("hint").textContent=
+      nFaces===2?"Swipe to flip it over. Tap a technique for its card."
+                :"Swipe to turn. Tap a technique for its card.";
+    buildDots(nFaces);
+  }
+  document.getElementById("hint").classList.remove("fade");
+  setBack(`&larr; All families`); document.getElementById("ctx").textContent=`${fam.n} · ${items.length}`;
+  setRotation(0,0);
+  updateDots(); placeGround();
+}
+
+/* ---------- level-3 (card) ---------- */
+function openCard(t,ci){
+  const fam=FAM[ci];
+  const card=document.getElementById("card");
+  card.style.setProperty("--c",fam.c); card.style.setProperty("--cs",shade(fam.c,0.72));
+  let body=`<div class="c-lab">What it is</div><div class="c-txt">${t.what}</div>`;
+  if(t.how) body+=`<div class="c-lab">How to run it</div><div class="c-txt">${t.how}</div>`;
+  if(t.instead) body+=`<div class="c-lab">Do this instead</div><div class="c-txt">${t.instead}</div>`;
+  const mappedMove = MOVE_MAP[t.n];
+  const tryBtn = mappedMove ? `<button class="c-btn2" id="cardTry">Try it on your material</button>` : "";
+  card.innerHTML=`
+    <div class="c-head"><div class="c-av">${svg(ICON[t.n],34)}</div><div class="c-nm">${t.n}</div></div>
+    <div class="c-badge">${fam.n}</div>
+    <div class="c-band"></div>
+    ${body}
+    <div class="c-lab">Source</div><div class="c-src">${t.src}</div>
+    <button class="c-btn" id="cardBack">Back to ${fam.n}</button>
+    ${tryBtn}`;
+  document.getElementById("cardBack").addEventListener("click",closeCard);
+  if(mappedMove){
+    document.getElementById("cardTry").addEventListener("click",()=>{
+      closeCard();
+      if(opts.onTryIt) opts.onTryIt(mappedMove);
+    });
+  }
+  document.getElementById("cardWrap").classList.add("on");
+  document.getElementById("ctx").textContent=t.n;
+}
+function closeCard(){ document.getElementById("cardWrap").classList.remove("on");
+  document.getElementById("ctx").textContent=`${FAM[curFam].n} · ${T.filter(t=>t.fam.includes(curFam)).length}`; }
+document.getElementById("cardWrap").addEventListener("click",e=>{ if(e.target.id==="cardWrap") closeCard(); });
+
+/* ---------- back / breadcrumb ---------- */
+const backBtn=document.getElementById("back");
+function setBack(html){ backBtn.innerHTML=html; backBtn.classList.add("on"); }
+backBtn.addEventListener("click",()=>{
+  if(level==="family"){
+    level="families"; shape="cube"; faceCount=6;
+    cubeT.classList.add("hide"); panelEl.classList.add("hide"); cubeF.classList.remove("hide");
+    legend.classList.remove("hide");
+    stage.style.cursor="grab";
+    document.getElementById("hint").textContent="Drag to spin. Tap a family to open it.";
+    document.getElementById("hint").classList.add("fade");
+    document.getElementById("ctx").textContent=CTX_ALL;
+    backBtn.classList.remove("on");
+    setRotation(-18,-28);      /* rest at the hero angle; snapping resumes after the next drag */
+    updateDots(); placeGround();
+  }
+});
+
+/* ---------- rotation engine ----------
+   pointermove only records input; painting happens once per frame in the loop.
+   release projects momentum to pick the target face (a committed swipe always
+   advances), then a spring that inherits release velocity settles onto it. */
+let level="families", curFam=0, moved=false;
+let shape="cube", faceCount=6;   /* cube | prism | flip | panel */
+let rotX=-18, rotY=-28;          /* current */
+let vX=0, vY=0;                  /* velocity, deg/frame */
+let down=false, lx=0, ly=0, lt=0, pid=null;
+let startX=0, startY=0;          /* rotation at drag start */
+let pendX=0, pendY=0;            /* input accumulated since last frame */
+let mode="rest";                 /* rest | drag | settle */
+let tX=0, tY=0;                  /* settle target */
+let rafId=null, lastDot=-1;
+let idleSpin=!REDUCED;          /* ambient rotation until the first real touch */
+
+const groundEl=document.getElementById("ground");
+function placeGround(){
+  const el=level==="family"?(shape==="panel"?panelEl:cubeT):cubeF;
+  requestAnimationFrame(()=>{
+    const sr=stage.getBoundingClientRect(), er=el.getBoundingClientRect();
+    groundEl.style.width=(er.width*0.92)+"px";
+    groundEl.style.height=Math.max(16, er.width*0.10)+"px";
+    groundEl.style.top=(er.bottom - sr.top + er.width*0.02)+"px";
+  });
+}
+function rotatable(){ return !(level==="family" && shape==="panel"); }
+function paint(){
+  if(!rotatable()) return;
+  const el=level==="family"?cubeT:cubeF;
+  el.style.transform=`rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+}
+function setRotation(x,y){ rotX=x; rotY=y; vX=vY=0; mode="rest"; lastDot=-1; paint(); }
+
+function snapStepY(){ return shape==="flip"?180:90; }
+function refreshDots(){
+  if(level!=="family" || faceCount<2) return;
+  const step=360/faceCount;
+  const fi=((Math.round(-rotY/step))%faceCount+faceCount)%faceCount;
+  if(fi!==lastDot){ lastDot=fi; [...dotsEl.children].forEach((d,i)=>d.classList.toggle("on",i===fi)); }
+}
+
+/* pick targets from momentum; a committed drag never springs back */
+function chooseTargets(){
+  const step=snapStepY();
+  const projY=rotY + vY*12;                    /* deceleration projection */
+  tY=Math.round(projY/step)*step;
+  const homeY=Math.round(startY/step)*step;
+  const dY=rotY-startY;
+  if(tY===homeY && Math.abs(dY)>step*0.22) tY=homeY+Math.sign(dY)*step;
+  if(shape==="cube"){
+    const projX=rotX + vX*12;
+    tX=Math.round(projX/90)*90;
+    const homeX=Math.round(startX/90)*90;
+    const dX=rotX-startX;
+    if(tX===homeX && Math.abs(dX)>20) tX=homeX+Math.sign(dX)*90;
+  } else tX=0;
+}
+function settleTo(x,y){ tX=x; tY=y; mode="settle"; run(); }
+function snapSoon(){ chooseTargets(); mode="settle"; run(); }
+
+function tick(){
+  if(mode==="drag"){
+    rotY+=pendY;
+    if(shape==="cube"){ rotX+=pendX; }
+    pendX=pendY=0;
+    paint(); refreshDots();
+  } else if(mode==="settle"){
+    /* spring seeded with release velocity: continuous motion, no hitch */
+    vY=vY*0.82+(tY-rotY)*0.09; rotY+=vY;
+    vX=vX*0.82+(tX-rotX)*0.09; rotX+=vX;
+    if(Math.abs(tY-rotY)<0.05 && Math.abs(vY)<0.05 && Math.abs(tX-rotX)<0.05 && Math.abs(vX)<0.05){
+      rotX=tX; rotY=tY; vX=vY=0; mode="rest";
+    }
+    paint(); refreshDots();
+  }
+  if(mode==="rest"){
+    if(idleSpin && level==="families"){
+      rotY -= 0.10; paint();
+      rafId=requestAnimationFrame(tick);
+      return;
+    }
+    rafId=null; updateDots(); return;
+  }
+  rafId=requestAnimationFrame(tick);
+}
+function run(){ if(rafId===null) rafId=requestAnimationFrame(tick); }
+function updateDots(){
+  if(level!=="family" || shape==="panel" || faceCount<2){ dotsEl.classList.add("hide"); return; }
+  dotsEl.classList.remove("hide"); refreshDots();
+}
+
+stage.addEventListener("pointerdown",e=>{
+  if(down) return;                             /* ignore a second finger */
+  if(document.getElementById("cardWrap").classList.contains("on")) return;
+  idleSpin=false;
+  down=true; moved=false; vX=vY=0; pendX=pendY=0;
+  startX=rotX; startY=rotY;
+  if(rotatable()){ mode="drag"; stage.classList.add("grab"); run(); }
+  lx=e.clientX; ly=e.clientY; lt=performance.now();
+  pid=e.pointerId;
+});
+stage.addEventListener("pointermove",e=>{
+  if(!down || e.pointerId!==pid) return;
+  const dx=e.clientX-lx, dy=e.clientY-ly;
+  if(!moved && Math.hypot(dx,dy)>7){ moved=true; if(rotatable()){ try{ stage.setPointerCapture(pid); }catch(_){} } }
+  if(moved && rotatable()){
+    const k=0.45;
+    pendY+=dx*k;
+    if(shape==="cube") pendX+=-dy*k;
+    const now=performance.now(), dt=Math.max(1,now-lt);
+    const iY=dx*k*(16/dt), iX=shape==="cube"?-dy*k*(16/dt):0;
+    vY=vY*0.6+iY*0.4; vX=vX*0.6+iX*0.4;        /* smoothed release velocity */
+    lx=e.clientX; ly=e.clientY; lt=now;
+    document.getElementById("hint").classList.add("fade");
+  }
+});
+function endDrag(e){
+  if(!down || (e && e.pointerId!==pid)) return;
+  down=false; pid=null; stage.classList.remove("grab");
+  if(!moved || !rotatable()){ mode="rest"; return; }   /* tap, or a flat panel */
+  if(REDUCED){ chooseTargets(); rotX=tX; rotY=tY; vX=vY=0; mode="rest"; paint(); updateDots(); return; }
+  chooseTargets(); mode="settle"; run();
+}
+stage.addEventListener("pointerup",endDrag);
+stage.addEventListener("pointercancel",endDrag);
+
+/* keyboard: arrows turn one face */
+function onKeydown(e){
+  if(document.getElementById("cardWrap").classList.contains("on")){ if(e.key==="Escape") closeCard(); return; }
+  if(!rotatable()) return;
+  const s2=snapStepY();
+  const step={ArrowLeft:[0,s2],ArrowRight:[0,-s2],ArrowUp:[90,0],ArrowDown:[-90,0]}[e.key];
+  if(!step) return;
+  if(shape!=="cube" && step[0]!==0) return;   /* single-axis shapes ignore up/down */
+  const bx=shape==="cube"?Math.max(-90,Math.min(90,Math.round(rotX/90)*90)):0;
+  const by=Math.round(rotY/s2)*s2;
+  settleTo(shape==="cube"?bx+step[0]:0, by+step[1]);
+}
+window.addEventListener("keydown", onKeydown);
+
+/* ---------- boot ---------- */
+sizeCube(); paint(); placeGround();
+if(idleSpin) run();
+let rz;
+function onResize(){ clearTimeout(rz); rz=setTimeout(()=>{
+  sizeCube();
+  if(level==="family") openFamily(curFam); else { paint(); placeGround(); }
+},120); }
+window.addEventListener("resize", onResize);
+
+
+    return {
+      unmount: function(){
+        window.removeEventListener("keydown", onKeydown);
+        window.removeEventListener("resize", onResize);
+        host.innerHTML = "";
+      }
+    };
+  }
+
+  return { mount: mount, count: T.length };
+})();
+
+</script>
+<script>
+"use strict";
+
+const GENERATION_PROMPT =
+`You turn a student's own study material into retrieval-practice items.
+RULES:
+- Output ONLY a JSON array. No prose, no explanation, no markdown fences.
+- Each element is an object with exactly two string fields: "q" and "a".
+- "q" forces recall of ONE fact, term, relationship, or step from the material.
+- "a" is the shortest correct answer (under 15 words).
+- Produce 6 to 12 items. One idea per item. Cover the most important points, not trivia.
+- Use ONLY what the material says. Never add outside facts.
+- Prefer questions that require producing the answer from memory (what, why, how, define, what's the difference). Never yes/no.
+- If the material is a set of problems, ask for the METHOD or the TYPE of problem, not the worked numeric answer.
+- No item may be answerable just by rereading the question.`;
+
+/* Question generation runs through a Cloudflare Worker that holds the API key
+   server-side. Set this to your deployed Worker URL. If left as the placeholder
+   or empty, the app uses on-device simple questions and says so plainly. */
+const GENERATE_URL = "https://move-generate.YOUR-SUBDOMAIN.workers.dev";
+function apiConfigured(){ return /^https:\/\/[^ ]+\.workers\.dev/.test(GENERATE_URL) && !/YOUR-SUBDOMAIN/.test(GENERATE_URL); }
+
+const MOVES = [
+  { id:"braindump", name:"Brain Dump", kind:"free", tier:"high", timer:180, bet:"count", source:"Powerful Teaching · free recall 67% vs concept-map 45% (Karpicke & Blunt 2011)",
+    what:"Close the book and write everything you remember. No checking, no fixing.",
+    read:t=>`Close the book. You're going to write down everything you remember about <b>${t}</b>.`,
+    betq:"How many separate things do you think you'll get?",
+    doi:"Go. Everything you remember. Don't stop to fix it, don't check.",
+    cover:"Tick what you actually covered. Whatever's left is what you missed.",
+    grad:"She closes the book and starts dumping before the app asks." },
+  { id:"tellme", name:"Tell Me Without Looking", kind:"cued", tier:"high", timer:0, bet:"countN", source:"Make It Stick · retrieval 71→61% vs reread 83→40% over a week (Roediger & Karpicke 2006)",
+    what:"Books closed. Answer from memory, one question at a time.",
+    read:t=>`Books closed. I'll ask about <b>${t}</b>, you answer, out loud or typed.`,
+    betq:"Out of these questions, how many will you nail?",
+    grad:"She quizzes herself, or asks to be quizzed, without the app drawing it." },
+  { id:"space", name:"Space It Out", kind:"cued", tier:"high", timer:0, bet:"countN", source:"Make It Stick · spacing doubles retention at 4 weeks (Rohrer & Taylor 2006)",
+    what:"Older material, pulled back after a gap so a little forgetting happens.",
+    read:t=>`This came up before. Quick gut check on what's still in there.`,
+    betq:"How much of it is still there?",
+    grad:"She brings up an older topic to review on her own." },
+  { id:"drawit", name:"Draw It", kind:"reflect", tier:"high (for her)", timer:150, bet:"scale", source:"Dual Coding with Teachers · drawing aids retention (Fernandes 2018, Hu 2015)",
+    what:"Turn the idea into a picture or diagram. No words.",
+    read:t=>`No words this time. Draw <b>${t}</b>, a picture, a diagram, whatever shows the idea.`,
+    betq:"Can you draw it without looking?",
+    doi:"Draw it on paper. Make the idea visual. Boxes, arrows, a sketch.",
+    reflectq:"Now open the book. What did your drawing leave out?",
+    grad:"She sketches or diagrams material on her own." },
+  { id:"teach", name:"Teach It Dumber", kind:"reflect", tier:"moderate", timer:120, bet:"scale", source:"Protégé effect (Stanford teachable agents), output beats input, Convergence 12",
+    what:"Explain it out loud in the simplest words, like teaching a little kid. No notes.",
+    read:t=>`You're going to teach <b>${t}</b> out loud, like you're explaining it to a little kid. Simplest words. No notes.`,
+    betq:"Can you get through it without checking?",
+    doi:"Teach it. Out loud. If you reach for the book, that spot is the gap.",
+    reflectq:"Where did you get stuck or go vague?",
+    grad:"She explains a concept aloud, to someone or herself, without being told." },
+  { id:"elaborate", name:"Elaborate", kind:"reflect", tier:"moderate", timer:90, bet:"none", source:"Make It Stick · elaboration multiplies the cues you can recall by",
+    what:"Connect the new thing to something you already know.",
+    read:t=>`One sentence. "<b>${t}</b> is like ___ because ___." Connect it to something you already get.`,
+    doi:"Finish the sentence on paper. Make the link real. A word match doesn't hold.",
+    reflectq:"Does the link hold up? A good one is a second handle on the memory.",
+    grad:"She spontaneously connects new material to something she knows." },
+  { id:"mapit", name:"Map It", kind:"reflect", tier:"moderate · narrow", timer:180, bet:"none", source:"Make It Stick · spatial structures file material; run AFTER a dump, never instead",
+    what:"Lay the material out in space, each piece where it belongs, connected.",
+    read:t=>`Spread <b>${t}</b> out. Put each piece on the page where it belongs and connect what goes together.`,
+    doi:"Build the map on paper. Let space and arrows do the work; keep sentences off it.",
+    reflectq:"Anything you couldn't place is the part you don't have yet. What was it?",
+    grad:"She reaches for a spatial layout on her own when material is tangled." },
+  { id:"mixit", name:"Mix It", kind:"cued", tier:"high", timer:0, bet:"countN", source:"Make It Stick · 77% interleaved vs 38% blocked at 24h (Taylor & Rohrer 2010) · similar types only",
+    what:"Practice related problem types together, sorting which is which before solving.",
+    read:t=>`We mix types in this one. The trick: figure out which kind each one is before you solve.`,
+    betq:"How many will you sort correctly?",
+    grad:"She chooses to practice mixed types rather than blocking one." },
+  { id:"tryfirst", name:"Try It First", kind:"cued", tier:"high", timer:0, bet:"countN", source:"Make It Stick (generation) · pretest before a lecture → ~10% better later (E. Bjork) · 30% study + 70% reciting beats 100% study (Gates 1917)",
+    what:"Take a swing before you've studied it. Wrong answers prime the real one.",
+    read:t=>`Before you really study <b>${t}</b>, take a swing at it. Wrong is fine, the swing is the whole point.`,
+    betq:"Cold, no studying yet: how many will you get?",
+    grad:"She attempts a problem before reading it or being taught it." },
+  { id:"concrete", name:"Make It Concrete", kind:"reflect", tier:"moderate", timer:90, bet:"none", source:"Understanding How We Learn (one of the six) · Why Don't Students Like School · guard: use 2+, push back to the principle",
+    what:"Turn the abstract idea into your own specific, made-up example.",
+    read:t=>`Make <b>${t}</b> concrete. Invent your own example of it, something specific and real to you.`,
+    doi:"Write your example on paper. Then a second one that's different from the first.",
+    reflectq:"Does your example actually fit the rule, or just sound like it? Push it back to the principle.",
+    grad:"She makes up her own example without being asked." },
+  { id:"palace", name:"Build a Palace", kind:"reflect", tier:"moderate · narrow", timer:180, bet:"scale", source:"Learning How to Learn (Ch 8; the memory palace runs on visuospatial memory, supersized vs verbal) · Make It Stick (mnemonics)",
+    what:"Place the items along a route you know by heart. Walk it to pull them back.",
+    read:t=>`Pick a place you know cold, your room, your walk to school. Put each piece of <b>${t}</b> somewhere along it.`,
+    betq:"Can you walk the route and pull them all back?",
+    doi:"Build the route on paper or in your head. One item per spot, make each one vivid.",
+    reflectq:"Walk it back. Which spots came up empty? Those are the ones to redo.",
+    grad:"She builds a route for a list on her own." },
+  { id:"crackword", name:"Crack the Word", kind:"reflect", tier:"moderate · her bridge", timer:120, bet:"none", source:"Executive Skills in Reading Comprehension (morphology) · profile EC-001 Strategy 03: build words from roots the way Chinese characters are built",
+    what:"Break a hard word into its root and parts. The meaning is usually built right in.",
+    read:t=>`Take the hard words in <b>${t}</b>. Don't memorise them whole. Break each into root, prefix, suffix, like building a character from parts.`,
+    doi:"On paper, split each word into its pieces and write what each piece means. Build the meaning from the parts.",
+    reflectq:"Which words cracked open once you saw the parts? Which roots show up again and again?",
+    grad:"She breaks an unfamiliar word into roots on her own instead of guessing or memorising it whole." },
+];
+const moveById = id => MOVES.find(m=>m.id===id);
+
+const EXCLUDED = [
+  { name:"Rereading", instead:"Brain Dump",
+    body:"Reading your notes again. Feels like studying. Mostly isn't. In one study, people who reread were down to 40% a week later, and they thought they'd remember more than people who tested themselves. Pulling it from memory with the book closed is what sticks." },
+  { name:"Highlighting", instead:"Tell Me Without Looking",
+    body:"Colouring the page. Feels active. But the marking isn't the learning, the remembering is. A bright page can hide how little is actually in your head." },
+  { name:"Neat Recopied Notes", instead:"Map It",
+    body:"Rewriting your notes to make them look tidy. It's copying. A pretty page hides how little is actually in your head." },
+];
+
+const LIBRARY = {
+  extraMoves: [
+    { name:"Sketchnote", line:"Take notes as drawings, arrows and icons instead of sentences, so your hand keeps pace with how fast you think. Words are your slow lane; pictures aren't.", src:"profile EC-001 Strategy 04 · Dual Coding with Teachers" },
+    { name:"Chunk It", line:"Group a long list into a few labelled bundles. Working memory holds about seven things; a chunk lets one slot carry many.", src:"Learning How to Learn (Miller 1956)" },
+    { name:"Self-Explain", line:"Go step by step and say why each step is right. Naming it doesn't count. The gaps show up fast.", src:"Learn Better · Understanding How We Learn" },
+    { name:"Use an Analogy", line:"Find what the idea works like. \"This is the same as ___.\" Comparison is how you actually understand it.", src:"Why Don't Students Like School (Holyoak)" },
+    { name:"Sprint and Break", line:"Work one focused sprint of about 25 minutes, then a real break. The break is when it sinks in.", src:"Uncommon Sense Teaching (Pomodoro; brain breaks)" },
+    { name:"Walk It Off", line:"Stuck? Leave it and move. Your background brain keeps working and often hands you the answer.", src:"How We Learn (incubation; focused vs diffuse)" },
+    { name:"Get Started", line:"The hardest part is starting. Do just the first two minutes, on purpose badly. Momentum does the rest.", src:"Smart but Scattered Teens (task initiation)" },
+    { name:"Plan It", line:"Break the work into steps and put them in order before you start. A plan beats willpower.", src:"Smart but Scattered Teens (planning)" },
+    { name:"Find the Hook", line:"Before you start, find one reason this matters to you. Material you care about sticks harder.", src:"Learn Better (learn crafting)" },
+    { name:"Set a Process Goal", line:"Aim at \"do ten problems,\" not \"get an A.\" You control the effort. The grade isn't yours to control.", src:"Learn Better (process vs outcome goals)" },
+    { name:"Review As You Learn", line:"Glance back over today's material the same day, briefly. A little review now saves a lot later.", src:"Brain Train (RAYL; Ebbinghaus)" },
+    { name:"Study Somewhere New", line:"Change where you study sometimes. Different places give your memory more hooks to find it by.", src:"How We Learn (context variability)" },
+    { name:"Steady the Nerves", line:"When it tips from hard into panic, stop and breathe; hard is fine, panic isn't. And the way out of putting it off is one small first step.", src:"Neuroteach (amygdala; zone of proximal discomfort) · Ace Your Exam" },
+    { name:"Hard-Start (exams)", line:"In a test, start a hard question, then leave it and do the easy ones. Your background brain chews on the hard one while you bank marks.", src:"Uncommon Sense Teaching (hard-start)" },
+    { name:"Exam Postmortem", line:"After a test, sort your mistakes by type. The pattern tells you exactly what to fix next time.", src:"Ace Your Exam (five error types)" },
+  ],
+  why: [
+    { name:"Race-Car vs Hiker Brain", line:"Fast processors (race-cars) get there quick but skim the scenery; slower ones (hikers) catch more detail. Neither is smarter. Yours is a race-car, so slowing down on purpose is your edge.", src:"Uncommon Sense Teaching" },
+    { name:"The Two Illusions", line:"Why \"I get it\" lies: rereading feels easy (that's fluency), and feeling sure isn't being right (that's confidence). The guess catches both.", src:"Powerful Teaching" },
+    { name:"Forget a Little, Learn More", line:"Forgetting a bit between sessions isn't failing. The effort to pull it back is what makes it stick harder.", src:"How We Learn (Bjork)" },
+    { name:"Learn It, Link It", line:"Memory is connections. A new fact sticks when it hooks onto something you already know.", src:"Uncommon Sense Teaching (Hebbian learning)" },
+    { name:"Two Kinds of Learning", line:"Facts and skills travel different routes in your brain. Skills need doing, spread over time; you can't cram them in.", src:"Uncommon Sense Teaching (declarative vs procedural)" },
+    { name:"Deep vs Surface", line:"Beginners sort problems by how they look; experts sort by what's really going on underneath. Mixing problems trains that.", src:"Learn Better" },
+    { name:"Practice Rewires You", line:"Repetition physically speeds up your brain's wiring. Getting faster is real; the wiring physically changes.", src:"Neuroteach (myelination)" },
+    { name:"Why Breaks Solve It", line:"Your brain has a tight focused mode and a loose background mode. The stuck problem often cracks in the loose one, on a walk.", src:"Learning How to Learn (focused vs diffuse)" },
+    { name:"Start and End Stick Most", line:"You remember the beginning and end of a session best. Put the most important stuff there; the middle is where things get lost.", src:"Neuroteach (primacy-recency)" },
+    { name:"Why School Is Hard", line:"Your brain evolved for faces and talking; reading and algebra are recent add-ons. Those take deliberate practice; struggling with them is normal.", src:"Uncommon Sense Teaching (biologically primary vs secondary)" },
+    { name:"Wrong First, Right Later", line:"Taking a real swing and missing primes your brain for the answer. The wrong attempt is the learning.", src:"Learn Better (productive failure, Kapur)" },
+    { name:"Knowledge Before Thinking", line:"You can't think hard about something you barely know. Facts first are what make the clever stuff possible.", src:"Why Don't Students Like School" },
+    { name:"Ability Is Built", line:"Smart isn't fixed. Effort and the right practice grow it; your brain changes when you push it.", src:"Neuroteach (growth mindset)" },
+    { name:"Sleep Saves It", line:"Sleep is when the day's learning gets filed into long-term memory. A late cram you don't sleep on barely counts.", src:"Neuroteach (sleep)" },
+    { name:"The Unfinished Problem", line:"Leave a problem half-done and your mind keeps it active in the background, picking up clues. You can use that on purpose.", src:"How We Learn (Zeigarnik; percolation)" },
+  ],
+};
+
+const KEY="move.v1";
+let mem=null;
+function load(){
+  try{ const r=localStorage.getItem(KEY); if(r) return JSON.parse(r); }catch(e){}
+  if(mem) return mem;
+  return null;
+}
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(DB)); }catch(e){ mem=DB; }
+}
+function freshProfile(name){
+  const moves={}; MOVES.forEach(m=>moves[m.id]={status:"active", unprompted:0});
+  return { name, moves, cards:[], gapHistory:[], sessions:[], muddiest:[], reviewLog:[] };
+}
+let DB = load() || { active:0, profiles:[freshProfile("You")] };
+DB.profiles.forEach(p=>{
+  MOVES.forEach(m=>{ if(!p.moves[m.id]) p.moves[m.id]={status:"active",unprompted:0}; });
+  if(!p.reviewLog) p.reviewLog=[];
+  if(p.coached==null) p.coached=0;
+  if(p.soloRuns==null) p.soloRuns=0;
+});
+if(DB.coachIdx===undefined) DB.coachIdx=null;
+
+/* ------------------------- SHAPE DETECTION -------------------------
+   Runs once on the raw pasted text, at capture time, before
+   generateItems(), never inside the local fallback generator (that
+   path is skipped whenever the API call succeeds, which would make
+   detection silently vanish on the happy path). Never surfaced to
+   the student as a question, a label, or a theory name. Two
+   distinctive signals only; anything short of threshold falls
+   through to "default" and the existing blind rotation is untouched. */
+function detectShape(text){
+  const lines = text.split(/\n+/).map(l=>l.trim()).filter(Boolean);
+  if(lines.length < 4) return "default";
+  const seqLine = /^(\d+[\.\)]|[-*•])\s+/;
+  const seqWord = /\b(first|then|next|step|after that|finally)\b/i;
+  let seqHits=0;
+  lines.forEach(l=>{ if(seqLine.test(l) || seqWord.test(l)) seqHits++; });
+  if(seqHits>=3 && (seqHits/lines.length)>=0.30) return "sequence";
+
+  const relWord=/\b(because|causes|leads to|results in|versus|compared to|depends on|due to)\b/i;
+  let relHits=0;
+  lines.forEach(l=>{ if(relWord.test(l)) relHits++; });
+  if(relHits>=3) return "relational";
+
+  return "default";
+}
+/* shape -> preferred move ids, priority order. Only used if the move
+   is currently active; falls through silently otherwise. Routing
+   only ever fills the SECOND slot of a session, see buildSession().
+   The opening retrieval-move invariant is never displaced. */
+const SHAPE_ROUTE = {
+  sequence: ["tryfirst","palace"],
+  relational: ["mapit","elaborate"],
+  default: []
+};
+function P(){ return DB.profiles[DB.active]; }
+function today(){ return Math.floor(Date.now()/86400000); }
+
+function addCards(items, topic, shape){
+  const p=P(); const t=today();
+  items.forEach(it=>{
+    p.cards.push({ id:"c"+Math.random().toString(36).slice(2,9), q:it.q, a:it.a, topic:topic||"",
+      shape: shape||"default", ef:2.5, interval:0, reps:0, due:t, born:t });
+  });
+}
+function sm2(card, quality){
+  if(quality<3){ card.reps=0; card.interval=1; }
+  else{
+    card.reps+=1;
+    card.interval = card.reps===1?1 : card.reps===2?6 : Math.round(card.interval*card.ef);
+  }
+  card.ef = Math.max(1.3, card.ef + (0.1 - (5-quality)*(0.08+(5-quality)*0.02)));
+  card.interval = Math.min(card.interval, 30);
+  card.due = today()+card.interval;
+}
+function dueCards(n){
+  const t=today();
+  return P().cards.filter(c=>c.due<=t && c.born<t).sort((a,b)=>a.due-b.due).slice(0,n);
+}
+
+/* Returns { items, source } where source is "ai" | "local", or throws an
+   Error with a .code the caller can turn into a clear message. No silent
+   degrade: if the Worker is configured and fails, the caller decides what to
+   show, and only falls back to on-device questions when the user opts in. */
+async function generateItems(topic, text){
+  const clean=(text||"").trim();
+  if(!apiConfigured()){
+    const items=localItems(clean, topic);
+    return { items, source:"local", reason:"not_configured" };
+  }
+  let r;
+  try{
+    const ctrl=new AbortController();
+    const to=setTimeout(()=>ctrl.abort(), 28000);
+    r = await fetch(GENERATE_URL,{
+      method:"POST", headers:{"Content-Type":"application/json"},
+      signal:ctrl.signal,
+      body:JSON.stringify({ topic:(topic||"").slice(0,200), material:clean.slice(0,8000) })
+    });
+    clearTimeout(to);
+  }catch(e){
+    const err=new Error("network"); err.code=(e&&e.name==="AbortError")?"timeout":"network"; throw err;
+  }
+  if(r.status===429){ const e=new Error("rate"); e.code="rate_limited"; throw e; }
+  if(r.status===422){ const e=new Error("noitems"); e.code="no_items"; throw e; }
+  if(!r.ok){ const e=new Error("server"); e.code="server"; e.status=r.status; throw e; }
+  let data;
+  try{ data=await r.json(); }catch(e){ const er=new Error("parse"); er.code="parse"; throw er; }
+  const items=Array.isArray(data.items)?data.items.filter(o=>o&&o.q&&o.a).map(o=>({q:String(o.q),a:String(o.a)})):[];
+  if(!items.length){ const e=new Error("empty"); e.code="no_items"; throw e; }
+  return { items, source:"ai" };
+}
+function genErrorLine(code){
+  switch(code){
+    case "timeout": return "That took too long. Check your connection and try again.";
+    case "network": return "Couldn't reach the question service. Try again in a moment.";
+    case "rate_limited": return "A lot of requests just now. Wait a few seconds and try again.";
+    case "no_items": return "Couldn't pull clear questions from that. Try fuller sentences, or use simple questions.";
+    case "server": return "The question service hit an error. Try again, or use simple questions.";
+    default: return "Something went wrong generating questions. Try again, or use simple questions.";
+  }
+}
+/* Capture gate: the length check alone let emoji, digit strings, and
+   one-word pastes through, which then generate hollow questions. Require
+   enough distinct word-like tokens that a retrieval item could plausibly
+   come from the text. Not a grammar check, just a floor on real material. */
+function hasRealContent(txt){
+  if(!txt || txt.length<25) return false;
+  const words = txt.match(/[A-Za-z\u00C0-\u024F]{3,}/g) || [];
+  const distinct = new Set(words.map(w=>w.toLowerCase()));
+  if(words.length < 8) return false;      // needs a few real words
+  if(distinct.size < 6) return false;     // not the same word repeated
+  const letters = (txt.match(/[A-Za-z]/g)||[]).length;
+  if(letters / txt.length < 0.5) return false; // mostly symbols/digits
+  return true;
+}
+function localItems(text, topic){
+  if(!text) return [];
+  let parts = text.split(/\n+/).flatMap(line=>{
+    line=line.replace(/^[\s•\-\*\d\.\)]+/,"").trim();
+    return line.split(/(?<=[.;!?])\s+(?=[A-Z(])/);
+  }).map(s=>s.trim()).filter(s=>s.length>22 && /[a-z]/.test(s));
+  const items=[]; const seen=new Set();
+  const stop=new Set("the a an of to in on and or is are was were be been being that this these those with for from as by it its their his her our your they we you i".split(" "));
+  for(const s of parts){
+    if(items.length>=12) break;
+    let q=null,a=null;
+    let m = s.match(/^(.{3,60}?)\s+(?:is|are|was|were|means|refers to|is called|is defined as)\s+(.{3,})$/i);
+    if(m){ q=`What is ${m[1].trim().replace(/[.,;:]$/,"")}?`; a=m[2].replace(/[.;]$/,"").trim(); }
+    if(!q){ m=s.match(/^([^:]{3,50}):\s+(.{4,})$/); if(m){ q=m[1].trim()+"?"; a=m[2].replace(/[.;]$/,"").trim(); } }
+    if(!q){ const num=s.match(/\b(\d[\d,\.]*%?)\b/); if(num){ a=num[1]; q=s.replace(num[0],"_____").replace(/[.;]$/,"").trim()+ (/[?.]$/.test(s)?"":""); } }
+    if(!q){
+      const words=s.split(/\s+/);
+      let best="",bi=-1;
+      for(let i=0;i<words.length;i++){ const w=words[i].replace(/[^\w]/g,""); if(w.length>best.length && !stop.has(w.toLowerCase()) && /[A-Za-z]/.test(w)){ best=w; bi=i; } }
+      if(best && bi>=0){ a=best; const copy=words.slice(); copy[bi]=copy[bi].replace(best,"_____"); q=copy.join(" ").replace(/[.;]$/,"").trim(); }
+    }
+    if(q&&a){ const key=q.toLowerCase().slice(0,40); if(!seen.has(key) && a.length<90){ seen.add(key); items.push({q,a}); } }
+  }
+  return items;
+}
+
+let S = { screen:"home", pendingMove:null, coach:false };
+
+const app=document.getElementById("app");
+function go(screen){
+  if(S.screen===screen){ render(); return; }
+  S.nav = S.nav || [];
+  S.nav.push(S.screen);
+  S.screen=screen;
+  try{ history.pushState({screen}, ""); }catch(e){}
+  render(); window.scrollTo(0,0);
+}
+window.addEventListener("popstate", function(){
+  const prev = (S.nav && S.nav.length) ? S.nav.pop() : "home";
+  // If a session is mid-flight, back should exit to home once, not unwind beats.
+  if(S.sess && (S.screen==="session")){
+    S.sess=null; S.coach=false;
+    S.screen="home";
+  } else {
+    S.screen = prev || "home";
+  }
+  render(); window.scrollTo(0,0);
+});
+/* Seed one history entry so the first Back has somewhere to land. */
+try{ history.replaceState({screen:"home"}, ""); }catch(e){}
+let activeCube=null;
+function clearApp(){ if(activeCube){ activeCube.unmount(); activeCube=null; } app.innerHTML=""; }
+function render(){
+  clearApp();
+  const fn = ({home:Home, capture:Capture, session:Session, summary:Summary, library:Library, material:Material, coach:CoachStart, report:Report, how:HowItWorks})[S.screen] || Home;
+  app.appendChild(fn());
+}
+function div(cls,html){ const d=document.createElement("div"); if(cls)d.className=cls; if(html!=null)d.innerHTML=html; return d; }
+function btn(cls,label){ const b=document.createElement("button"); b.type="button"; if(cls)b.className=cls; if(label!=null)b.textContent=label; return b; }
+function esc(v){ return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function topbar(showProfile=true){
+  const t=div("top");
+  t.innerHTML=`<span class="brand">MOVE<span class="dot">.</span></span>`;
+  if(!showProfile){
+    const c=btn("chip","Back"); c.onclick=()=>go("home"); t.appendChild(c);
+  }
+  return t;
+}
+function toast(msg){ const el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show"); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("show"),2200); }
+
+
+/* ------------------------- COACH LAYER -------------------------
+   The parent shell. The screen tells you whose turn it is:
+   inverted card = coach holds the phone, white screen = kid does.
+   Scripts give the parent the exact words. The rule under all of
+   them: ask, don't correct. The retrieval attempt is the learning
+   event; fixing it mid-attempt takes the event away. */
+const COACH = {
+  braindump:{ say:"Close the book. Write down everything you remember about this. Don't stop to fix anything, don't peek.",
+    why:"Free recall beats concept-mapping the same material, 67% vs 45% on a later test. The mess is fine. The pulling-out is the point." },
+  tellme:{ say:"Books stay closed. I'll pass you the phone, it asks, you answer out loud or type it.",
+    why:"One round of self-testing roughly 1.5x's what sticks a week later versus rereading. Wrong answers here are the work." },
+  space:{ say:"This is older material coming back on purpose. Quick gut check, how much of it is still in there?",
+    why:"Bringing something back after a bit of forgetting is what locks it in. Feeling rusty is the treatment working." },
+  drawit:{ say:"No words this round. Draw the idea on paper, boxes, arrows, whatever shows it.",
+    why:"A second handle on the memory. If they groan, that effort is the sign it's doing something." },
+  teach:{ say:"Teach it to me like I'm five. Simplest words you can find. No notes.",
+    why:"Explaining out loud exposes exactly where it gets vague. Play dumb, ask them to go slower at the vague part." },
+  elaborate:{ say:"Finish this sentence: this is like ___ because ___. Hook it to something you already know.",
+    why:"Every real connection is another route back to the memory. A forced link is fine, a lazy word-match isn't." },
+  mapit:{ say:"Spread it out on paper. Each piece where it belongs, lines between what connects.",
+    why:"Whatever they can't place is the part they don't have yet. That's the find." },
+  mixit:{ say:"These come mixed up. Before you solve each one, say which kind it is.",
+    why:"Sorting the type is the exam skill. Mixed practice ran 77% vs 38% against one-type-at-a-time a day later." },
+  tryfirst:{ say:"You haven't studied this yet. Take a swing anyway; wrong is fine.",
+    why:"A wrong guess first primes the brain for the real answer. Do not rescue them mid-swing." },
+  concrete:{ say:"Give me a real example of this. Something you could point at.",
+    why:"Abstract ideas stick when they're tied to at least two concrete cases. Push back to the principle after." },
+  palace:{ say:"Put each item somewhere along a route you know cold, front door, hallway, kitchen. Make each one vivid.",
+    why:"Spatial memory is the strongest system they have. Silly images work better than sensible ones." },
+  crackword:{ say:"Break the word open. What are its parts, what do they each mean?",
+    why:"A cracked word sticks as meaning instead of noise. It also unlocks its cousins for free." }
+};
+function coachFor(m){
+  const c = COACH[m.id];
+  if(c) return c;
+  return { say: m.what || "Run this one as the card says.", why: "" };
+}
+const GAPTALK = {
+  cued:"Ask: \u201cWhat did you guess, what did you get?\u201d Then: \u201cWhich one surprised you?\u201d Stop there. Don't re-teach the misses, they come back on their own schedule.",
+  free:"Look at what got ticked together. Ask: \u201cWhich missing one surprises you most?\u201d Resist filling the blanks in for them.",
+  reflect:"Ask them to read you the sticky part out loud. Then ask: \u201cWhat would you try on it next time?\u201d The answer has to be theirs."
+};
+function kidP(){ return DB.coachIdx!=null ? DB.profiles[DB.coachIdx] : null; }
+function kidName(){ const k=kidP(); return k? k.name : "your kid"; }
+function useKid(){ if(DB.coachIdx!=null) DB.active=DB.coachIdx; }
+function useSolo(){ DB.active=0; }
+function phaseOf(p){
+  const gradN = MOVES.filter(m=>p.moves[m.id] && p.moves[m.id].status==="graduated").length;
+  if(gradN>=5) return 3;
+  if((p.coached||0)>=4) return 2;
+  return 1;
+}
+const PHASES=[
+  {n:1, t:"You run it", d:"Ten minutes. You hold the script, they do the work."},
+  {n:2, t:"They run it", d:"Hand the app over. You read the gap report after."},
+  {n:3, t:"It's theirs", d:"Moves retire as they run them unprompted. The app's job ends."}
+];
+function phaser(cur){
+  const w=div("phaser");
+  PHASES.forEach(ph=>{
+    const c=div("ph"+(ph.n===cur?" on":""));
+    c.innerHTML=`<div class="n">${ph.n}</div><div class="t">${ph.t}</div>`;
+    w.appendChild(c);
+  });
+  return w;
+}
+function daysSince(t){ return Math.floor((Date.now()-t)/86400000); }
+
+function Home(){
+  const s=div("scr"); s.appendChild(topbar());
+  const kid = kidP();
+  if(!kid){
+    /* Cold open: the parent is the front door. */
+    s.appendChild(div(null,`<h1 class="display" style="font-size:42px;margin-top:22px;line-height:1.08">Coach your kid\u2019s studying.<br>Ten minutes.</h1>`));
+    s.appendChild(div("lede mt","No subject expertise needed. MOVE gives you the words to say and the science behind them. Your kid does the work. You see the gaps."));
+    const cta=div(); cta.style.marginTop="24px";
+    const b1=btn("btn btn-primary mb","Run your first session together"); b1.onclick=()=>go("coach");
+    cta.appendChild(b1); s.appendChild(cta);
+    s.appendChild(phaser(1));
+    const dl=div("doorline");
+    const b2=btn("tlink","I\u2019m studying on my own \u2192"); b2.onclick=()=>{ useSolo(); S.coach=false; startFlow("full"); };
+    dl.appendChild(b2); s.appendChild(dl);
+    const ll=div("linklist"); ll.style.marginTop="14px";
+    const a1=btn("tlink","How this works, and the research behind it"); a1.onclick=()=>go("how"); ll.appendChild(a1);
+    const a2=btn("tlink",`The move library \u00b7 all ${window.MoveCube.count}`); a2.onclick=()=>{ useSolo(); go("library"); }; ll.appendChild(a2);
+    s.appendChild(ll);
+    s.appendChild(div("kicker","MOVE \u00b7 a 100% Human build \u00b7 posted for feedback, tell me what breaks. Everything you enter stays on this device; nothing is uploaded except the notes you choose to turn into questions."));
+    s.appendChild(div("spacer"));
+    return s;
+  }
+  /* Returning coach */
+  useKid();
+  const ph = phaseOf(kid);
+  const due = dueCards(99).length;
+  const gradN = MOVES.filter(m=>kid.moves[m.id].status==="graduated").length;
+  const last = kid.sessions.length ? kid.sessions[kid.sessions.length-1].t : null;
+  const head = ph===1 ? `Session ${kid.coached+1} with ${esc(kid.name)}.`
+             : ph===2 ? `${esc(kid.name)} runs it now.`
+             : `It\u2019s ${esc(kid.name)}\u2019s.`;
+  s.appendChild(div(null,`<h1 class="display" style="font-size:40px;margin-top:22px;line-height:1.1">${head}</h1>`));
+  const sub = ph===1
+    ? (due? `${due} item${due!==1?"s":""} due. You hold the script, ${esc(kid.name)} does the work.` : `You hold the script, ${esc(kid.name)} does the work.`)
+    : ph===2
+    ? `Hand ${esc(kid.name)} the phone to run a session. Your job is the report after.`
+    : `${gradN} moves retired and running unprompted. Check the report, stay out of the way.`;
+  s.appendChild(div("lede mt",sub));
+  const cta=div(); cta.style.marginTop="22px";
+  if(ph===1){
+    const b1=btn("btn btn-primary mb","Start a coached session"); b1.onclick=()=>{ useKid(); S.coach=true; startFlow("full"); };
+    const b2=btn("btn btn-ghost",`Short one \u00b7 two moves`); b2.onclick=()=>{ useKid(); S.coach=true; startFlow("two"); };
+    cta.appendChild(b1); cta.appendChild(b2);
+  } else {
+    const b1=btn("btn btn-primary mb",`Hand it to ${esc(kid.name)}`); b1.onclick=()=>{ useKid(); S.coach=false; startFlow("full"); };
+    const b2=btn("btn btn-ghost","Run one together instead"); b2.onclick=()=>{ useKid(); S.coach=true; startFlow("full"); };
+    cta.appendChild(b1); cta.appendChild(b2);
+  }
+  s.appendChild(cta);
+  s.appendChild(phaser(ph));
+  if(last!=null){
+    const d=daysSince(last);
+    const backline = d<=4 ? `Last session ${d===0?"today":d===1?"yesterday":d+" days ago"}. Inside the four-day window, that\u2019s the habit forming.`
+                          : `Last session ${d} days ago. The four-day window matters more than the length of any one session.`;
+    s.appendChild(div("faint",`<div style="margin-top:14px;font-size:13px">${backline}</div>`));
+  }
+  const ll=div("linklist"); ll.style.marginTop="28px";
+  const r1=btn("tlink",`${esc(kid.name)}\u2019s gap report`); r1.onclick=()=>go("report"); ll.appendChild(r1);
+  const a2=btn("tlink","What they\u2019ve studied"); a2.onclick=()=>{ useKid(); go("material"); }; ll.appendChild(a2);
+  const a3=btn("tlink",`The move library \u00b7 all ${window.MoveCube.count}`); a3.onclick=()=>go("library"); ll.appendChild(a3);
+  const a4=btn("tlink","How this works"); a4.onclick=()=>go("how"); ll.appendChild(a4);
+  const a5=btn("tlink","I\u2019m studying on my own"); a5.onclick=()=>{ useSolo(); S.coach=false; startFlow("full"); }; ll.appendChild(a5);
+  s.appendChild(ll);
+  s.appendChild(div("kicker","MOVE \u00b7 a 100% Human build \u00b7 posted for feedback, tell me what breaks. Everything you enter stays on this device; nothing is uploaded except the notes you choose to turn into questions."));
+  s.appendChild(div("spacer"));
+  return s;
+}
+
+/* ---------- Coach onboarding ---------- */
+function CoachStart(){
+  const s=div("scr"); s.appendChild(topbar(false));
+  s.appendChild(div(null,`<div style="margin-top:26px"><div class="eyebrow mb-s">Before the first session</div>
+    <div class="prompt">Three things, thirty seconds.</div></div>`));
+  const list=div(); list.style.marginTop="20px";
+  [["You never explain the content.","You don\u2019t need to know the material. The app asks, they answer, you read the script between rounds."],
+   ["Wrong answers are the work.","Every miss they pull up themselves sticks better than anything you could tell them. Don\u2019t rescue mid-attempt."],
+   ["The bet is the skill.","Before each round they guess how much they\u2019ll get. Seeing guess against reality is what builds it."]
+  ].forEach((r,idx)=>{
+    const row=div("citerow");
+    row.innerHTML=`<div class="c-claim"><b>${r[0]}</b> ${r[1]}</div>`;
+    list.appendChild(row);
+  });
+  s.appendChild(list);
+  const lab=div("field-lab"); lab.style.marginTop="24px"; lab.textContent="Who are you coaching? First name is plenty.";
+  s.appendChild(lab);
+  const nameIn=document.createElement("input"); nameIn.type="text"; nameIn.placeholder="e.g. Maya";
+  s.appendChild(nameIn);
+  s.appendChild(div("note mt","Grab whatever they\u2019re actually studying this week. Real homework beats a demo topic."));
+  s.appendChild(div("spacer"));
+  const b=btn("btn btn-primary","Set up and start");
+  b.onclick=()=>{
+    const nm=nameIn.value.trim();
+    if(!nm){ toast("A name to coach by, even a nickname."); return; }
+    if(DB.coachIdx==null){
+      DB.profiles.push(freshProfile(nm)); DB.coachIdx=DB.profiles.length-1;
+    } else { DB.profiles[DB.coachIdx].name=nm; }
+    DB.active=DB.coachIdx; save();
+    S.coach=true; startFlow("full");
+  };
+  s.appendChild(b);
+  return s;
+}
+
+/* ---------- Gap report, written for the coach ---------- */
+function Report(){
+  const s=div("scr"); s.appendChild(topbar(false));
+  const kid=kidP(); if(!kid){ go("home"); return s; }
+  useKid();
+  s.appendChild(div("boardhead",`<div class="eyebrow mb-s">For the coach</div>
+    <h1 class="display">${esc(kid.name)}\u2019s gap report.</h1>`));
+  const hist=kid.gapHistory.slice(-14);
+  if(!kid.sessions.length){
+    s.appendChild(div("lede mt","Nothing here yet. Run one session together and this page fills in."));
+    s.appendChild(div("spacer"));
+    const b=btn("btn btn-primary","Start the first session"); b.onclick=()=>{ S.coach=true; startFlow("full"); }; s.appendChild(b);
+    return s;
+  }
+  /* Dominant element: calibration */
+  s.appendChild(div("mt",`<div class="field-lab">The skill being built: reading their own knowledge</div>`));
+  if(hist.length>=2){
+    const sp=div("spark");
+    hist.forEach((h,i)=>{ const b=div("bar"+(i===hist.length-1?" last":"")); b.style.height=(Math.max(.08,1-h.gap)*100)+"%"; sp.appendChild(b); });
+    s.appendChild(sp);
+    const latest=hist[hist.length-1].gap;
+    const readout = latest<=0.15 ? `Their guesses are landing close to reality. That\u2019s calibration, the thing tests punish kids for not having.`
+                                  : `Guesses and reality still disagree. Normal early. The point is that ${esc(kid.name)} now sees the gap before an exam does.`;
+    s.appendChild(div("sub",readout));
+  } else {
+    s.appendChild(div("note","One data point so far. The trend appears after a few sessions."));
+  }
+  /* Rhythm */
+  const last=kid.sessions[kid.sessions.length-1].t; const d=daysSince(last);
+  const wk=kid.sessions.filter(x=>Date.now()-x.t<7*86400000).length;
+  s.appendChild(div("mt",`<div class="field-lab">Rhythm</div>`));
+  const r=div("rowcard");
+  r.innerHTML=`<div style="display:flex;gap:26px;align-items:baseline"><div><span class="repnum">${kid.sessions.length}</span><div class="rd" style="margin:2px 0 0">sessions total</div></div>
+    <div><span class="repnum">${wk}</span><div class="rd" style="margin:2px 0 0">this week</div></div></div>
+    <div class="rd" style="margin-top:10px">${d<=4?`Back inside four days. Spacing is doing its job.`:`${d} days since the last one. A short session inside four days beats a long one later.`}</div>`;
+  s.appendChild(r);
+  /* Fuzzy list = dinner questions */
+  if(kid.muddiest.length){
+    s.appendChild(div("mt",`<div class="field-lab">What ${esc(kid.name)} flagged as fuzzy</div>`));
+    kid.muddiest.slice(0,3).forEach(m=>{
+      const row=div("rowcard");
+      const ds=new Date(m.t).toLocaleDateString(undefined,{month:"short",day:"numeric"});
+      row.innerHTML=`<div class="rd" style="margin:0"><span class="faint" style="font-size:12px">${ds}${m.topic?` \u00b7 ${esc(m.topic)}`:""}</span><br>${esc(m.text)}</div>`;
+      s.appendChild(row);
+    });
+    s.appendChild(div("sub","Ask about one of these at dinner. Ask, don\u2019t quiz. \u201cYou flagged X, what made it fuzzy?\u201d is the whole move."));
+  }
+  /* Ownership */
+  const gradList=MOVES.filter(m=>kid.moves[m.id].status==="graduated");
+  s.appendChild(div("mt",`<div class="field-lab">Ownership transferred</div>`));
+  const oc=div("rowcard");
+  oc.innerHTML = gradList.length
+    ? `<div class="rd" style="margin:0"><b style="color:var(--ink)">${gradList.length} move${gradList.length!==1?"s":""} retired:</b> ${gradList.map(m=>esc(m.name)).join(", ")}. ${esc(kid.name)} runs these unprompted now. They\u2019re not the app\u2019s anymore.</div>`
+    : `<div class="rd" style="margin:0">None retired yet. A move retires when ${esc(kid.name)} runs it twice without being asked. That\u2019s the finish line for every one of them.</div>`;
+  s.appendChild(oc);
+  s.appendChild(div("mt",""));
+  s.appendChild(phaser(phaseOf(kid)));
+  s.appendChild(div("spacer"));
+  const b=btn("btn btn-ghost mt","Back"); b.style.maxWidth="320px"; b.onclick=()=>go("home"); s.appendChild(b);
+  return s;
+}
+
+/* ---------- How it works ---------- */
+function HowItWorks(){
+  const s=div("scr"); s.appendChild(topbar(false));
+  s.appendChild(div("boardhead",`<div class="eyebrow mb-s">How this works</div>
+    <h1 class="display">The job is to make the app unnecessary.</h1>
+    <div class="note mt">MOVE is a coaching protocol. It never explains content and never does the work. It hands the parent a script, hands the kid a retrieval attempt, and shows both of them the gap between what was guessed and what was got.</div>`));
+  s.appendChild(div("section-lab","The arc"));
+  s.appendChild(phaser(0));
+  s.appendChild(div("note mt","Every move has the same finish line: it retires when the kid runs it twice unprompted. Graduation is the product working."));
+  s.appendChild(div("section-lab","Why retrieval, why the bet"));
+  const cites=[
+    ["Practicing retrieval roughly 1.5x\u2019s what sticks a week later, versus rereading the same material.","Roediger & Karpicke 2006 \u00b7 confirmed at scale, Karpicke & Roediger, Science, 2008"],
+    ["Rereading and highlighting feel like learning and mostly aren\u2019t. Reviews rank them among the lowest-utility techniques students use.","Dunlosky et al. 2013"],
+    ["Students\u2019 loudest complaint is misreading their own knowledge: \u201cI felt ready and still failed.\u201d The fix is calibration, guessing your score before seeing it. That\u2019s the bet, and it opens every session.","Koriat & Bjork 2005 on the illusion of competence"]
+  ];
+  cites.forEach(c=>{
+    const row=div("citerow");
+    row.innerHTML=`<div class="c-claim">${c[0]}</div><div class="c-src">${c[1]}</div>`;
+    s.appendChild(row);
+  });
+  s.appendChild(div("section-lab","What this is not"));
+  s.appendChild(div("note","Not a tutor. Not an answer machine. Nothing here explains the material, on purpose: an app that does the studying leaves the skill in the app. If a kid still needs MOVE in a year, MOVE failed."));
+  s.appendChild(div("spacer"));
+  const b=btn("btn btn-primary","Run a session"); b.onclick=()=>go(kidP()?"home":"coach"); s.appendChild(b);
+  const b2=btn("tlink center mt","Browse all the moves and their sources"); b2.onclick=()=>go("library"); s.appendChild(b2);
+  return s;
+}
+
+function startFlow(mode){ S.pendingMode=mode; go("capture"); }
+
+function Capture(){
+  const s=div("scr"); s.appendChild(topbar(false));
+  const pendMove = S.pendingMove ? moveById(S.pendingMove) : null;
+  s.appendChild(div(null,`<div style="margin-top:24px"><div class="eyebrow mb-s">Step one</div>
+    <div class="prompt">What are you working on?</div></div>`));
+  if(pendMove){
+    s.appendChild(div("note mt",`This session opens with <b>${pendMove.name}</b>, from the move you picked.`));
+  }
+  const wrap=div(); wrap.style.marginTop="22px";
+  wrap.innerHTML=`<div class="field-lab">Topic</div>`;
+  const topic=document.createElement("input"); topic.type="text"; topic.placeholder="e.g. Photosynthesis, Chapter 4";
+  wrap.appendChild(topic);
+  const lab2=div("field-lab"); lab2.style.marginTop="16px"; lab2.textContent="Paste your notes, or type the key bits";
+  wrap.appendChild(lab2);
+  const ta=document.createElement("textarea"); ta.placeholder="Paste your notes here. The more you give it, the better the questions."; ta.style.minHeight="160px";
+  wrap.appendChild(ta);
+  const micRow=div(); micRow.style.marginTop="10px";
+  micRow.appendChild(voiceButton(ta,"Dictate instead"));
+  wrap.appendChild(micRow);
+  const phNote=div("note"); phNote.style.marginTop="16px";
+  phNote.innerHTML="Paste your notes, type the key bits, or dictate. Ten seconds is enough.";
+  wrap.appendChild(phNote);
+  s.appendChild(wrap);
+  s.appendChild(div("spacer"));
+  const errBox=div(); errBox.style.marginTop="14px"; errBox.style.display="none"; s.appendChild(errBox);
+  const go1=btn("btn btn-primary","Build my session");
+
+  function commit(items, shape){
+    addCards(items, topic.value.trim(), shape); save();
+    buildSession(S.pendingMode, topic.value.trim()||"your work", items, shape);
+  }
+  function showError(code, txt, shape){
+    errBox.style.display="";
+    errBox.innerHTML="";
+    const msg=div("note"); msg.style.borderColor="var(--line-2)";
+    msg.innerHTML=`<b>${genErrorLine(code)}</b>`;
+    errBox.appendChild(msg);
+    const row=div(); row.style.cssText="display:flex; gap:10px; margin-top:12px";
+    const retry=btn("btn btn-ghost","Try again"); retry.style.margin="0";
+    retry.onclick=()=>{ errBox.style.display="none"; run(); };
+    row.appendChild(retry);
+    const simple=btn("btn btn-ghost","Use simple questions"); simple.style.margin="0";
+    simple.onclick=()=>{
+      const items=localItems(txt, topic.value.trim());
+      if(!items.length){ toast("Even simple questions need fuller sentences."); return; }
+      commit(items, shape);
+    };
+    row.appendChild(simple);
+    errBox.appendChild(row);
+    go1.textContent="Build my session"; go1.disabled=false;
+  }
+
+  async function run(){
+    const txt=ta.value.trim();
+    if(!hasRealContent(txt)){ toast("Give it a few real sentences to work with."); return; }
+    errBox.style.display="none";
+    go1.textContent = apiConfigured() ? "Writing your questions…" : "Reading it…";
+    go1.disabled=true;
+    const shape = detectShape(txt);
+    try{
+      const res = await generateItems(topic.value.trim(), txt);
+      if(!res.items.length){ showError("no_items", txt, shape); return; }
+      commit(res.items, shape);
+    }catch(e){
+      showError((e&&e.code)||"server", txt, shape);
+    }
+  }
+  go1.onclick=run;
+  s.appendChild(go1);
+  return s;
+}
+
+/* pendingMove (set by a cube card's "Try it on your material" button)
+   always wins the opening slot: unshifted, flag cleared, overrides
+   graduated status, deduped against the rest of the fill. Otherwise
+   the invariant holds: a retrieval move opens every session. Shape
+   routing only ever fills the SECOND slot in "full" mode, and only
+   the fallback slot in "two" mode; it never displaces the opener. */
+function buildSession(mode, topic, freshItems, shape){
+  const p=P();
+  const act = id => p.moves[id] && p.moves[id].status==="active";
+  const activeRetrieval = ["braindump","tellme"].filter(act);
+  const queue=[];
+  const pushIf = id => { if(id && !queue.includes(id)) queue.push(id); };
+
+  if(S.pendingMove){
+    queue.push(S.pendingMove);
+    S.pendingMove=null;
+  } else if(activeRetrieval.length){
+    queue.push(activeRetrieval[0]);
+  }
+
+  const shapePick = (SHAPE_ROUTE[shape]||[]).find(id=>act(id) && !queue.includes(id));
+
+  if(mode==="full"){
+    if(act("space") && dueCards(1).length) pushIf("space");
+    if(shapePick) pushIf(shapePick);
+    else pushIf("drawit");
+    const extra=["tryfirst","tellme","teach","concrete","elaborate","mapit","palace","crackword","mixit"].find(id=>act(id) && !queue.includes(id));
+    if(extra) queue.push(extra);
+  } else {
+    if(act("space") && dueCards(1).length) pushIf("space");
+    else if(shapePick) pushIf(shapePick);
+    else if(act("drawit")) pushIf("drawit");
+    else { const e=["tellme","teach"].find(id=>act(id) && !queue.includes(id)); if(e) queue.push(e); }
+  }
+  if(!queue.length) queue.push("braindump");
+  S.sess={ mode, topic, items:freshItems.slice(), queue, idx:0, beat:(S.coach?"coachpre":"read"), results:[],
+           guess:null, cover:new Set(), qIdx:0, qMarks:[], reflectText:"", showAnswer:false, shape: shape||"default" };
+  go("session");
+}
+
+function Session(){
+  const ss=S.sess; const m=moveById(ss.queue[ss.idx]);
+  const s=div("scr");
+  const dots=div(); dots.style.cssText="display:flex;gap:6px;padding-top:20px";
+  ss.queue.forEach((q,i)=>{ const d=div(); d.style.cssText=`height:3px;flex:1;border-radius:3px;background:${i<ss.idx?'var(--now)':i===ss.idx?'var(--ink-dim)':'var(--line)'}`; dots.appendChild(d); });
+  s.appendChild(dots);
+  if(ss.beat==="coachpre") return coachPreBeat(s,m,ss);
+  if(ss.beat==="read") return readBeat(s,m,ss);
+  if(ss.beat==="do") return doBeat(s,m,ss);
+  if(ss.beat==="reveal") return revealBeat(s,m,ss);
+  if(ss.beat==="muddiest") return muddiestBeat(s);
+  return s;
+}
+
+function coachPreBeat(s,m,ss){
+  const c=coachFor(m);
+  const card=div("coachcard");
+  card.innerHTML=`<div class="holder">Your turn \u00b7 you hold the phone</div>
+    <div class="eyebrow" style="margin-top:16px">${m.name}</div>
+    <div class="say">\u201c${c.say}\u201d</div>
+    ${c.why?`<div class="why"><b>Why this one:</b> ${c.why}</div>`:""}
+    <div class="why" style="margin-top:10px">Read it in your own words. Then hand the phone over and let the screen do the asking.</div>`;
+  const b=btn("btn-onink",`Hand ${esc(kidName())} the phone \u2192`);
+  b.onclick=()=>{ ss.beat="read"; render(); };
+  card.appendChild(b);
+  s.appendChild(card);
+  return s;
+}
+function coachGapCard(m){
+  const card=div("coachcard thin");
+  card.innerHTML=`<div class="holder">Take the phone back</div>
+    <div class="say">${GAPTALK[m.kind]||GAPTALK.reflect}</div>`;
+  return card;
+}
+function readBeat(s,m,ss){
+  s.appendChild(div(null,`<div style="margin-top:30px"><div class="eyebrow mb-s">${m.name}</div>
+    <div class="prompt">${m.read(esc(ss.topic))}</div></div>`));
+  if(m.bet!=="none"){
+    const bb=div("betbox"); bb.style.marginTop="32px";
+    bb.appendChild(div("field-lab center", m.betq||"How confident are you?"));
+    if(m.bet==="count" || m.bet==="countN"){
+      const max = m.bet==="countN" ? Math.max(1,ss.items.length) : 12;
+      ss.guess = ss.guess==null ? Math.min(3,max) : ss.guess;
+      const st=div("stepper");
+      const minus=document.createElement("button"); minus.textContent="−";
+      const val=div("val"); val.textContent=ss.guess;
+      const plus=document.createElement("button"); plus.textContent="+";
+      minus.onclick=()=>{ ss.guess=Math.max(0,ss.guess-1); val.textContent=ss.guess; };
+      plus.onclick=()=>{ ss.guess=Math.min(max,ss.guess+1); val.textContent=ss.guess; };
+      st.appendChild(minus); st.appendChild(val); st.appendChild(plus); bb.appendChild(st);
+      if(m.bet==="countN") bb.appendChild(div("faint center",`out of ${max}`));
+    } else {
+      ss.guess = ss.guess==null ? 3 : ss.guess;
+      const sc=div("scale");
+      for(let i=1;i<=5;i++){ const b=document.createElement("button"); b.textContent=i; b.setAttribute("aria-pressed", i===ss.guess);
+        b.onclick=()=>{ ss.guess=i; [...sc.children].forEach((c,j)=>c.setAttribute("aria-pressed", j+1===i)); }; sc.appendChild(b); }
+      bb.appendChild(sc);
+      const ends=div("scale-ends"); ends.style.width="290px"; ends.innerHTML=`<span>no clue</span><span>easy</span>`; bb.appendChild(ends);
+    }
+    s.appendChild(bb);
+  } else { ss.guess=null; }
+  s.appendChild(div("spacer"));
+  const b=btn("btn btn-primary","Start"); b.onclick=()=>{ ss.beat="do"; render(); };
+  s.appendChild(b);
+  return s;
+}
+
+function doBeat(s,m,ss){
+  if(m.kind==="cued") return doCued(s,m,ss);
+  const ring=makeRing(m.timer);
+  const wrap=div("ringwrap"); wrap.style.marginTop="6px";
+  wrap.appendChild(div("center muted",`<div style="max-width:30ch;margin-bottom:18px;font-size:16px">${m.doi||m.what}</div>`));
+  wrap.appendChild(ring.el);
+  s.appendChild(wrap);
+  const isSketchMove = (m.id==="drawit" || m.id==="mapit" || m.id==="palace" || m.id==="crackword");
+  if(m.id==="braindump"){
+    const cap=div(); cap.style.marginTop="14px";
+    const ta=document.createElement("textarea"); ta.placeholder="Type what you remember… (or write on paper and tick it off after)";
+    cap.appendChild(ta); ss._ta=ta;
+    const mr=div(); mr.style.marginTop="10px"; mr.appendChild(voiceButton(ta,"Speak it")); cap.appendChild(mr);
+    const sk=div(); sk.style.marginTop="8px"; sk.appendChild(sketchCapture(ss,"Or snap your paper")); cap.appendChild(sk);
+    s.appendChild(cap);
+  } else if(isSketchMove){
+    const cap=div(); cap.style.marginTop="16px"; cap.style.display="flex"; cap.style.flexDirection="column"; cap.style.alignItems="center";
+    cap.appendChild(sketchCapture(ss, "Snap your sketch"));
+    cap.appendChild(div("faint center",`<div style="margin-top:8px;font-size:13px">Or just keep it on paper. The book stays closed.</div>`));
+    s.appendChild(cap);
+  } else {
+    s.appendChild(div("note center",`<div style="margin-top:18px;border:none">Do it on paper. The book stays closed.</div>`));
+  }
+  s.appendChild(div("spacer"));
+  const done=btn("btn btn-primary","Done");
+  done.onclick=()=>{ ring.stop(); ss.beat="reveal"; render(); };
+  s.appendChild(done);
+  ring.start();
+  return s;
+}
+
+function sketchCapture(ss, label){
+  const wrap=div();
+  const inp=document.createElement("input"); inp.type="file"; inp.accept="image/*"; inp.capture="environment"; inp.style.display="none";
+  const snap=btn("btn btn-ghost"); snap.style.width="auto"; snap.style.display="inline-flex"; snap.style.gap="9px";
+  snap.innerHTML=`<span style="font-size:18px">✎</span> ${label}`;
+  const prev=div(); prev.style.marginTop="12px";
+  let lastUrl=null;
+  snap.onclick=()=>inp.click();
+  inp.onchange=()=>{ const f=inp.files&&inp.files[0]; if(!f) return;
+    if(lastUrl) URL.revokeObjectURL(lastUrl);
+    lastUrl=URL.createObjectURL(f);
+    prev.innerHTML=`<img src="${lastUrl}" alt="your sketch" style="max-width:100%;border-radius:13px;border:1px solid var(--line-2)">`;
+    snap.innerHTML=`<span style="font-size:18px">✎</span> Retake`; ss._sketched=true; };
+  wrap.appendChild(inp); wrap.appendChild(snap); wrap.appendChild(prev);
+  return wrap;
+}
+
+function doCued(s,m,ss){
+  const items = m.id==="space" ? cardItems(dueCards(Math.max(3,ss.items.length))) : ss.items;
+  ss._items = items;
+  if(!items.length){
+    s.appendChild(div(null,`<div style="margin-top:40px" class="prompt">Nothing's due to come back yet.</div>`));
+    s.appendChild(div("lede mt","That's spacing working. Keep going, it'll fill up."));
+    s.appendChild(div("spacer"));
+    const b=btn("btn btn-primary","Next"); b.onclick=()=>advanceMove(ss); s.appendChild(b); return s;
+  }
+  const it=items[ss.qIdx];
+  s.appendChild(div(null,`<div style="margin-top:26px"></div>`));
+  const card=div("qcard");
+  card.innerHTML=`<div class="qnum">Question ${ss.qIdx+1} of ${items.length}</div><div class="qtext">${esc(it.q)}</div>`;
+  if(ss.showAnswer){
+    const an=div("answer"); an.innerHTML=`<span class="alab">Answer</span>${esc(it.a)}`; card.appendChild(an);
+  }
+  s.appendChild(card);
+  if(!ss.showAnswer){
+    const aBox=document.createElement("textarea"); aBox.placeholder="Your answer (out loud is fine too)"; aBox.style.marginTop="12px"; aBox.style.minHeight="80px";
+    s.appendChild(aBox);
+    const mr=div(); mr.style.marginTop="10px"; mr.appendChild(voiceButton(aBox,"Speak")); s.appendChild(mr);
+    s.appendChild(div("spacer"));
+    const show=btn("btn btn-ghost","Show answer"); show.onclick=()=>{ ss.showAnswer=true; render(); };
+    s.appendChild(show);
+  } else {
+    s.appendChild(div("spacer"));
+    s.appendChild(div("field-lab center","Did you get it?"));
+    const row=div("row"); row.style.marginTop="4px";
+    const got=btn("btn btn-quiet","Got it"); got.style.color="var(--good)";
+    const miss=btn("btn btn-quiet","Missed it");
+    got.onclick=()=>markCued(ss,it,true); miss.onclick=()=>markCued(ss,it,false);
+    row.appendChild(miss); row.appendChild(got); s.appendChild(row);
+  }
+  return s;
+}
+function markCued(ss,it,correct){
+  ss.qMarks.push(correct);
+  if(it._card){
+    sm2(it._card, correct?5:2);
+    P().reviewLog.push({ t:Date.now(), cardShape: it._card.shape||"default", correct });
+  }
+  ss.showAnswer=false; ss.qIdx++;
+  if(ss.qIdx>=ss._items.length){ save(); ss.beat="reveal"; }
+  render();
+}
+function cardItems(cards){ return cards.map(c=>({q:c.q,a:c.a,_card:c})); }
+
+function revealBeat(s,m,ss){
+  let got=0, max=1;
+  if(m.kind==="cued"){
+    got=ss.qMarks.filter(Boolean).length; max=Math.max(1,ss._items.length);
+    s.appendChild(div(null,`<div style="margin-top:30px"><div class="eyebrow mb-s">${m.name}</div>
+      <div class="prompt">You got ${got} of ${max}.</div></div>`));
+    s.appendChild(gapViz(ss.guess, got, max));
+    recordGap(ss.guess/max, got/max, ss.shape);
+  } else if(m.kind==="free"){
+    s.appendChild(div(null,`<div style="margin-top:26px"><div class="eyebrow mb-s">${m.name}</div>
+      <div class="prompt">${m.cover||"Tick what you covered."}</div></div>`));
+    const chips=div("chips"); chips.style.marginTop="16px";
+    ss.items.forEach((it,i)=>{
+      const c=btn("cov", it.q.replace(/_____/g,"___")); c.setAttribute("aria-pressed", ss.cover.has(i));
+      c.onclick=()=>{ ss.cover.has(i)?ss.cover.delete(i):ss.cover.add(i); c.setAttribute("aria-pressed", ss.cover.has(i)); updGap(); };
+      chips.appendChild(c);
+    });
+    s.appendChild(chips);
+    got=ss.cover.size; max=Math.max(1,ss.items.length);
+    const gv=gapViz(ss.guess, got, max); gv.id="gv"; s.appendChild(gv);
+    function updGap(){ const g=document.getElementById("gv"); const nv=gapViz(ss.guess, ss.cover.size, max); nv.id="gv"; g.replaceWith(nv); }
+  } else {
+    s.appendChild(div(null,`<div style="margin-top:30px"><div class="eyebrow mb-s">${m.name}</div>
+      <div class="prompt">${m.reflectq||"What was the gap?"}</div></div>`));
+    const ta=document.createElement("textarea"); ta.placeholder="Name the part you couldn't do. That's tomorrow's start."; ta.style.marginTop="16px";
+    s.appendChild(ta);
+    const mr=div(); mr.style.marginTop="10px"; mr.appendChild(voiceButton(ta,"Speak")); s.appendChild(mr); ss._reflect=ta;
+  }
+  if(m.kind==="free"){
+    const miss=div("note"); miss.style.marginTop="14px";
+    miss.innerHTML="Whatever you left unticked is the bit to hit next time. Not a fail, just the next turn.";
+    s.appendChild(miss);
+  }
+  if(S.coach) s.appendChild(coachGapCard(m));
+  s.appendChild(div("spacer"));
+  s.appendChild(div("field-lab center",S.coach?`Ask ${esc(kidName())}: how hard did that feel?`:"How hard did that feel?"));
+  const eff=div("scale"); eff.style.justifyContent="center"; eff.style.marginBottom="14px";
+  ["Easy","OK","Hard"].forEach((lab,i)=>{ const b=document.createElement("button"); b.textContent=lab; b.style.width="92px"; b.style.fontFamily="var(--ui)"; b.style.fontSize="14px";
+    b.onclick=()=>{ ss._effort=i+1; [...eff.children].forEach((c,j)=>c.setAttribute("aria-pressed",j===i)); }; eff.appendChild(b); });
+  s.appendChild(eff);
+  const next=btn("btn btn-primary",(ss.idx>=ss.queue.length-1)?"Last thing":"Next move");
+  next.onclick=()=>{
+    if(m.kind==="free"){
+      ss.items.forEach((it,i)=>{ const card=P().cards.find(c=>c.q===it.q); if(card) sm2(card, ss.cover.has(i)?5:2); });
+      recordGapFinal(ss.guess, ss.cover.size, Math.max(1,ss.items.length), ss.shape);
+      save();
+    }
+    advanceMove(ss);
+  };
+  s.appendChild(next);
+  return s;
+}
+
+function advanceMove(ss){
+  ss.results.push({ move:ss.queue[ss.idx], effort:ss._effort||null });
+  ss.idx++; ss.beat=(S.coach?"coachpre":"read"); ss.guess=null; ss.cover=new Set(); ss.qIdx=0; ss.qMarks=[]; ss.showAnswer=false; ss._effort=null;
+  if(ss.idx>=ss.queue.length){ ss.beat="muddiest"; }
+  render();
+}
+
+function muddiestBeat(s){
+  s.appendChild(div(null,`<div style="margin-top:32px"><div class="eyebrow mb-s">One thing before you close</div>
+    <div class="prompt">What's still fuzzy?</div></div>`));
+  if(S.coach){ const cc=div("coachcard thin"); cc.style.marginTop="14px"; cc.innerHTML=`<div class="holder">Last coach line</div><div class="say">“What’s the one bit you’d struggle to explain to someone?” They say it, either of you types it.</div>`; s.appendChild(cc); }
+  else s.appendChild(div("lede mt","The part you'd struggle to explain. It comes back first next time."));
+  const ta=document.createElement("textarea"); ta.placeholder="Type or say the murky bit…"; ta.style.marginTop="18px";
+  s.appendChild(ta);
+  const mr=div(); mr.style.marginTop="10px"; mr.appendChild(voiceButton(ta,"Speak it")); s.appendChild(mr);
+  s.appendChild(div("spacer"));
+  const b=btn("btn btn-primary","Finish session");
+  b.onclick=()=>{ if(ta.value.trim()) P().muddiest.unshift({t:Date.now(), text:ta.value.trim(), topic:(S.sess&&S.sess.topic)||""}); endSession(); };
+  s.appendChild(b);
+  const skip=btn("tlink center","Nothing fuzzy, skip"); skip.style.marginTop="12px"; skip.onclick=endSession;
+  s.appendChild(skip);
+  return s;
+}
+
+function endSession(){
+  const ss=S.sess;
+  P().sessions.push({ t:Date.now(), moves:ss.queue.length, coached:!!S.coach });
+  if(S.coach) P().coached=(P().coached||0)+1; else if(DB.active===DB.coachIdx) P().soloRuns=(P().soloRuns||0)+1;
+  save();
+  go("summary");
+}
+
+function Summary(){
+  const s=div("scr"); s.appendChild(topbar(false));
+  const ss=S.sess||{queue:[]};
+  const sumHead = S.coach ? `Session ${P().coached} with ${esc(kidName())} done.` : `${ss.queue.length} move${ss.queue.length!==1?"s":""}, on your work.`;
+  s.appendChild(div(null,`<div style="margin-top:30px"><div class="eyebrow mb-s">Done</div>
+    <h1 class="display">${sumHead}</h1></div>`));
+  if(S.coach && P().coached===1){ s.appendChild(div("note mt","That was the whole job: you read the script, they did the pulling-out. Three more like it and phase two unlocks, where they run it and you just read the report.")); }
+  const hist=P().gapHistory.slice(-12);
+  if(hist.length>=2){
+    s.appendChild(div("mt",`<div class="field-lab">How close your guesses are getting</div>`));
+    const sp=div("spark");
+    hist.forEach((h,i)=>{ const b=div("bar"+(i===hist.length-1?" last":"")); const closeness=Math.max(.08,1-h.gap); b.style.height=(closeness*100)+"%"; sp.appendChild(b); });
+    s.appendChild(sp);
+    s.appendChild(div("sub",`Closer is better. You're reading yourself ${trendWord(hist)}.`));
+  } else if(hist.length===1){
+    s.appendChild(div("note mt","First data point logged. The trend shows up once you've done a few."));
+  }
+  const freshMud = (P().muddiest[0] && (Date.now()-P().muddiest[0].t < 3600000)) ? P().muddiest[0].text : null;
+  const topic = ss.topic || "this";
+  if(freshMud){
+    s.appendChild(div("mt",`<div class="field-lab">Carrying forward</div>`));
+    s.appendChild(div("rowcard",`<div class="rd" style="margin:0">You flagged <b style="color:var(--ink)">${esc(freshMud)}</b>. Start there next time, before anything easy.</div>`));
+  }
+  const shortMud = freshMud ? (freshMud.length>44 ? freshMud.slice(0,44).trim()+"…" : freshMud) : null;
+  const plan = shortMud
+    ? `When you next open ${esc(topic)}, start with ${esc(shortMud)} before anything else.`
+    : `When you next sit down with ${esc(topic)}, close the book and dump what you remember before you read a thing.`;
+  s.appendChild(div("mt",`<div class="field-lab">Your plan for next time</div>`));
+  s.appendChild(div("rowcard",`<div style="margin:0;font-family:var(--display);font-size:20px;line-height:1.3;color:var(--ink)">${plan}</div>`));
+  s.appendChild(div("spacer"));
+  const grad=MOVES.filter(m=>P().moves[m.id].status==="active").length;
+  s.appendChild(div("center faint",`<div style="font-size:13px;margin-bottom:14px">${grad} move${grad!==1?"s":""} still being coached. When you catch yourself running one without the app asking, retire it yourself in the moves map.</div>`));
+  if(S.coach){ const rb=btn("btn btn-primary mb",`Read ${esc(kidName())}’s gap report`); rb.onclick=()=>go("report"); s.appendChild(rb); }
+  const b=btn(S.coach?"btn btn-ghost":"btn btn-primary","Back to start"); b.onclick=()=>go("home"); s.appendChild(b);
+  return s;
+}
+function trendWord(h){ if(h.length<3) return "more each time"; const a=h.slice(0,Math.ceil(h.length/2)).reduce((x,y)=>x+y.gap,0); const b=h.slice(Math.ceil(h.length/2)).reduce((x,y)=>x+y.gap,0); return b<a?"better":"steadily"; }
+
+function recordGap(gFrac, rFrac){ /* placeholder used by cued; final write below */ }
+function recordGapFinal(guess, got, max, shape){
+  const gap = Math.abs((guess/max)-(got/max));
+  P().gapHistory.push({ t:Date.now(), gap, shape: shape||"default" });
+}
+(function(){ recordGap=function(gFrac,rFrac,shape){ P().gapHistory.push({t:Date.now(), gap:Math.abs(gFrac-rFrac), shape: shape||"default"}); save(); }; })();
+
+function gapViz(guess, got, max){
+  const g=div("gap");
+  const track=div("gaptrack");
+  const gp = max? (guess/max):0, rp = max? (got/max):0;
+  const gPin=div("pin g"); gPin.style.left=(gp*100)+"%";
+  const rPin=div("pin r"); rPin.style.left=(rp*100)+"%";
+  const gl=div("pinlab g"); gl.style.left=(gp*100)+"%"; gl.innerHTML=`guessed <span class="gapnum">${guess}</span>`;
+  const rl=div("pinlab r"); rl.style.left=(rp*100)+"%"; rl.innerHTML=`<span class="gapnum">${got}</span> got`;
+  track.appendChild(gPin); track.appendChild(rPin); track.appendChild(gl); track.appendChild(rl);
+  g.appendChild(track);
+  const diff=Math.abs(guess-got);
+  const msg = diff===0 ? "Dead on. You know what you know." : diff<=1 ? "Close. Your gut's getting accurate." : guess>got ? "You thought you had more. That gap is the fluency illusion, now you've seen it." : "You had more than you thought. Bank that.";
+  g.appendChild(div("sub center",`<div style="margin-top:4px">${msg}</div>`));
+  return g;
+}
+
+function makeRing(seconds){
+  const R=116, C=2*Math.PI*R;
+  const el=div("ring");
+  el.innerHTML=`<svg width="248" height="248" viewBox="0 0 248 248">
+    <circle class="track" cx="124" cy="124" r="${R}"></circle>
+    <circle class="arc" cx="124" cy="124" r="${R}" stroke-dasharray="${C}" stroke-dashoffset="0"></circle></svg>
+    <div class="mid"><div class="time">${fmt(seconds)}</div><div class="midlab">on paper</div></div>`;
+  const arc=el.querySelector(".arc"); const time=el.querySelector(".time");
+  let raf=null, start=null, dur=seconds*1000, stopped=false;
+  function frame(ts){ if(stopped) return; if(!start) start=ts; const e=ts-start; const left=Math.max(0,dur-e);
+    const frac=Math.min(1,e/dur); arc.style.strokeDashoffset=(C*frac); time.textContent=fmt(Math.ceil(left/1000));
+    if(left<=0){ arc.style.stroke="var(--ink-dim)"; el.querySelector(".midlab").textContent="take your time"; return; }
+    raf=requestAnimationFrame(frame); }
+  return { el, start:()=>{ raf=requestAnimationFrame(frame); }, stop:()=>{ stopped=true; if(raf)cancelAnimationFrame(raf); } };
+}
+function fmt(s){ s=Math.max(0,s); const m=Math.floor(s/60), x=s%60; return m+":"+String(x).padStart(2,"0"); }
+
+function voiceButton(target, label){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const b=btn("mic"); b.innerHTML=`<span class="pulse"></span>${label}`;
+  if(!SR){ b.style.opacity=".4"; b.title="Voice not supported in this browser"; b.onclick=()=>toast("This browser doesn't do voice. Typing works."); return b; }
+  let rec=null, on=false;
+  b.onclick=()=>{
+    if(on){ rec&&rec.stop(); return; }
+    rec=new SR(); rec.continuous=true; rec.interimResults=false; rec.lang="en-US";
+    rec.onresult=e=>{ let t=""; for(let i=e.resultIndex;i<e.results.length;i++) t+=e.results[i][0].transcript; target.value=(target.value?target.value+" ":"")+t.trim(); };
+    rec.onend=()=>{ on=false; b.setAttribute("aria-pressed",false); };
+    rec.onerror=()=>{ on=false; b.setAttribute("aria-pressed",false); };
+    rec.start(); on=true; b.setAttribute("aria-pressed",true);
+  };
+  return b;
+}
+
+function Material(){
+  const s=div("scr"); s.appendChild(topbar(false));
+  const p=P(); const t=today();
+  s.appendChild(div("boardhead",`<div class="eyebrow mb-s">Your material</div>
+    <h1 class="display">Everything you've run.</h1>
+    <div class="note mt">Every topic you've studied, the questions built from it, and what you flagged as fuzzy. Nothing here is graded. It's yours to come back to.</div>`));
+  if(!p.cards.length){
+    s.appendChild(div("lede mt","Nothing here yet. Run a session and your topics show up, ready to bring back."));
+    s.appendChild(div("spacer"));
+    const b=div("btn btn-primary"); b.textContent="Start a session"; b.onclick=()=>go("home"); s.appendChild(b);
+    return s;
+  }
+  const groups={};
+  p.cards.forEach(c=>{ const k=c.topic && c.topic.trim() ? c.topic.trim() : "Earlier sessions"; (groups[k]=groups[k]||[]).push(c); });
+  const order=Object.keys(groups).sort((a,b)=>{
+    const bornA=Math.max.apply(null, groups[a].map(c=>c.born));
+    const bornB=Math.max.apply(null, groups[b].map(c=>c.born));
+    return bornB-bornA;
+  });
+  s.appendChild(div("section-lab","Topics"));
+  order.forEach(name=>{
+    const cards=groups[name];
+    const due=cards.filter(c=>c.due<=t).length;
+    const settling=cards.filter(c=>c.interval>=7).length;
+    const nextDue=Math.min.apply(null, cards.map(c=>c.due-t));
+    const det=document.createElement("details"); det.className="rowcard";
+    const sub = due
+      ? `${due} ready to bring back`
+      : `next one comes back in ${Math.max(0,nextDue)} day${nextDue===1?"":"s"}`;
+    det.innerHTML=`<summary><div class="rowhead"><div class="rt">${esc(name)}</div>
+      <span class="tag ${due?'active':'dud'}">${cards.length} item${cards.length!==1?"s":""}</span></div>
+      <div class="rd">${sub}${settling?` \u00b7 ${settling} settling in`:""}</div></summary>`;
+    const body=div(); body.style.marginTop="12px";
+    cards.forEach(c=>{
+      const item=div(); item.style.cssText="padding:11px 0;border-top:1px solid var(--line)";
+      item.innerHTML=`<div style="font-family:var(--display);font-size:18px;line-height:1.25">${esc(c.q).replace(/_____/g,"___")}</div>
+        <div style="color:var(--good);font-size:14px;margin-top:5px">${esc(c.a)}</div>`;
+      body.appendChild(item);
+    });
+    det.appendChild(body);
+    s.appendChild(det);
+  });
+  if(p.muddiest && p.muddiest.length){
+    s.appendChild(div("section-lab","What you've flagged as fuzzy"));
+    p.muddiest.slice(0,12).forEach(mud=>{
+      const row=div("rowcard");
+      const ds=new Date(mud.t).toLocaleDateString(undefined,{month:"short",day:"numeric"});
+      const where = mud.topic && mud.topic.trim() ? ` \u00b7 ${esc(mud.topic.trim())}` : "";
+      row.innerHTML=`<div class="rd" style="margin:0"><span class="faint" style="font-size:12px">${ds}${where}</span><br>${esc(mud.text)}</div>`;
+      s.appendChild(row);
+    });
+  }
+  s.appendChild(div("spacer"));
+  const b=btn("btn btn-ghost mt","Back"); b.style.maxWidth="320px"; b.onclick=()=>go("home"); s.appendChild(b);
+  return s;
+}
+
+function Library(){
+  const s=div("scr"); s.appendChild(topbar(false));
+  const head=div("boardhead",`<div class="eyebrow mb-s">Every move</div>
+    <h1 class="display">All ${window.MoveCube.count}, one at a time.</h1>
+    <div class="note mt" id="libNote">Drag to spin. Tap a family, then a move. Cards with a practice button run that move on your own notes.</div>`);
+  s.appendChild(head);
+
+  const toggle=div("libtoggle");
+  const bMap=document.createElement("button"); bMap.textContent="Map view"; bMap.setAttribute("aria-pressed","false");
+  const bCube=document.createElement("button"); bCube.textContent="Cube view"; bCube.setAttribute("aria-pressed","true");
+  toggle.appendChild(bMap); toggle.appendChild(bCube);
+  s.appendChild(toggle);
+
+  const mapSection=div(); mapSection.style.display="none"; const cubeSection=div();
+  s.appendChild(mapSection); s.appendChild(cubeSection);
+
+  const libNote=head.querySelector("#libNote");
+  const NOTE_MAP="Each line is a different journey. Stations are moves. Every line changes at <b>Guess First</b>, and every material line ends at <b>Muddiest Point</b>. Tap a station to read it.";
+  const NOTE_CUBE="Drag to spin. Tap a family, then a move. Cards with a practice button run that move on your own notes.";
+
+  function showMap(){
+    bMap.setAttribute("aria-pressed","true"); bCube.setAttribute("aria-pressed","false");
+    mapSection.style.display=""; cubeSection.style.display="none";
+    libNote.innerHTML=NOTE_MAP;
+    if(activeCube){ activeCube.unmount(); activeCube=null; }
+  }
+  function showCube(){
+    bMap.setAttribute("aria-pressed","false"); bCube.setAttribute("aria-pressed","true");
+    mapSection.style.display="none"; cubeSection.style.display="";
+    libNote.innerHTML=NOTE_CUBE;
+    if(!activeCube){
+      const host=div(); host.id="cubeHost";
+      cubeSection.innerHTML=""; cubeSection.appendChild(host);
+      activeCube = window.MoveCube.mount(host, {
+        onTryIt: function(moveId){ S.pendingMove=moveId; go("capture"); }
+      });
+    }
+  }
+  bMap.onclick=showMap; bCube.onclick=showCube;
+  setTimeout(showCube, 0);
+
+  const WRAP={
+    "Guess First":{desc:"Before any recall move, call your shot: predict how much you'll get, then find out. The gap between guess and got is the whole game.", src:"Make It Stick (calibration)"},
+    "Muddiest Point":{desc:"Before you close, name the one thing still fuzzy. It comes back first next time.", src:"Range (Lovett) \u00b7 Neuroteach (exit ticket)"},
+  };
+  function libItem(name){
+    const m=MOVES.find(x=>x.name===name); if(m){ const st=P().moves[m.id]&&P().moves[m.id].status; return {desc:m.what, src:m.source, status:st, id:m.id}; }
+    const e=LIBRARY.extraMoves.find(x=>x.name===name); if(e) return {desc:e.line, src:e.src};
+    const w=LIBRARY.why.find(x=>x.name===name); if(w) return {desc:w.line, src:w.src};
+    const x=EXCLUDED.find(z=>z.name===name); if(x) return {desc:x.body, src:"Do this instead: "+x.instead+"."};
+    return WRAP[name] || {desc:"",src:""};
+  }
+  const HEX={learn:"#4a5fa5", keep:"#4e7d5b", exam:"#a35248", unstuck:"#b8863b", node:"#1A1D23"};
+  const LINE={
+    learn:{name:"Learn It", desc:"New material, start to finish. Guess, take a swing before you\u2019ve studied, turn it into your own picture, pull it back cold."},
+    keep:{name:"Keep It", desc:"Bring old material back after a gap so it sticks. A short line: guess, space it, review, out."},
+    exam:{name:"Exam", desc:"Get ready for a test. Mix the types, hard-start the hard one, learn from the postmortem."},
+    unstuck:{name:"Unstuck", desc:"When you can\u2019t start or you stall. It runs from the door to Guess First, where the learning lines begin."},
+  };
+  const ORDER=[
+    ["Get Started","unstuck"],["Plan It","unstuck"],["Find the Hook","unstuck"],["Set a Process Goal","unstuck"],
+    ["Study Somewhere New","unstuck"],["Sprint and Break","unstuck"],["Walk It Off","unstuck"],["Steady the Nerves","unstuck"],
+    ["Guess First","xchg"],
+    ["Space It Out","keep"],["Review As You Learn","keep"],
+    ["Mix It","exam"],["Hard-Start (exams)","exam"],["Exam Postmortem","exam"],
+    ["Try It First","learn"],["Draw It","learn"],["Sketchnote","learn"],["Map It","learn"],["Build a Palace","learn"],
+    ["Crack the Word","learn"],["Chunk It","learn"],["Brain Dump","learn"],["Tell Me Without Looking","learn"],
+    ["Teach It Dumber","learn"],["Self-Explain","learn"],["Use an Analogy","learn"],["Make It Concrete","learn"],["Elaborate","learn"],
+    ["Muddiest Point","term"],
+  ];
+  const rowOf={}; ORDER.forEach((r,i)=>rowOf[r[0]]=i);
+  const N=ORDER.length, rowH=46, y0=30, SPINE=44, KEEP=74, EXAM=104, LX=126;
+  const yOf=i=>y0+i*rowH, H=y0+(N-1)*rowH+34;
+  const gf=rowOf["Guess First"], mp=rowOf["Muddiest Point"];
+  const laneX={unstuck:SPINE, learn:SPINE, xchg:SPINE, term:SPINE, keep:KEEP, exam:EXAM};
+  const strokes=[];
+  strokes.push(`<line x1="${SPINE}" y1="${yOf(0)}" x2="${SPINE}" y2="${yOf(gf)}" stroke="${HEX.unstuck}" stroke-width="4" stroke-linecap="round"/>`);
+  strokes.push(`<line x1="${SPINE}" y1="${yOf(gf)}" x2="${SPINE}" y2="${yOf(mp)}" stroke="${HEX.learn}" stroke-width="4" stroke-linecap="round"/>`);
+  strokes.push(`<path d="M ${SPINE} ${yOf(gf)} C ${SPINE} ${yOf(gf)+20}, ${KEEP} ${yOf(rowOf["Space It Out"])-20}, ${KEEP} ${yOf(rowOf["Space It Out"])} L ${KEEP} ${yOf(rowOf["Review As You Learn"])} L ${KEEP} ${yOf(mp)-24} C ${KEEP} ${yOf(mp)-6}, ${SPINE} ${yOf(mp)-12}, ${SPINE} ${yOf(mp)}" fill="none" stroke="${HEX.keep}" stroke-width="4" stroke-linecap="round"/>`);
+  strokes.push(`<path d="M ${SPINE} ${yOf(gf)} C ${SPINE} ${yOf(gf)+20}, ${EXAM} ${yOf(rowOf["Mix It"])-20}, ${EXAM} ${yOf(rowOf["Mix It"])} L ${EXAM} ${yOf(rowOf["Exam Postmortem"])} L ${EXAM} ${yOf(mp)-28} C ${EXAM} ${yOf(mp)-6}, ${SPINE} ${yOf(mp)-14}, ${SPINE} ${yOf(mp)}" fill="none" stroke="${HEX.exam}" stroke-width="4" stroke-linecap="round"/>`);
+  const dots=[], labels=[], hits=[], pos={};
+  ORDER.forEach((r,i)=>{
+    const name=r[0], lane=r[1], x=laneX[lane], y=yOf(i); pos[name]=[x,y];
+    const big=(lane==="xchg"||lane==="term"), col=big?HEX.node:HEX[lane];
+    if(big){ dots.push(`<circle cx="${x}" cy="${y}" r="9" fill="#FFFFFF" stroke="${HEX.node}" stroke-width="3"/><circle cx="${x}" cy="${y}" r="3.4" fill="${HEX.node}"/>`); }
+    else { dots.push(`<circle cx="${x}" cy="${y}" r="5.5" fill="#FFFFFF" stroke="${col}" stroke-width="3"/>`); }
+    const it=libItem(name), retired=it.status==="graduated";
+    const sub = lane==="xchg" ? "interchange \u00b7 every line" : lane==="term" ? "terminus \u00b7 all lines end" : "";
+    labels.push(`<text x="${LX}" y="${sub?y-2:y+4.5}" fill="${big?HEX.node:'#1A1D23'}" font-family="Inter,system-ui,sans-serif" font-size="14" font-weight="${big?600:450}"${retired?' opacity="0.45"':''}>${name}${retired?'  \u2713':''}</text>`);
+    if(sub) labels.push(`<text x="${LX}" y="${y+13}" fill="#5E636E" font-family="Inter,system-ui,sans-serif" font-size="10.5" letter-spacing="0.4">${sub}</text>`);
+    hits.push(`<rect class="thit" data-st="${name}" x="0" y="${y-rowH/2}" width="360" height="${rowH}" fill="transparent"/>`);
+  });
+  const halo=`<circle id="thalo" cx="-99" cy="-99" r="12" fill="none" stroke="#1A1D23" stroke-width="2"/>`;
+  const svg=`<svg viewBox="0 0 360 ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MOVE lines and stations">${strokes.join("")}${halo}${dots.join("")}${labels.join("")}${hits.join("")}</svg>`;
+  const mapWrap=div("tmap"); mapWrap.innerHTML=svg; mapSection.appendChild(mapWrap);
+  const laneName={unstuck:"Unstuck line", keep:"Keep It line", exam:"Exam line", learn:"Learn It line", xchg:"Interchange \u00b7 every line", term:"Terminus \u00b7 every line ends here"};
+  const laneOf={}; ORDER.forEach(r=>laneOf[r[0]]=r[1]);
+  const sheet=div("sheet"); sheet.id="stationSheet"; mapSection.appendChild(sheet);
+  function closeSheet(){ sheet.classList.remove("show"); const h=mapWrap.querySelector("#thalo"); if(h){h.setAttribute("cx","-99");h.setAttribute("cy","-99");} }
+  function openStation(name){
+    const it=libItem(name); const lane=laneOf[name];
+    let lineLabel, col;
+    if(!lane){
+      if(LIBRARY.why.find(w=>w.name===name)){ lineLabel="Why it works"; col="#2E6FA6"; }
+      else if(EXCLUDED.find(x=>x.name===name)){ lineLabel="Not on the map"; col="#565C68"; }
+      else { lineLabel=""; col=HEX.learn; }
+    } else { lineLabel=laneName[lane]; col=(lane==="xchg"||lane==="term")?HEX.node:(HEX[lane]||HEX.learn); }
+    sheet.innerHTML=`<div class="sheet-top"><div><div class="sheet-nm">${name}</div>
+      <div class="sheet-line" style="color:${col}">${lineLabel}</div></div>
+      <button class="sheet-x" aria-label="Close">\u2715</button></div>
+      <div class="sheet-desc">${it.desc||""}${it.src?`<span class="sheet-src">${it.src}</span>`:""}</div>`;
+    sheet.querySelector(".sheet-x").onclick=closeSheet;
+    const mv=MOVES.find(x=>x.name===name);
+    if(mv && P().moves[mv.id] && P().moves[mv.id].status==="active"){
+      const rb=document.createElement("button"); rb.className="retire"; rb.style.marginTop="15px";
+      rb.textContent="I run this on my own now";
+      rb.onclick=()=>{ const ms=P().moves[mv.id]; ms.unprompted=(ms.unprompted||0)+1;
+        if(ms.unprompted>=2){ ms.status="graduated"; save(); celebrate(mv); return; }
+        save(); toast(`Noted. One more time on your own and ${mv.name} retires.`); closeSheet(); render(); };
+      sheet.appendChild(rb);
+    }
+    const p=pos[name], h=mapWrap.querySelector("#thalo");
+    if(p&&h){ h.setAttribute("cx",p[0]); h.setAttribute("cy",p[1]); } else if(h){ h.setAttribute("cx","-99"); h.setAttribute("cy","-99"); }
+    sheet.classList.add("show");
+  }
+  mapWrap.querySelectorAll(".thit").forEach(el=>{ el.addEventListener("click",()=>openStation(el.getAttribute("data-st"))); });
+  const key=div("tkey"); key.appendChild(div("tkey-h","The lines \u00b7 what each is for"));
+  ["learn","keep","exam","unstuck"].forEach(id=>{
+    const row=div("tkey-line");
+    row.innerHTML=`<span class="tkey-sw" style="background:${HEX[id]}"></span>
+      <div><div class="tkey-nm">${LINE[id].name}</div><div class="tkey-ds">${LINE[id].desc}</div></div>`;
+    key.appendChild(row);
+  });
+  mapSection.appendChild(key);
+  const laws=div("tlaws"); laws.appendChild(div("tkey-h","Why the lines work"));
+  laws.appendChild(div("tkey-ds","The physics under the network. Not stations, the reasons the routes run the way they do."));
+  const lc=div("tlaw-chips");
+  LIBRARY.why.forEach(w=>{ const c=document.createElement("button"); c.className="tlaw"; c.textContent=w.name; c.onclick=()=>openStation(w.name); lc.appendChild(c); });
+  laws.appendChild(lc); mapSection.appendChild(laws);
+  const skip=div("tskip"); skip.appendChild(div("tskip-h","Not on the map \u00b7 feels like studying, isn\u2019t"));
+  const sc=div("tskip-chips");
+  EXCLUDED.forEach(x=>{ const c=document.createElement("button"); c.className="d"; c.textContent=x.name; c.onclick=()=>openStation(x.name); sc.appendChild(c); });
+  skip.appendChild(sc); mapSection.appendChild(skip);
+  const proofNote=div("tskip"); proofNote.style.marginTop="26px";
+  proofNote.appendChild(div("tskip-h","Why believe it"));
+  proofNote.appendChild(div("tkey-ds","None of this is opinion. Every move here beat the usual ones in controlled studies. Test yourself on something once and you remember about twice as much a week later as rereading it. Karpicke and Roediger, Science, 2008."));
+  mapSection.appendChild(proofNote);
+  s.appendChild(div("spacer"));
+  const b=btn("btn btn-ghost mt","Back"); b.style.maxWidth="320px"; b.onclick=()=>go("home"); s.appendChild(b);
+  return s;
+}
+
+function celebrate(m){
+  const s=div("scr");
+  s.appendChild(div("spacer"));
+  s.appendChild(div("celebrate",`<div class="big">${m.name}<br>retired.</div>
+    <div class="lede" style="margin:18px auto 0">You do this on your own now. The app's job on this one is done.</div>`));
+  s.appendChild(div("spacer"));
+  const b=btn("btn btn-primary","Good"); b.onclick=()=>go("home");
+  s.appendChild(b);
+  clearApp(); app.appendChild(s);
+}
+
+window.addEventListener("keydown",e=>{
+  if(e.key!=="Escape") return;
+  const sh=document.getElementById("stationSheet");
+  if(sh && sh.classList.contains("show")){
+    sh.classList.remove("show");
+    const h=document.getElementById("thalo");
+    if(h){ h.setAttribute("cx","-99"); h.setAttribute("cy","-99"); }
+  }
+});
+
+render();
+</script>
+</body>
+</html>
