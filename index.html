@@ -1282,8 +1282,8 @@ function Home(){
   s.appendChild(phaser(ph));
   if(last!=null){
     const d=daysSince(last);
-    const backline = d<=4 ? `Last session ${d===0?"today":d===1?"yesterday":d+" days ago"}. Inside the four-day window, that\u2019s the habit forming.`
-                          : `Last session ${d} days ago. The four-day window matters more than the length of any one session.`;
+    const backline = d<=4 ? `Last session ${d===0?"today":d===1?"yesterday":d+" days ago"}. Back inside four days, that\u2019s a real habit forming, not a New Year\u2019s resolution.`
+                          : `Last session ${d} days ago. A short session inside four days beats a long one you keep putting off.`;
     s.appendChild(div("faint",`<div style="margin-top:14px;font-size:13px">${backline}</div>`));
   }
   const ll=div("linklist"); ll.style.marginTop="28px";
@@ -1304,9 +1304,9 @@ function CoachStart(){
   s.appendChild(div(null,`<div style="margin-top:26px"><div class="eyebrow mb-s">Before the first session</div>
     <div class="prompt">Three things, thirty seconds.</div></div>`));
   const list=div(); list.style.marginTop="20px";
-  [["You never explain the content.","You don\u2019t need to know the material. The app asks, they answer, you read the script between rounds."],
-   ["Wrong answers are the work.","Every miss they pull up themselves sticks better than anything you could tell them. Don\u2019t rescue mid-attempt."],
-   ["The bet is the skill.","Before each round they guess how much they\u2019ll get. Seeing guess against reality is what builds it."]
+  [["You never explain the content.","You don\u2019t need to know the material at all. The app asks, they answer, you read the script between rounds. Doesn\u2019t matter if it\u2019s been years since you looked at any of this yourself."],
+   ["Wrong answers are the work.","Every miss they catch themselves sticks better than anything you could tell them. Let them sit in it a second before you jump in."],
+   ["The bet is the skill.","Before each round, they guess how much they\u2019ll get. Watching that guess meet the real number is the whole trick."]
   ].forEach((r,idx)=>{
     const row=div("citerow");
     row.innerHTML=`<div class="c-claim"><b>${r[0]}</b> ${r[1]}</div>`;
@@ -1342,7 +1342,7 @@ function Report(){
     <h1 class="display">${esc(kid.name)}\u2019s gap report.</h1>`));
   const hist=kid.gapHistory.slice(-14);
   if(!kid.sessions.length){
-    s.appendChild(div("lede mt","Nothing here yet. Run one session together and this page fills in."));
+    s.appendChild(div("lede mt","Nothing here yet. Run one session together, and this page stops being empty."));
     s.appendChild(div("spacer"));
     const b=btn("btn btn-primary","Start the first session"); b.onclick=()=>{ S.coach=true; startFlow("full"); }; s.appendChild(b);
     return s;
@@ -1836,7 +1836,7 @@ function gapViz(guess, got, max){
   const gPin=div("pin g"); gPin.style.left=(gp*100)+"%";
   const rPin=div("pin r"); rPin.style.left=(rp*100)+"%";
   const gl=div("pinlab g"); gl.style.left=(gp*100)+"%"; gl.innerHTML=`guessed <span class="gapnum">${guess}</span>`;
-  const rl=div("pinlab r"); rl.style.left=(rp*100)+"%"; rl.innerHTML=`<span class="gapnum">${got}</span> got`;
+  const rl=div("pinlab r"); rl.style.left=(rp*100)+"%"; rl.innerHTML=`got <span class="gapnum">${got}</span>`;
   track.appendChild(gPin); track.appendChild(rPin); track.appendChild(gl); track.appendChild(rl);
   g.appendChild(track);
   const diff=Math.abs(guess-got);
@@ -2091,7 +2091,7 @@ function celebrate(m){
   const s=div("scr");
   s.appendChild(div("spacer"));
   s.appendChild(div("celebrate",`<div class="big">${m.name}<br>retired.</div>
-    <div class="lede" style="margin:18px auto 0">You do this on your own now. The app's job on this one is done.</div>`));
+    <div class="lede" style="margin:18px auto 0">Twice, unprompted, no app required. That's not luck, that's it sticking. Go spend the ten minutes you just got back on something else.</div>`));
   s.appendChild(div("spacer"));
   const b=btn("btn btn-primary","Good"); b.onclick=()=>go("home");
   s.appendChild(b);
