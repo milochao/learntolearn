@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF">
-<meta name="description" content="MOVE. Coach your kid’s studying in ten minutes, twice a week. No subject expertise needed. The skill stays in the kid.">
-<title>MOVE · coach your kid’s studying</title>
+<meta name="description" content="MOVE shows you how to help your child study. It takes ten minutes, twice a week. You do not need to know the subject. Your child learns the skills and keeps them.">
+<title>MOVE · help your child study</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
@@ -101,6 +101,8 @@
   .cov[aria-pressed=true]::before{content:"✓ "; color:var(--now); font-weight:700}
   .qcard{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:22px; margin:6px 0}
   .qnum{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; margin-bottom:11px}
+  .tchip{display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    padding:2px 7px; border-radius:6px; margin-left:8px; vertical-align:middle}
   .qtext{font-family:var(--display); font-size:25px; line-height:1.2}
   .answer{margin-top:16px; padding-top:16px; border-top:1px solid var(--line); color:var(--good); font-size:16px}
   .answer .alab{font-size:12px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.12em; display:block; margin-bottom:5px; font-weight:600}
@@ -353,12 +355,12 @@ window.MoveCube = (function(){
 
 /* families: index -> face of level-1 cube (0 front,1 right,2 left,3 top,4 bottom,5 back) */
 const FAM=[
-  {n:"Learn It",    c:"#4a5fa5", bl:"When you're learning something new. Guess first, try it before you study, turn it into a picture, then try to remember it on your own."},
-  {n:"Keep It",     c:"#4e7d5b", bl:"Bring old material back after some time so it stays in your head. Guess, wait, then review."},
-  {n:"Exam",        c:"#a35248", bl:"Get ready for a test. Mix up the problem types, start with the hardest one, then check your mistakes after."},
-  {n:"Stuck",       c:"#b8863b", bl:"When you can't start or you're frozen. This shows you what to do first."},
-  {n:"Why It Works",c:"#6d5a94", bl:"How your brain actually learns. The reasons behind the other moves."},
-  {n:"Skip These", c:"#75787c", bl:"These feel like studying but don't work. Do the better move instead."},
+  {n:"Learn It",    c:"#4a5fa5", bl:"Use these moves when you are learning something new. Guess first. Try it before you study. Turn it into a picture. Then try to remember it on your own."},
+  {n:"Keep It",     c:"#4e7d5b", bl:"Come back to old material after a few days so it stays in your head. Guess how much you remember, then check."},
+  {n:"Exam",        c:"#a35248", bl:"These moves help you get ready for a test. Mix up the problem types. Start with the hardest one. Check your mistakes after."},
+  {n:"Stuck",       c:"#b8863b", bl:"Use these moves when you can't get started. They show you what to do first."},
+  {n:"Why It Works",c:"#6d5a94", bl:"These cards explain how your brain learns. They are the reasons the other moves work."},
+  {n:"Skip These", c:"#75787c", bl:"These feel like studying, but they do not work well. Each one tells you a better move to do instead."},
 ];
 
 /* every technique. fam = family indices it belongs to. content pulled from the app. */
@@ -367,53 +369,53 @@ const T=[
   {n:`What's Still Fuzzy`, fam:[0,1,2], what:`Before you stop studying, write down the one thing you still don't understand. That's the first thing to check next time.`, src:`Range (Lovett); Neuroteach (exit ticket)`},
 
   {n:`Try It First`, fam:[0], what:`Try to answer before you've studied. Getting it wrong first helps you remember the right answer later.`, src:`Make It Stick (generation); pretest before a lecture ~10% better later (E. Bjork); 30% study + 70% reciting beats 100% study (Gates 1917)`},
-  {n:`Draw It`, fam:[0], what:`Turn the idea into a picture or a drawing. No words.`, how:`Draw it on paper. Use boxes, arrows, or a simple sketch. Then check the book to see what you missed.`, src:`Dual Coding with Teachers; drawing aids retention (Fernandes 2018, Hu 2015)`},
-  {n:`Draw Your Notes`, fam:[0], what:`Take notes using drawings and arrows instead of full sentences. Your hand can draw faster than it can write, so pictures keep up with your thinking.`, src:`profile EC-001 Strategy 04; Dual Coding with Teachers`},
+  {n:`Draw It`, fam:[0], what:`Turn the idea into a picture or a drawing. Do not use words.`, how:`Draw it on paper. Use boxes, arrows, or a simple sketch. Then check the book to see what you missed.`, src:`Dual Coding with Teachers; drawing aids retention (Fernandes 2018, Hu 2015)`},
+  {n:`Draw Your Notes`, fam:[0], what:`Take notes using drawings and arrows instead of full sentences. Drawing is faster than writing, so you don't fall behind.`, src:`Dual Coding with Teachers`},
   {n:`Map It`, fam:[0], what:`Lay the material out on paper. Put each piece where it belongs, and draw lines to connect them.`, how:`Build the map on paper. Use space and arrows only. Do this after you've already tried to remember everything on your own.`, src:`Make It Stick; spatial structures file material`},
   {n:`Memory Walk`, fam:[0], what:`Picture a path you know well, like your walk to school. Place each thing you're trying to remember at a spot along that path. Then walk the path in your head to bring them back.`, how:`Pick one clear picture for each spot on the path. Walk through it in your head. Any spot you can't remember is one to study again.`, src:`Learning How to Learn (Ch 8); Make It Stick (mnemonics)`},
-  {n:`Break the Word Apart`, fam:[0], what:`Break a hard word into smaller pieces. The meaning is usually hiding inside the parts.`, how:`Split the word into its pieces and write what each piece means. Put the meaning back together.`, src:`Executive Skills in Reading Comprehension (morphology); profile EC-001 Strategy 03`},
+  {n:`Break the Word Apart`, fam:[0], what:`Break a hard word into smaller pieces. The meaning is usually hiding inside the parts.`, how:`Split the word into its pieces and write what each piece means. Put the meaning back together.`, src:`Executive Skills in Reading Comprehension (morphology)`},
   {n:`Group It Together`, fam:[0], what:`Group a long list into a few small groups with labels. Your brain can only hold about seven things at once, so a group counts as just one thing.`, src:`Learning How to Learn (Miller 1956)`},
-  {n:`Write Everything Down`, fam:[0], what:`Close the book and write down everything you remember. Don't stop to check or fix anything.`, how:`Write until you run out. Don't stop to fix mistakes. Then check what you got right, whatever's missing is what to study.`, src:`Powerful Teaching; free recall 67% vs concept-map 45% (Karpicke & Blunt 2011)`},
+  {n:`Write Everything Down`, fam:[0], what:`Close the book and write down everything you remember. Don't stop to check or fix anything.`, how:`Write until you run out of things to say. Don't stop to fix mistakes. Then check your work. The things you missed are the things to study next.`, src:`Powerful Teaching; free recall 67% vs concept-map 45% (Karpicke & Blunt 2011)`},
   {n:`Tell Me Without Looking`, fam:[0], what:`Close the book. Answer questions one at a time, using only your memory.`, src:`Make It Stick; retrieval 71 to 61% vs reread 83 to 40% over a week (Roediger & Karpicke 2006)`},
-  {n:`Teach It Simple`, fam:[0], what:`Say it out loud in the simplest words you can, like you're teaching a little kid. No notes.`, how:`Teach it out loud. If you have to check the book, that's the part you don't know yet.`, src:`Protege effect (Stanford teachable agents); output beats input`},
-  {n:`Explain Each Step`, fam:[0], what:`Go through it step by step. For each step, say out loud why it's right. Naming it doesn't count. This shows you fast where you're confused.`, src:`Learn Better; Understanding How We Learn`},
+  {n:`Teach It Simple`, fam:[0], what:`Say it out loud in the simplest words you can, like you're teaching a little kid. Don't use notes.`, how:`Teach it out loud. If you have to check the book, that's the part you don't know yet.`, src:`Protege effect (Stanford teachable agents); teaching someone else helps you learn`},
+  {n:`Explain Each Step`, fam:[0], what:`Go through it step by step. For each step, say out loud why it's right. Just naming it is not enough. This shows you fast where you're confused.`, src:`Learn Better; Understanding How We Learn`},
   {n:`Compare It to Something`, fam:[0], what:`Think about what the idea is like. Finish the sentence: "This is the same as ___." Comparing two things helps you understand both.`, src:`Why Don't Students Like School (Holyoak)`},
   {n:`Make Your Own Example`, fam:[0], what:`Turn the idea into your own real example.`, how:`Write your example on paper. Then write a second, different example. Check that both really fit the rule.`, src:`Understanding How We Learn; Why Don't Students Like School`},
-  {n:`Connect It to What You Know`, fam:[0], what:`Connect the new thing to something you already know.`, how:`Finish this sentence with a real connection: "X is like ___ because ___." A matching word alone doesn't hold.`, src:`Make It Stick; elaboration multiplies the cues you can recall by`},
+  {n:`Connect It to What You Know`, fam:[0], what:`Connect the new thing to something you already know.`, how:`Finish this sentence with a real connection: "X is like ___ because ___." A word that just sounds the same is not a real connection.`, src:`Make It Stick; elaboration multiplies the cues you can recall by`},
 
   {n:`Space It Out`, fam:[1], what:`Go back to older material after some time has passed, so you forget a little before you review it.`, src:`Make It Stick; spacing doubles retention at 4 weeks (Rohrer & Taylor 2006)`},
   {n:`Look Back Today`, fam:[1], what:`Look back over what you learned today, the same day, just for a few minutes. A short review now saves a lot of time later.`, src:`Brain Train (RAYL; Ebbinghaus)`},
 
   {n:`Mix Up the Problems`, fam:[2], what:`Practice different types of problems mixed together. Figure out which type each one is before you solve it.`, src:`Make It Stick; 77% interleaved vs 38% blocked at 24h (Taylor & Rohrer 2010); similar types only`},
-  {n:`Start With the Hard One`, fam:[2], what:`On a test, start the hardest question first. Then leave it and do the easy ones. Your brain keeps working on the hard one in the background while you finish the rest.`, src:`Uncommon Sense Teaching (hard-start)`},
+  {n:`Start With the Hard One`, fam:[2], what:`On a test, start the hardest question first. Then leave it and do the easy ones. Your brain keeps thinking about the hard one while you do the easy ones.`, src:`Uncommon Sense Teaching (hard-start)`},
   {n:`Check Your Mistakes`, fam:[2], what:`After a test, look at what you got wrong and sort the mistakes into groups. The pattern shows you exactly what to fix next time.`, src:`Ace Your Exam (five error types)`},
 
   {n:`Get Started`, fam:[3], what:`Starting is the hardest part. Do just the first two minutes, even if you do them badly on purpose. Once you start, it gets easier to keep going.`, src:`Smart but Scattered Teens (task initiation)`},
-  {n:`Plan It`, fam:[3], what:`Break the work into steps. Put the steps in order before you start. A plan works better than just trying hard.`, src:`Smart but Scattered Teens (planning)`},
+  {n:`Plan It`, fam:[3], what:`Break the work into steps. Put the steps in order before you start. It's hard to plan when you're tired, so plan first and you won't have to think about what's next.`, src:`Smart but Scattered Teens (planning)`},
   {n:`Find a Reason to Care`, fam:[3], what:`Before you start, find one reason this matters to you. You remember things better when you care about them.`, src:`Learn Better (learn crafting)`},
   {n:`Set a Goal You Control`, fam:[3], what:`Aim for something you control, like "do ten problems," instead of something you don't, like "get an A."`, src:`Learn Better (process vs outcome goals)`},
   {n:`Study Somewhere New`, fam:[3], what:`Change where you study sometimes. Studying in different places gives your memory more ways to find the answer later.`, src:`How We Learn (context variability)`},
-  {n:`Work, Then Rest`, fam:[3], what:`Work hard for about 25 minutes. Then take a real break. The break is when your brain locks in what you learned, it's not wasted time.`, src:`Uncommon Sense Teaching (Pomodoro; brain breaks)`},
+  {n:`Work, Then Rest`, fam:[3], what:`Work hard for about 25 minutes. Then take a real break. Your brain does a lot of its learning during the break, not during the work.`, src:`Uncommon Sense Teaching (Pomodoro; brain breaks)`},
   {n:`Take a Walk`, fam:[3], what:`If you're stuck, stop and move around. Your brain keeps working in the background and often hands you the answer later.`, src:`How We Learn (incubation; focused vs diffuse)`},
-  {n:`Calm Down First`, fam:[3], what:`When you go from feeling challenged to feeling panicked, stop and take a breath. Feeling challenged is normal, panic isn't. The way out isn't a big push, it's one small first step.`, src:`Neuroteach (amygdala; zone of proximal discomfort); Ace Your Exam`},
+  {n:`Calm Down First`, fam:[3], what:`If you start to panic, stop and take a breath. Then do one small thing to get moving again. Just sitting there will make the panic worse.`, src:`Neuroteach (amygdala; zone of proximal discomfort); Ace Your Exam`},
 
-  {n:`Fast Brain, Slow Brain`, fam:[4], what:`Some brains work fast but miss small details, like a race car. Some work slower but notice more, like a hiker. Neither one is smarter. If your brain is the fast kind, slowing down on purpose is your advantage.`, src:`Uncommon Sense Teaching`},
-  {n:`Two Tricks Your Brain Plays`, fam:[4], what:`Rereading feels easy, so it feels like it's working, but that's a trick. Feeling sure of yourself isn't the same as being right, that's another trick. Guessing before you check catches both.`, src:`Powerful Teaching`},
+  {n:`Fast Brain, Slow Brain`, fam:[4], what:`Some brains work fast but miss small details, like a race car. Some work slower but notice more, like a hiker. Neither one is smarter. If your brain is the fast kind, slowing down on purpose helps you.`, src:`Uncommon Sense Teaching`},
+  {n:`Two Tricks Your Brain Plays`, fam:[4], what:`Rereading feels easy, so it feels like it is working. That is a trick. Feeling sure of yourself is not the same as being right. That is another trick. Guessing before you check helps you catch both tricks.`, src:`Powerful Teaching`},
   {n:`A Little Forgetting Helps`, fam:[4], what:`Forgetting a bit between study sessions isn't a bad sign. The work it takes to remember it again is what makes it stick.`, src:`How We Learn (Bjork)`},
   {n:`New Facts Need Old Facts`, fam:[4], what:`Memory works by making connections. A new fact sticks when it hooks onto something you already know.`, src:`Uncommon Sense Teaching (Hebbian learning)`},
-  {n:`Two Kinds of Learning`, fam:[4], what:`Facts and skills are learned in different ways. Skills need practice spread out over time, you can't learn a skill in one night.`, src:`Uncommon Sense Teaching (declarative vs procedural)`},
+  {n:`Two Kinds of Learning`, fam:[4], what:`Facts and skills are learned in different ways. Skills need practice spread out over time. You can't learn a skill in one night.`, src:`Uncommon Sense Teaching (declarative vs procedural)`},
   {n:`Look Past the Surface`, fam:[4], what:`Beginners sort problems by how they look on the outside. Experts sort by what's really happening underneath. Mixing up problem types trains you to think like an expert.`, src:`Learn Better`},
-  {n:`Practice Changes Your Brain`, fam:[4], what:`Practicing something over and over actually speeds up the wiring in your brain. Getting faster is real, it's real; the wiring physically changes.`, src:`Neuroteach (myelination)`},
+  {n:`Practice Changes Your Brain`, fam:[4], what:`Practicing something over and over actually speeds up the wiring in your brain. When something starts to feel easier, that is real. Your brain is actually changing.`, src:`Neuroteach (myelination)`},
   {n:`Breaks Help You Solve It`, fam:[4], what:`Your brain has a focused mode and a relaxed background mode. A problem you're stuck on often gets solved in the relaxed mode, like on a walk.`, src:`Learning How to Learn (focused vs diffuse)`},
-  {n:`You Remember the Start and End`, fam:[4], what:`You remember the beginning and the end of a study session best. Put the most important stuff there; the middle is where things get lost.`, src:`Neuroteach (primacy-recency)`},
-  {n:`Why School Feels Hard`, fam:[4], what:`Your brain grew up on talking and reading faces; books and algebra arrived too recently to be wired in. Those skills take real practice. Struggling with them is normal.`, src:`Uncommon Sense Teaching (biologically primary vs secondary)`},
-  {n:`Mistakes Help You Learn`, fam:[4], what:`Taking a real guess and getting it wrong actually helps your brain remember the right answer later. The wrong try is part of the learning.`, src:`Learn Better (productive failure, Kapur)`},
+  {n:`You Remember the Start and End`, fam:[4], what:`You remember the beginning and the end of a study session best. Put the most important stuff at the start and end, because you forget the middle part more easily.`, src:`Neuroteach (primacy-recency)`},
+  {n:`Why School Feels Hard`, fam:[4], what:`Your brain is built for talking and reading faces. Reading and math are newer skills. They take real practice to learn. Struggling with them is normal.`, src:`Uncommon Sense Teaching (biologically primary vs secondary)`},
+  {n:`Mistakes Help You Learn`, fam:[4], what:`Taking a real guess and getting it wrong actually helps your brain remember the right answer later. The wrong try is part of how you learn it.`, src:`Learn Better (productive failure, Kapur)`},
   {n:`Learn Facts First`, fam:[4], what:`You can't think deeply about something you barely know. Learning the facts first is what makes deeper thinking possible.`, src:`Why Don't Students Like School`},
   {n:`Smart Grows With Practice`, fam:[4], what:`Being smart isn't something you're born with and stuck with. Effort and the right kind of practice grow it. Your brain actually changes when you push it.`, src:`Neuroteach (growth mindset)`},
   {n:`Sleep Locks In Learning`, fam:[4], what:`Sleep is when your brain files away what you learned that day into long-term memory. Cramming late without sleeping on it barely helps.`, src:`Neuroteach (sleep)`},
   {n:`Leaving It Half-Done Helps`, fam:[4], what:`If you leave a problem half-finished, your brain keeps working on it in the background. You can use that on purpose by stepping away before you're totally stuck.`, src:`How We Learn (Zeigarnik; percolation)`},
 
-  {n:`Reading It Again`, fam:[5], what:`Reading your notes over and over feels like studying, but it mostly isn't. In one study, people who reread scored 40% on a test a week later, and they thought they'd remember more than they actually did. Trying to remember with the book closed is what actually works.`, instead:`Write Everything Down`, src:`Do this instead: Brain Dump`},
+  {n:`Reading It Again`, fam:[5], what:`Reading your notes over and over feels like studying, but it does not work well. In one study, people who reread scored 40% on a test a week later, and they thought they would remember more than they actually did. Trying to remember with the book closed works much better.`, instead:`Write Everything Down`, src:`Do this instead: Write Everything Down`},
   {n:`Highlighting`, fam:[5], what:`Coloring the page with a highlighter feels active, but marking words isn't the same as learning them. A bright page can trick you into thinking you know more than you do.`, instead:`Tell Me Without Looking`, src:`Do this instead: Tell Me Without Looking`},
   {n:`Copying Notes Over`, fam:[5], what:`Rewriting your notes to make them neat is copying. A pretty page can trick you into thinking you know more than you do.`, instead:`Map It`, src:`Do this instead: Map It`},
 ];
@@ -829,128 +831,128 @@ RULES:
 /* Question generation runs through a Cloudflare Worker that holds the API key
    server-side. Set this to your deployed Worker URL. If left as the placeholder
    or empty, the app uses on-device simple questions and says so plainly. */
-const GENERATE_URL = "https://move-generate.YOUR-SUBDOMAIN.workers.dev";
+const GENERATE_URL = "https://move-generate.milochao.workers.dev";
 function apiConfigured(){ return /^https:\/\/[^ ]+\.workers\.dev/.test(GENERATE_URL) && !/YOUR-SUBDOMAIN/.test(GENERATE_URL); }
 
 const MOVES = [
-  { id:"braindump", name:"Brain Dump", kind:"free", tier:"high", timer:180, bet:"count", source:"Powerful Teaching · free recall 67% vs concept-map 45% (Karpicke & Blunt 2011)",
-    what:"Close the book and write everything you remember. No checking, no fixing.",
+  { id:"braindump", name:"Write Everything Down", kind:"free", tier:"high", timer:180, bet:"count", source:"Powerful Teaching · free recall 67% vs concept-map 45% (Karpicke & Blunt 2011)",
+    what:"Close the book and write down everything you remember. Do not check or fix anything.",
     read:t=>`Close the book. You're going to write down everything you remember about <b>${t}</b>.`,
-    betq:"How many separate things do you think you'll get?",
-    doi:"Go. Everything you remember. Don't stop to fix it, don't check.",
-    cover:"Tick what you actually covered. Whatever's left is what you missed.",
+    betq:"How many things do you think you will remember?",
+    doi:"Write down everything you remember. Don't stop to fix anything, and don't check the book.",
+    cover:"Tap each one your writing covered. The rest are the ones you missed.",
     grad:"She closes the book and starts dumping before the app asks." },
   { id:"tellme", name:"Tell Me Without Looking", kind:"cued", tier:"high", timer:0, bet:"countN", source:"Make It Stick · retrieval 71→61% vs reread 83→40% over a week (Roediger & Karpicke 2006)",
-    what:"Books closed. Answer from memory, one question at a time.",
-    read:t=>`Books closed. I'll ask about <b>${t}</b>, you answer, out loud or typed.`,
-    betq:"Out of these questions, how many will you nail?",
+    what:"Close the book. Answer each question from memory, one at a time.",
+    read:t=>`Close the book. I will ask you questions about <b>${t}</b>. You can answer out loud or type your answer.`,
+    betq:"How many of these questions will you get right?",
     grad:"She quizzes herself, or asks to be quizzed, without the app drawing it." },
   { id:"space", name:"Space It Out", kind:"cued", tier:"high", timer:0, bet:"countN", source:"Make It Stick · spacing doubles retention at 4 weeks (Rohrer & Taylor 2006)",
-    what:"Older material, pulled back after a gap so a little forgetting happens.",
-    read:t=>`This came up before. Quick gut check on what's still in there.`,
-    betq:"How much of it is still there?",
+    what:"This brings back older material after some time has passed. A little forgetting is part of the plan.",
+    read:t=>`You studied this before. Let's see how much you still remember.`,
+    betq:"How many do you think you still remember?",
     grad:"She brings up an older topic to review on her own." },
   { id:"drawit", name:"Draw It", kind:"reflect", tier:"high (for her)", timer:150, bet:"scale", source:"Dual Coding with Teachers · drawing aids retention (Fernandes 2018, Hu 2015)",
-    what:"Turn the idea into a picture or diagram. No words.",
-    read:t=>`No words this time. Draw <b>${t}</b>, a picture, a diagram, whatever shows the idea.`,
+    what:"Turn the idea into a picture or diagram. Do not use words.",
+    read:t=>`This time, don't use words. Draw a picture or diagram of <b>${t}</b>. Anything that shows the idea is fine.`,
     betq:"Can you draw it without looking?",
-    doi:"Draw it on paper. Make the idea visual. Boxes, arrows, a sketch.",
+    doi:"Draw it on paper. You can use boxes, arrows, or a simple sketch.",
     reflectq:"Now open the book. What did your drawing leave out?",
     grad:"She sketches or diagrams material on her own." },
-  { id:"teach", name:"Teach It Dumber", kind:"reflect", tier:"moderate", timer:120, bet:"scale", source:"Protégé effect (Stanford teachable agents), output beats input, Convergence 12",
-    what:"Explain it out loud in the simplest words, like teaching a little kid. No notes.",
-    read:t=>`You're going to teach <b>${t}</b> out loud, like you're explaining it to a little kid. Simplest words. No notes.`,
-    betq:"Can you get through it without checking?",
-    doi:"Teach it. Out loud. If you reach for the book, that spot is the gap.",
-    reflectq:"Where did you get stuck or go vague?",
+  { id:"teach", name:"Teach It Simple", kind:"reflect", tier:"moderate", timer:120, bet:"scale", source:"Protégé effect (Stanford teachable agents); teaching someone else helps you learn",
+    what:"Explain it out loud in the simplest words you can, like you are teaching a little kid. Do not use notes.",
+    read:t=>`Teach <b>${t}</b> out loud, like you are explaining it to a little kid. Use the simplest words you can. Don't use notes.`,
+    betq:"Can you explain the whole thing without checking the book?",
+    doi:"Teach it out loud. If you have to check the book, that part is what you still need to learn.",
+    reflectq:"Where did you get stuck or unsure?",
     grad:"She explains a concept aloud, to someone or herself, without being told." },
-  { id:"elaborate", name:"Elaborate", kind:"reflect", tier:"moderate", timer:90, bet:"none", source:"Make It Stick · elaboration multiplies the cues you can recall by",
+  { id:"elaborate", name:"Connect It to What You Know", kind:"reflect", tier:"moderate", timer:90, bet:"none", source:"Make It Stick · elaboration multiplies the cues you can recall by",
     what:"Connect the new thing to something you already know.",
-    read:t=>`One sentence. "<b>${t}</b> is like ___ because ___." Connect it to something you already get.`,
-    doi:"Finish the sentence on paper. Make the link real. A word match doesn't hold.",
-    reflectq:"Does the link hold up? A good one is a second handle on the memory.",
+    read:t=>`Finish this sentence: "<b>${t}</b> is like ___ because ___." Connect it to something you already understand.`,
+    doi:"Write the sentence on paper. The connection has to be a real reason, not just a word that sounds the same.",
+    reflectq:"Does your sentence explain why the two things are alike? If it just matches a word, try again.",
     grad:"She spontaneously connects new material to something she knows." },
-  { id:"mapit", name:"Map It", kind:"reflect", tier:"moderate · narrow", timer:180, bet:"none", source:"Make It Stick · spatial structures file material; run AFTER a dump, never instead",
-    what:"Lay the material out in space, each piece where it belongs, connected.",
-    read:t=>`Spread <b>${t}</b> out. Put each piece on the page where it belongs and connect what goes together.`,
-    doi:"Build the map on paper. Let space and arrows do the work; keep sentences off it.",
-    reflectq:"Anything you couldn't place is the part you don't have yet. What was it?",
+  { id:"mapit", name:"Map It", kind:"reflect", tier:"moderate · narrow", timer:180, bet:"none", source:"Make It Stick; use after Write Everything Down, not instead of it",
+    what:"Spread the material out on paper. Put each piece where it belongs and connect the pieces that go together.",
+    read:t=>`Spread <b>${t}</b> out on paper. Put each piece where it belongs, and draw lines between the pieces that go together.`,
+    doi:"Build the map on paper. Use space and arrows to show how things connect. Don't write full sentences on it.",
+    reflectq:"Was there anything you couldn't place on the map? That is the part you don't know yet.",
     grad:"She reaches for a spatial layout on her own when material is tangled." },
-  { id:"mixit", name:"Mix It", kind:"cued", tier:"high", timer:0, bet:"countN", source:"Make It Stick · 77% interleaved vs 38% blocked at 24h (Taylor & Rohrer 2010) · similar types only",
-    what:"Practice related problem types together, sorting which is which before solving.",
-    read:t=>`We mix types in this one. The trick: figure out which kind each one is before you solve.`,
+  { id:"mixit", name:"Mix Up the Problems", kind:"cued", tier:"high", timer:0, bet:"countN", source:"Make It Stick · 77% interleaved vs 38% blocked at 24h (Taylor & Rohrer 2010) · similar types only",
+    what:"Practice different problem types mixed together. Figure out which type each one is before you solve it.",
+    read:t=>`The problem types are mixed together here. Before you solve each one, figure out which type it is.`,
     betq:"How many will you sort correctly?",
     grad:"She chooses to practice mixed types rather than blocking one." },
   { id:"tryfirst", name:"Try It First", kind:"cued", tier:"high", timer:0, bet:"countN", source:"Make It Stick (generation) · pretest before a lecture → ~10% better later (E. Bjork) · 30% study + 70% reciting beats 100% study (Gates 1917)",
-    what:"Take a swing before you've studied it. Wrong answers prime the real one.",
-    read:t=>`Before you really study <b>${t}</b>, take a swing at it. Wrong is fine, the swing is the whole point.`,
-    betq:"Cold, no studying yet: how many will you get?",
+    what:"Try to answer before you study. Wrong answers now help you remember the right answers later.",
+    read:t=>`Before you study <b>${t}</b>, try to answer these questions. Being wrong is fine. Trying is what matters.`,
+    betq:"You haven't studied this yet. How many do you think you will get right?",
     grad:"She attempts a problem before reading it or being taught it." },
-  { id:"concrete", name:"Make It Concrete", kind:"reflect", tier:"moderate", timer:90, bet:"none", source:"Understanding How We Learn (one of the six) · Why Don't Students Like School · guard: use 2+, push back to the principle",
-    what:"Turn the abstract idea into your own specific, made-up example.",
-    read:t=>`Make <b>${t}</b> concrete. Invent your own example of it, something specific and real to you.`,
-    doi:"Write your example on paper. Then a second one that's different from the first.",
-    reflectq:"Does your example actually fit the rule, or just sound like it? Push it back to the principle.",
+  { id:"concrete", name:"Make Your Own Example", kind:"reflect", tier:"moderate", timer:90, bet:"none", source:"Understanding How We Learn · Why Don't Students Like School; use two or more examples",
+    what:"Turn the idea into your own real example.",
+    read:t=>`Make up your own example of <b>${t}</b>. Pick something real from your own life.`,
+    doi:"Write your example on paper. Then write a second example that is different from the first.",
+    reflectq:"Does your example really fit the rule, or does it just sound like it does? Check it against the rule.",
     grad:"She makes up her own example without being asked." },
-  { id:"palace", name:"Build a Palace", kind:"reflect", tier:"moderate · narrow", timer:180, bet:"scale", source:"Learning How to Learn (Ch 8; the memory palace runs on visuospatial memory, supersized vs verbal) · Make It Stick (mnemonics)",
-    what:"Place the items along a route you know by heart. Walk it to pull them back.",
-    read:t=>`Pick a place you know cold, your room, your walk to school. Put each piece of <b>${t}</b> somewhere along it.`,
-    betq:"Can you walk the route and pull them all back?",
-    doi:"Build the route on paper or in your head. One item per spot, make each one vivid.",
-    reflectq:"Walk it back. Which spots came up empty? Those are the ones to redo.",
+  { id:"palace", name:"Memory Walk", kind:"reflect", tier:"moderate · narrow", timer:180, bet:"scale", source:"Learning How to Learn (Ch 8; your memory for places is very strong) · Make It Stick (mnemonics)",
+    what:"Picture a path you know well. Put each thing you want to remember at a spot along the path. Then walk the path in your head to remember them.",
+    read:t=>`Pick a place you know very well, like your room or your walk to school. Put each piece of <b>${t}</b> at a spot along the way.`,
+    betq:"Can you walk the path in your head and remember them all?",
+    doi:"Build the path on paper or in your head. Put one item at each spot. Make each picture bright and clear.",
+    reflectq:"Walk the path again in your head. Which spots were empty? Those are the ones to practice again.",
     grad:"She builds a route for a list on her own." },
-  { id:"crackword", name:"Crack the Word", kind:"reflect", tier:"moderate · her bridge", timer:120, bet:"none", source:"Executive Skills in Reading Comprehension (morphology) · profile EC-001 Strategy 03: build words from roots the way Chinese characters are built",
-    what:"Break a hard word into its root and parts. The meaning is usually built right in.",
-    read:t=>`Take the hard words in <b>${t}</b>. Don't memorise them whole. Break each into root, prefix, suffix, like building a character from parts.`,
-    doi:"On paper, split each word into its pieces and write what each piece means. Build the meaning from the parts.",
-    reflectq:"Which words cracked open once you saw the parts? Which roots show up again and again?",
+  { id:"crackword", name:"Break the Word Apart", kind:"reflect", tier:"moderate · her bridge", timer:120, bet:"none", source:"Executive Skills in Reading Comprehension (morphology); build words from their parts, the way Chinese characters are built",
+    what:"Break a hard word into smaller parts. The meaning is usually hiding inside the parts.",
+    read:t=>`Look at the hard words in <b>${t}</b>. Don't try to memorize each one whole. Break each word into its parts, like the beginning, the root, and the ending.`,
+    doi:"On paper, split each word into its parts. Write what each part means. Then put the meaning back together.",
+    reflectq:"Which words made sense once you saw the parts? Which parts show up in more than one word?",
     grad:"She breaks an unfamiliar word into roots on her own instead of guessing or memorising it whole." },
 ];
 const moveById = id => MOVES.find(m=>m.id===id);
 
 const EXCLUDED = [
-  { name:"Rereading", instead:"Brain Dump",
-    body:"Reading your notes again. Feels like studying. Mostly isn't. In one study, people who reread were down to 40% a week later, and they thought they'd remember more than people who tested themselves. Pulling it from memory with the book closed is what sticks." },
+  { name:"Rereading", instead:"Write Everything Down",
+    body:"Reading your notes again feels like studying, but it does not work well. In one study, people who reread remembered only 40% a week later, and they thought they would remember more than the people who tested themselves. Trying to remember with the book closed works much better." },
   { name:"Highlighting", instead:"Tell Me Without Looking",
-    body:"Colouring the page. Feels active. But the marking isn't the learning, the remembering is. A bright page can hide how little is actually in your head." },
-  { name:"Neat Recopied Notes", instead:"Map It",
-    body:"Rewriting your notes to make them look tidy. It's copying. A pretty page hides how little is actually in your head." },
+    body:"Coloring the page feels like work, but marking words is not the same as learning them. A bright page can hide how little is really in your head." },
+  { name:"Copying Notes Over", instead:"Map It",
+    body:"Rewriting your notes to make them look neat is just copying. A pretty page can hide how little is really in your head." },
 ];
 
 const LIBRARY = {
   extraMoves: [
-    { name:"Sketchnote", line:"Take notes as drawings, arrows and icons instead of sentences, so your hand keeps pace with how fast you think. Words are your slow lane; pictures aren't.", src:"profile EC-001 Strategy 04 · Dual Coding with Teachers" },
-    { name:"Chunk It", line:"Group a long list into a few labelled bundles. Working memory holds about seven things; a chunk lets one slot carry many.", src:"Learning How to Learn (Miller 1956)" },
-    { name:"Self-Explain", line:"Go step by step and say why each step is right. Naming it doesn't count. The gaps show up fast.", src:"Learn Better · Understanding How We Learn" },
-    { name:"Use an Analogy", line:"Find what the idea works like. \"This is the same as ___.\" Comparison is how you actually understand it.", src:"Why Don't Students Like School (Holyoak)" },
-    { name:"Sprint and Break", line:"Work one focused sprint of about 25 minutes, then a real break. The break is when it sinks in.", src:"Uncommon Sense Teaching (Pomodoro; brain breaks)" },
-    { name:"Walk It Off", line:"Stuck? Leave it and move. Your background brain keeps working and often hands you the answer.", src:"How We Learn (incubation; focused vs diffuse)" },
-    { name:"Get Started", line:"The hardest part is starting. Do just the first two minutes, on purpose badly. Momentum does the rest.", src:"Smart but Scattered Teens (task initiation)" },
-    { name:"Plan It", line:"Break the work into steps and put them in order before you start. A plan beats willpower.", src:"Smart but Scattered Teens (planning)" },
-    { name:"Find the Hook", line:"Before you start, find one reason this matters to you. Material you care about sticks harder.", src:"Learn Better (learn crafting)" },
-    { name:"Set a Process Goal", line:"Aim at \"do ten problems,\" not \"get an A.\" You control the effort. The grade isn't yours to control.", src:"Learn Better (process vs outcome goals)" },
-    { name:"Review As You Learn", line:"Glance back over today's material the same day, briefly. A little review now saves a lot later.", src:"Brain Train (RAYL; Ebbinghaus)" },
-    { name:"Study Somewhere New", line:"Change where you study sometimes. Different places give your memory more hooks to find it by.", src:"How We Learn (context variability)" },
-    { name:"Steady the Nerves", line:"When it tips from hard into panic, stop and breathe; hard is fine, panic isn't. And the way out of putting it off is one small first step.", src:"Neuroteach (amygdala; zone of proximal discomfort) · Ace Your Exam" },
-    { name:"Hard-Start (exams)", line:"In a test, start a hard question, then leave it and do the easy ones. Your background brain chews on the hard one while you bank marks.", src:"Uncommon Sense Teaching (hard-start)" },
-    { name:"Exam Postmortem", line:"After a test, sort your mistakes by type. The pattern tells you exactly what to fix next time.", src:"Ace Your Exam (five error types)" },
+    { name:"Draw Your Notes", line:"Take notes as drawings, arrows, and small pictures instead of sentences. Drawing is faster than writing, so you don't fall behind.", src:"Dual Coding with Teachers" },
+    { name:"Group It Together", line:"Group a long list into a few small groups with labels. Your brain can only hold about seven things at once. A group counts as just one thing.", src:"Learning How to Learn (Miller 1956)" },
+    { name:"Explain Each Step", line:"Go step by step and say why each step is right. Just naming the step is not enough. You will quickly see where you are confused.", src:"Learn Better · Understanding How We Learn" },
+    { name:"Compare It to Something", line:"Think about what the idea is like. Finish this sentence: \"This is the same as ___.\" Comparing two things helps you understand both.", src:"Why Don't Students Like School (Holyoak)" },
+    { name:"Work, Then Rest", line:"Work on one thing for about 25 minutes, then take a real break. Your brain does a lot of its learning during the break, not during the work.", src:"Uncommon Sense Teaching (Pomodoro; brain breaks)" },
+    { name:"Take a Walk", line:"If you're stuck, stop and move around. Your brain keeps working on the problem and often gives you the answer later.", src:"How We Learn (incubation; focused vs diffuse)" },
+    { name:"Get Started", line:"Starting is the hardest part. Do just the first two minutes, even if you do them badly on purpose. Once you start, it's easier to keep going.", src:"Smart but Scattered Teens (task initiation)" },
+    { name:"Plan It", line:"Break the work into steps and put them in order before you start. It's hard to plan when you're tired, so plan first.", src:"Smart but Scattered Teens (planning)" },
+    { name:"Find a Reason to Care", line:"Before you start, find one reason this matters to you. You remember things better when you care about them.", src:"Learn Better (learn crafting)" },
+    { name:"Set a Goal You Control", line:"Aim for a goal you control, like \"do ten problems,\" instead of one you don't, like \"get an A.\" You control your effort. You can't fully control the grade.", src:"Learn Better (process vs outcome goals)" },
+    { name:"Look Back Today", line:"Look back over today's material the same day, just for a few minutes. A short review now saves a lot of time later.", src:"Brain Train (RAYL; Ebbinghaus)" },
+    { name:"Study Somewhere New", line:"Change where you study sometimes. Studying in different places gives your memory more ways to find the answer later.", src:"How We Learn (context variability)" },
+    { name:"Calm Down First", line:"If you start to panic, stop and take a breath. Then do one small thing to get moving again. Just sitting there will make the panic worse.", src:"Neuroteach (amygdala; zone of proximal discomfort) · Ace Your Exam" },
+    { name:"Start With the Hard One", line:"On a test, start with a hard question. Then leave it and do the easy ones. Your brain keeps thinking about the hard one while you earn points on the easy ones.", src:"Uncommon Sense Teaching (hard-start)" },
+    { name:"Check Your Mistakes", line:"After a test, sort your mistakes into groups. The groups show you exactly what to fix next time.", src:"Ace Your Exam (five error types)" },
   ],
   why: [
-    { name:"Race-Car vs Hiker Brain", line:"Fast processors (race-cars) get there quick but skim the scenery; slower ones (hikers) catch more detail. Neither is smarter. Yours is a race-car, so slowing down on purpose is your edge.", src:"Uncommon Sense Teaching" },
-    { name:"The Two Illusions", line:"Why \"I get it\" lies: rereading feels easy (that's fluency), and feeling sure isn't being right (that's confidence). The guess catches both.", src:"Powerful Teaching" },
-    { name:"Forget a Little, Learn More", line:"Forgetting a bit between sessions isn't failing. The effort to pull it back is what makes it stick harder.", src:"How We Learn (Bjork)" },
-    { name:"Learn It, Link It", line:"Memory is connections. A new fact sticks when it hooks onto something you already know.", src:"Uncommon Sense Teaching (Hebbian learning)" },
-    { name:"Two Kinds of Learning", line:"Facts and skills travel different routes in your brain. Skills need doing, spread over time; you can't cram them in.", src:"Uncommon Sense Teaching (declarative vs procedural)" },
-    { name:"Deep vs Surface", line:"Beginners sort problems by how they look; experts sort by what's really going on underneath. Mixing problems trains that.", src:"Learn Better" },
-    { name:"Practice Rewires You", line:"Repetition physically speeds up your brain's wiring. Getting faster is real; the wiring physically changes.", src:"Neuroteach (myelination)" },
-    { name:"Why Breaks Solve It", line:"Your brain has a tight focused mode and a loose background mode. The stuck problem often cracks in the loose one, on a walk.", src:"Learning How to Learn (focused vs diffuse)" },
-    { name:"Start and End Stick Most", line:"You remember the beginning and end of a session best. Put the most important stuff there; the middle is where things get lost.", src:"Neuroteach (primacy-recency)" },
-    { name:"Why School Is Hard", line:"Your brain evolved for faces and talking; reading and algebra are recent add-ons. Those take deliberate practice; struggling with them is normal.", src:"Uncommon Sense Teaching (biologically primary vs secondary)" },
-    { name:"Wrong First, Right Later", line:"Taking a real swing and missing primes your brain for the answer. The wrong attempt is the learning.", src:"Learn Better (productive failure, Kapur)" },
-    { name:"Knowledge Before Thinking", line:"You can't think hard about something you barely know. Facts first are what make the clever stuff possible.", src:"Why Don't Students Like School" },
-    { name:"Ability Is Built", line:"Smart isn't fixed. Effort and the right practice grow it; your brain changes when you push it.", src:"Neuroteach (growth mindset)" },
-    { name:"Sleep Saves It", line:"Sleep is when the day's learning gets filed into long-term memory. A late cram you don't sleep on barely counts.", src:"Neuroteach (sleep)" },
-    { name:"The Unfinished Problem", line:"Leave a problem half-done and your mind keeps it active in the background, picking up clues. You can use that on purpose.", src:"How We Learn (Zeigarnik; percolation)" },
+    { name:"Fast Brain, Slow Brain", line:"Some brains work fast but miss small details, like a race car. Some work slower but notice more, like a hiker. Neither one is smarter. If your brain is the fast kind, slowing down on purpose helps you.", src:"Uncommon Sense Teaching" },
+    { name:"Two Tricks Your Brain Plays", line:"Rereading feels easy, so it feels like it is working. That is a trick. Feeling sure of yourself is not the same as being right. That is another trick. Guessing before you check helps you catch both tricks.", src:"Powerful Teaching" },
+    { name:"A Little Forgetting Helps", line:"Forgetting a bit between study sessions isn't a bad sign. The work it takes to remember it again is what makes it stick.", src:"How We Learn (Bjork)" },
+    { name:"New Facts Need Old Facts", line:"Memory works by making connections. A new fact sticks when it hooks onto something you already know.", src:"Uncommon Sense Teaching (Hebbian learning)" },
+    { name:"Two Kinds of Learning", line:"Facts and skills are learned in different ways. Skills need practice spread out over time. You can't learn a skill in one night.", src:"Uncommon Sense Teaching (declarative vs procedural)" },
+    { name:"Look Past the Surface", line:"Beginners sort problems by how they look on the outside. Experts sort by what's really happening underneath. Mixing up problem types trains you to think like an expert.", src:"Learn Better" },
+    { name:"Practice Changes Your Brain", line:"Practicing something over and over actually speeds up the wiring in your brain. When something starts to feel easier, that is real. Your brain is actually changing.", src:"Neuroteach (myelination)" },
+    { name:"Breaks Help You Solve It", line:"Your brain has a focused mode and a relaxed background mode. A problem you're stuck on often gets solved in the relaxed mode, like on a walk.", src:"Learning How to Learn (focused vs diffuse)" },
+    { name:"You Remember the Start and End", line:"You remember the beginning and the end of a study session best. Put the most important stuff at the start and end, because you forget the middle part more easily.", src:"Neuroteach (primacy-recency)" },
+    { name:"Why School Feels Hard", line:"Your brain is built for talking and reading faces. Reading and math are newer skills. They take real practice to learn. Struggling with them is normal.", src:"Uncommon Sense Teaching (biologically primary vs secondary)" },
+    { name:"Mistakes Help You Learn", line:"Taking a real guess and getting it wrong actually helps your brain remember the right answer later. The wrong try is part of how you learn it.", src:"Learn Better (productive failure, Kapur)" },
+    { name:"Learn Facts First", line:"You can't think deeply about something you barely know. Learning the facts first is what makes deeper thinking possible.", src:"Why Don't Students Like School" },
+    { name:"Smart Grows With Practice", line:"Being smart isn't something you're born with and stuck with. Effort and the right kind of practice grow it. Your brain actually changes when you push it.", src:"Neuroteach (growth mindset)" },
+    { name:"Sleep Locks In Learning", line:"Sleep is when your brain saves what you learned that day into long-term memory. Studying late without sleeping on it barely helps.", src:"Neuroteach (sleep)" },
+    { name:"Leaving It Half-Done Helps", line:"If you leave a problem half-finished, your brain keeps working on it in the background. You can use that on purpose by stepping away before you're totally stuck.", src:"How We Learn (Zeigarnik; percolation)" },
   ],
 };
 
@@ -1016,7 +1018,7 @@ function today(){ return Math.floor(Date.now()/86400000); }
 function addCards(items, topic, shape){
   const p=P(); const t=today();
   items.forEach(it=>{
-    p.cards.push({ id:"c"+Math.random().toString(36).slice(2,9), q:it.q, a:it.a, topic:topic||"",
+    p.cards.push({ id:"c"+Math.random().toString(36).slice(2,9), q:it.q, a:it.a, tier:it.t||"R", topic:topic||"",
       shape: shape||"default", ef:2.5, interval:0, reps:0, due:t, born:t });
   });
 }
@@ -1063,7 +1065,7 @@ async function generateItems(topic, text){
   if(!r.ok){ const e=new Error("server"); e.code="server"; e.status=r.status; throw e; }
   let data;
   try{ data=await r.json(); }catch(e){ const er=new Error("parse"); er.code="parse"; throw er; }
-  const items=Array.isArray(data.items)?data.items.filter(o=>o&&o.q&&o.a).map(o=>({q:String(o.q),a:String(o.a)})):[];
+  const items=Array.isArray(data.items)?data.items.filter(o=>o&&o.q&&o.a).map(o=>({q:String(o.q),a:String(o.a),t:(o.t==="C"||o.t==="A")?o.t:"R"})):[];
   if(!items.length){ const e=new Error("empty"); e.code="no_items"; throw e; }
   return { items, source:"ai" };
 }
@@ -1071,9 +1073,9 @@ function genErrorLine(code){
   switch(code){
     case "timeout": return "That took too long. Check your connection and try again.";
     case "network": return "Couldn't reach the question service. Try again in a moment.";
-    case "rate_limited": return "A lot of requests just now. Wait a few seconds and try again.";
-    case "no_items": return "Couldn't pull clear questions from that. Try fuller sentences, or use simple questions.";
-    case "server": return "The question service hit an error. Try again, or use simple questions.";
+    case "rate_limited": return "Too many requests right now. Wait a few seconds and try again.";
+    case "no_items": return "We couldn't make clear questions from that. Try writing fuller sentences, or use simple questions.";
+    case "server": return "The question service had an error. Try again, or use simple questions.";
     default: return "Something went wrong generating questions. Try again, or use simple questions.";
   }
 }
@@ -1112,7 +1114,7 @@ function localItems(text, topic){
       for(let i=0;i<words.length;i++){ const w=words[i].replace(/[^\w]/g,""); if(w.length>best.length && !stop.has(w.toLowerCase()) && /[A-Za-z]/.test(w)){ best=w; bi=i; } }
       if(best && bi>=0){ a=best; const copy=words.slice(); copy[bi]=copy[bi].replace(best,"_____"); q=copy.join(" ").replace(/[.;]$/,"").trim(); }
     }
-    if(q&&a){ const key=q.toLowerCase().slice(0,40); if(!seen.has(key) && a.length<90){ seen.add(key); items.push({q,a}); } }
+    if(q&&a){ const key=q.toLowerCase().slice(0,40); if(!seen.has(key) && a.length<90){ seen.add(key); items.push({q,a,t:"R"}); } }
   }
   return items;
 }
@@ -1151,6 +1153,18 @@ function render(){
 function div(cls,html){ const d=document.createElement("div"); if(cls)d.className=cls; if(html!=null)d.innerHTML=html; return d; }
 function btn(cls,label){ const b=document.createElement("button"); b.type="button"; if(cls)b.className=cls; if(label!=null)b.textContent=label; return b; }
 function esc(v){ return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+/* Tier chip: the v2 question service tags each item R (recall), C (connection),
+   or A (use it). Kids never see letters; they see the plain word and a colour,
+   so a harder question announces itself as harder. Recall gets no chip, it's the
+   baseline; the two thinking tiers stand out. */
+const TIER = {
+  C:{label:"Think", bg:"rgba(74,95,165,.12)", fg:"#3a4d86"},
+  A:{label:"Use it", bg:"rgba(163,82,72,.12)", fg:"#8a3f37"}
+};
+function tierChip(t){
+  const d=TIER[t]; if(!d) return "";
+  return ` <span class="tchip" style="background:${d.bg};color:${d.fg}">${d.label}</span>`;
+}
 function topbar(showProfile=true){
   const t=div("top");
   t.innerHTML=`<span class="brand">MOVE<span class="dot">.</span></span>`;
@@ -1169,43 +1183,43 @@ function toast(msg){ const el=document.getElementById("toast"); el.textContent=m
    them: ask, don't correct. The retrieval attempt is the learning
    event; fixing it mid-attempt takes the event away. */
 const COACH = {
-  braindump:{ say:"Close the book. Write down everything you remember about this. Don't stop to fix anything, don't peek.",
-    why:"Free recall beats concept-mapping the same material, 67% vs 45% on a later test. The mess is fine. The pulling-out is the point." },
-  tellme:{ say:"Books stay closed. I'll pass you the phone, it asks, you answer out loud or type it.",
-    why:"One round of self-testing roughly 1.5x's what sticks a week later versus rereading. Wrong answers here are the work." },
-  space:{ say:"This is older material coming back on purpose. Quick gut check, how much of it is still in there?",
-    why:"Bringing something back after a bit of forgetting is what locks it in. Feeling rusty is the treatment working." },
-  drawit:{ say:"No words this round. Draw the idea on paper, boxes, arrows, whatever shows it.",
-    why:"A second handle on the memory. If they groan, that effort is the sign it's doing something." },
-  teach:{ say:"Teach it to me like I'm five. Simplest words you can find. No notes.",
-    why:"Explaining out loud exposes exactly where it gets vague. Play dumb, ask them to go slower at the vague part." },
-  elaborate:{ say:"Finish this sentence: this is like ___ because ___. Hook it to something you already know.",
-    why:"Every real connection is another route back to the memory. A forced link is fine, a lazy word-match isn't." },
-  mapit:{ say:"Spread it out on paper. Each piece where it belongs, lines between what connects.",
-    why:"Whatever they can't place is the part they don't have yet. That's the find." },
-  mixit:{ say:"These come mixed up. Before you solve each one, say which kind it is.",
-    why:"Sorting the type is the exam skill. Mixed practice ran 77% vs 38% against one-type-at-a-time a day later." },
-  tryfirst:{ say:"You haven't studied this yet. Take a swing anyway; wrong is fine.",
-    why:"A wrong guess first primes the brain for the real answer. Do not rescue them mid-swing." },
-  concrete:{ say:"Give me a real example of this. Something you could point at.",
-    why:"Abstract ideas stick when they're tied to at least two concrete cases. Push back to the principle after." },
-  palace:{ say:"Put each item somewhere along a route you know cold, front door, hallway, kitchen. Make each one vivid.",
-    why:"Spatial memory is the strongest system they have. Silly images work better than sensible ones." },
+  braindump:{ say:"Close the book. Write down everything you remember about this. Don't stop to fix anything, and don't peek.",
+    why:"Writing from memory works better than making a chart of the same material. In one study it was 67% versus 45% on a later test. Messy writing is fine. Remembering it on their own is what matters." },
+  tellme:{ say:"Keep the book closed. I'll pass you the phone. It will ask questions, and you answer out loud or type.",
+    why:"One round of self-testing helps you remember about 50% more a week later than rereading does. Wrong answers help you learn too." },
+  space:{ say:"This is older material coming back on purpose. How much of it do you think you still remember?",
+    why:"Bringing something back after a bit of forgetting is what locks it in. Feeling a little rusty is normal. That means the review is helping." },
+  drawit:{ say:"Don't use words this time. Draw the idea on paper. You can use boxes, arrows, or anything that shows it.",
+    why:"This gives your child a second way to remember it. If they complain, that's a sign it's working." },
+  teach:{ say:"Teach it to me like I'm five years old. Use the simplest words you can. Don't use any notes.",
+    why:"Explaining out loud shows exactly where they get confused. Act like you don't understand, and ask them to slow down at that part." },
+  elaborate:{ say:"Finish this sentence: this is like ___ because ___. Connect it to something you already know.",
+    why:"Each real connection makes the memory easier to find later. A real link is good. Just matching similar-sounding words is not." },
+  mapit:{ say:"Spread it out on paper. Put each piece where it belongs, and draw lines between the pieces that go together.",
+    why:"Whatever they can't place is the part they don't have yet. That shows you what to review next." },
+  mixit:{ say:"These problems are mixed up. Before you solve each one, tell me which kind it is.",
+    why:"Sorting the type is the exam skill. In one study, mixed practice led to 77% correct the next day, versus 38% for practicing one type at a time." },
+  tryfirst:{ say:"You haven't studied this yet. Try to answer anyway. Being wrong is fine.",
+    why:"A wrong guess first helps the brain remember the real answer later. Don't jump in to help while they're still trying." },
+  concrete:{ say:"Give me a real example of this. Pick something from your own life.",
+    why:"Ideas stick better with two real examples. After that, ask them to explain the general rule again." },
+  palace:{ say:"Put each item at a spot along a path you know well, like the front door, the hallway, and the kitchen. Make each picture bright and clear.",
+    why:"Your child's memory for places is very strong. Silly pictures work better than serious ones." },
   crackword:{ say:"Break the word open. What are its parts, what do they each mean?",
-    why:"A cracked word sticks as meaning instead of noise. It also unlocks its cousins for free." }
+    why:"A word makes more sense once you see its parts. It also helps with other words that share the same root." }
 };
 function coachFor(m){
   const c = COACH[m.id];
   if(c) return c;
-  return { say: m.what || "Run this one as the card says.", why: "" };
+  return { say: m.what || "Follow the steps on the card.", why: "" };
 }
 const GAPTALK = {
-  cued:"Ask: \u201cWhat did you guess, what did you get?\u201d Then: \u201cWhich one surprised you?\u201d Stop there. Don't re-teach the misses, they come back on their own schedule.",
-  free:"Look at what got ticked together. Ask: \u201cWhich missing one surprises you most?\u201d Resist filling the blanks in for them.",
-  reflect:"Ask them to read you the sticky part out loud. Then ask: \u201cWhat would you try on it next time?\u201d The answer has to be theirs."
+  cued:"Ask: \u201cWhat did you guess, what did you get?\u201d Then: \u201cWhich one surprised you?\u201d Stop there. Don't re-teach the ones they missed. Those will come back around again later.",
+  free:"Look at the checked list together. Ask: \u201cWhich missing one surprises you most?\u201d Try not to fill in the answers for them.",
+  reflect:"Ask them to read you the confusing part out loud. Then ask: \u201cWhat would you try on it next time?\u201d The answer has to be theirs."
 };
 function kidP(){ return DB.coachIdx!=null ? DB.profiles[DB.coachIdx] : null; }
-function kidName(){ const k=kidP(); return k? k.name : "your kid"; }
+function kidName(){ const k=kidP(); return k? k.name : "your child"; }
 function useKid(){ if(DB.coachIdx!=null) DB.active=DB.coachIdx; }
 function useSolo(){ DB.active=0; }
 function phaseOf(p){
@@ -1215,9 +1229,9 @@ function phaseOf(p){
   return 1;
 }
 const PHASES=[
-  {n:1, t:"You run it", d:"Ten minutes. You hold the script, they do the work."},
+  {n:1, t:"You run it", d:"You run a ten-minute session. You hold the script, and they do the work."},
   {n:2, t:"They run it", d:"Hand the app over. You read the gap report after."},
-  {n:3, t:"It's theirs", d:"Moves retire as they run them unprompted. The app's job ends."}
+  {n:3, t:"It's theirs", d:"Moves retire once they run them on their own. The app's job is done."}
 ];
 function phaser(cur){
   const w=div("phaser");
@@ -1235,8 +1249,8 @@ function Home(){
   const kid = kidP();
   if(!kid){
     /* Cold open: the parent is the front door. */
-    s.appendChild(div(null,`<h1 class="display" style="font-size:42px;margin-top:22px;line-height:1.08">Coach your kid\u2019s studying.<br>Ten minutes.</h1>`));
-    s.appendChild(div("lede mt","No subject expertise needed. MOVE gives you the words to say and the science behind them. Your kid does the work. You see the gaps."));
+    s.appendChild(div(null,`<h1 class="display" style="font-size:42px;margin-top:22px;line-height:1.08">Help your child study.<br>It takes ten minutes.</h1>`));
+    s.appendChild(div("lede mt","You don't need to know the subject. MOVE gives you the words to say. Your child does the work, and you see what they know and what they still need to learn."));
     const cta=div(); cta.style.marginTop="24px";
     const b1=btn("btn btn-primary mb","Run your first session together"); b1.onclick=()=>go("coach");
     cta.appendChild(b1); s.appendChild(cta);
@@ -1248,7 +1262,7 @@ function Home(){
     const a1=btn("tlink","How this works, and the research behind it"); a1.onclick=()=>go("how"); ll.appendChild(a1);
     const a2=btn("tlink",`The move library \u00b7 all ${window.MoveCube.count}`); a2.onclick=()=>{ useSolo(); go("library"); }; ll.appendChild(a2);
     s.appendChild(ll);
-    s.appendChild(div("kicker","MOVE \u00b7 a 100% Human build \u00b7 posted for feedback, tell me what breaks. Everything you enter stays on this device; nothing is uploaded except the notes you choose to turn into questions."));
+    s.appendChild(div("kicker","MOVE \u00b7 a 100% Human build. Posted for feedback, please tell me what breaks. Everything you type stays on this device. Nothing is uploaded except the notes you choose to turn into questions."));
     s.appendChild(div("spacer"));
     return s;
   }
@@ -1260,18 +1274,18 @@ function Home(){
   const last = kid.sessions.length ? kid.sessions[kid.sessions.length-1].t : null;
   const head = ph===1 ? `Session ${kid.coached+1} with ${esc(kid.name)}.`
              : ph===2 ? `${esc(kid.name)} runs it now.`
-             : `It\u2019s ${esc(kid.name)}\u2019s.`;
+             : `It belongs to ${esc(kid.name)} now.`;
   s.appendChild(div(null,`<h1 class="display" style="font-size:40px;margin-top:22px;line-height:1.1">${head}</h1>`));
   const sub = ph===1
-    ? (due? `${due} item${due!==1?"s":""} due. You hold the script, ${esc(kid.name)} does the work.` : `You hold the script, ${esc(kid.name)} does the work.`)
+    ? (due? `${due} question${due!==1?"s":""} ready for review. You hold the script, and ${esc(kid.name)} does the work.` : `You hold the script, and ${esc(kid.name)} does the work.`)
     : ph===2
-    ? `Hand ${esc(kid.name)} the phone to run a session. Your job is the report after.`
-    : `${gradN} moves retired and running unprompted. Check the report, stay out of the way.`;
+    ? `Hand ${esc(kid.name)} the phone to run a session. Your job is to read the report afterward.`
+    : `${gradN} moves are habits now. Check the report. You don't need to run sessions anymore.`;
   s.appendChild(div("lede mt",sub));
   const cta=div(); cta.style.marginTop="22px";
   if(ph===1){
     const b1=btn("btn btn-primary mb","Start a coached session"); b1.onclick=()=>{ useKid(); S.coach=true; startFlow("full"); };
-    const b2=btn("btn btn-ghost",`Short one \u00b7 two moves`); b2.onclick=()=>{ useKid(); S.coach=true; startFlow("two"); };
+    const b2=btn("btn btn-ghost",`Short session \u00b7 two moves`); b2.onclick=()=>{ useKid(); S.coach=true; startFlow("two"); };
     cta.appendChild(b1); cta.appendChild(b2);
   } else {
     const b1=btn("btn btn-primary mb",`Hand it to ${esc(kid.name)}`); b1.onclick=()=>{ useKid(); S.coach=false; startFlow("full"); };
@@ -1282,8 +1296,8 @@ function Home(){
   s.appendChild(phaser(ph));
   if(last!=null){
     const d=daysSince(last);
-    const backline = d<=4 ? `Last session ${d===0?"today":d===1?"yesterday":d+" days ago"}. Back inside four days, that\u2019s a real habit forming, not a New Year\u2019s resolution.`
-                          : `Last session ${d} days ago. A short session inside four days beats a long one you keep putting off.`;
+    const backline = d<=4 ? `Last session ${d===0?"today":d===1?"yesterday":d+" days ago"}. Coming back within four days helps make this a habit.`
+                          : `Last session ${d} days ago. A short session now is better than waiting.`;
     s.appendChild(div("faint",`<div style="margin-top:14px;font-size:13px">${backline}</div>`));
   }
   const ll=div("linklist"); ll.style.marginTop="28px";
@@ -1293,7 +1307,7 @@ function Home(){
   const a4=btn("tlink","How this works"); a4.onclick=()=>go("how"); ll.appendChild(a4);
   const a5=btn("tlink","I\u2019m studying on my own"); a5.onclick=()=>{ useSolo(); S.coach=false; startFlow("full"); }; ll.appendChild(a5);
   s.appendChild(ll);
-  s.appendChild(div("kicker","MOVE \u00b7 a 100% Human build \u00b7 posted for feedback, tell me what breaks. Everything you enter stays on this device; nothing is uploaded except the notes you choose to turn into questions."));
+  s.appendChild(div("kicker","MOVE \u00b7 a 100% Human build. Posted for feedback, please tell me what breaks. Everything you type stays on this device. Nothing is uploaded except the notes you choose to turn into questions."));
   s.appendChild(div("spacer"));
   return s;
 }
@@ -1302,27 +1316,27 @@ function Home(){
 function CoachStart(){
   const s=div("scr"); s.appendChild(topbar(false));
   s.appendChild(div(null,`<div style="margin-top:26px"><div class="eyebrow mb-s">Before the first session</div>
-    <div class="prompt">Three things, thirty seconds.</div></div>`));
+    <div class="prompt">Three things to know. It takes thirty seconds.</div></div>`));
   const list=div(); list.style.marginTop="20px";
-  [["You never explain the content.","You don\u2019t need to know the material at all. The app asks, they answer, you read the script between rounds. Doesn\u2019t matter if it\u2019s been years since you looked at any of this yourself."],
-   ["Wrong answers are the work.","Every miss they catch themselves sticks better than anything you could tell them. Let them sit in it a second before you jump in."],
-   ["The bet is the skill.","Before each round, they guess how much they\u2019ll get. Watching that guess meet the real number is the whole trick."]
+  [["You never explain the content.","You don\u2019t need to know the material at all. The app asks, they answer, you read the script between rounds. It doesn\u2019t matter if you haven\u2019t looked at this material in years."],
+   ["Wrong answers help them learn.","Every mistake they catch themselves helps them remember better than you telling them the right answer. Wait a few seconds before you help."],
+   ["Guessing is the skill.","Before each round, they guess how much they\u2019ll get right. Comparing that guess to the real score is what builds this skill."]
   ].forEach((r,idx)=>{
     const row=div("citerow");
     row.innerHTML=`<div class="c-claim"><b>${r[0]}</b> ${r[1]}</div>`;
     list.appendChild(row);
   });
   s.appendChild(list);
-  const lab=div("field-lab"); lab.style.marginTop="24px"; lab.textContent="Who are you coaching? First name is plenty.";
+  const lab=div("field-lab"); lab.style.marginTop="24px"; lab.textContent="Who are you coaching? A first name is fine.";
   s.appendChild(lab);
   const nameIn=document.createElement("input"); nameIn.type="text"; nameIn.placeholder="e.g. Maya";
   s.appendChild(nameIn);
-  s.appendChild(div("note mt","Grab whatever they\u2019re actually studying this week. Real homework beats a demo topic."));
+  s.appendChild(div("note mt","Use whatever they\u2019re actually studying this week. Real homework works better than a made-up example."));
   s.appendChild(div("spacer"));
   const b=btn("btn btn-primary","Set up and start");
   b.onclick=()=>{
     const nm=nameIn.value.trim();
-    if(!nm){ toast("A name to coach by, even a nickname."); return; }
+    if(!nm){ toast("Please enter a name or nickname."); return; }
     if(DB.coachIdx==null){
       DB.profiles.push(freshProfile(nm)); DB.coachIdx=DB.profiles.length-1;
     } else { DB.profiles[DB.coachIdx].name=nm; }
@@ -1342,23 +1356,23 @@ function Report(){
     <h1 class="display">${esc(kid.name)}\u2019s gap report.</h1>`));
   const hist=kid.gapHistory.slice(-14);
   if(!kid.sessions.length){
-    s.appendChild(div("lede mt","Nothing here yet. Run one session together, and this page stops being empty."));
+    s.appendChild(div("lede mt","Nothing here yet. Run one session together to see results here."));
     s.appendChild(div("spacer"));
     const b=btn("btn btn-primary","Start the first session"); b.onclick=()=>{ S.coach=true; startFlow("full"); }; s.appendChild(b);
     return s;
   }
   /* Dominant element: calibration */
-  s.appendChild(div("mt",`<div class="field-lab">The skill being built: reading their own knowledge</div>`));
+  s.appendChild(div("mt",`<div class="field-lab">The skill you\u2019re building: knowing what you actually know</div>`));
   if(hist.length>=2){
     const sp=div("spark");
     hist.forEach((h,i)=>{ const b=div("bar"+(i===hist.length-1?" last":"")); b.style.height=(Math.max(.08,1-h.gap)*100)+"%"; sp.appendChild(b); });
     s.appendChild(sp);
     const latest=hist[hist.length-1].gap;
-    const readout = latest<=0.15 ? `Their guesses are landing close to reality. That\u2019s calibration, the thing tests punish kids for not having.`
-                                  : `Guesses and reality still disagree. Normal early. The point is that ${esc(kid.name)} now sees the gap before an exam does.`;
+    const readout = latest<=0.15 ? `Their guesses are close to their real scores. This is called calibration. It\u2019s a skill that helps a lot on tests.`
+                                  : `Guesses and real scores don\u2019t match yet. That\u2019s normal at first. ${esc(kid.name)} is learning to spot this gap now, before a real test does.`;
     s.appendChild(div("sub",readout));
   } else {
-    s.appendChild(div("note","One data point so far. The trend appears after a few sessions."));
+    s.appendChild(div("note","You have one result so far. A pattern will show up after a few sessions."));
   }
   /* Rhythm */
   const last=kid.sessions[kid.sessions.length-1].t; const d=daysSince(last);
@@ -1367,26 +1381,26 @@ function Report(){
   const r=div("rowcard");
   r.innerHTML=`<div style="display:flex;gap:26px;align-items:baseline"><div><span class="repnum">${kid.sessions.length}</span><div class="rd" style="margin:2px 0 0">sessions total</div></div>
     <div><span class="repnum">${wk}</span><div class="rd" style="margin:2px 0 0">this week</div></div></div>
-    <div class="rd" style="margin-top:10px">${d<=4?`Back inside four days. Spacing is doing its job.`:`${d} days since the last one. A short session inside four days beats a long one later.`}</div>`;
+    <div class="rd" style="margin-top:10px">${d<=4?`Coming back within four days. That\u2019s good spacing.`:`${d} days since the last one. A short session inside four days is better than a long one later.`}</div>`;
   s.appendChild(r);
   /* Fuzzy list = dinner questions */
   if(kid.muddiest.length){
-    s.appendChild(div("mt",`<div class="field-lab">What ${esc(kid.name)} flagged as fuzzy</div>`));
+    s.appendChild(div("mt",`<div class="field-lab">What ${esc(kid.name)} said was still confusing</div>`));
     kid.muddiest.slice(0,3).forEach(m=>{
       const row=div("rowcard");
       const ds=new Date(m.t).toLocaleDateString(undefined,{month:"short",day:"numeric"});
       row.innerHTML=`<div class="rd" style="margin:0"><span class="faint" style="font-size:12px">${ds}${m.topic?` \u00b7 ${esc(m.topic)}`:""}</span><br>${esc(m.text)}</div>`;
       s.appendChild(row);
     });
-    s.appendChild(div("sub","Ask about one of these at dinner. Ask, don\u2019t quiz. \u201cYou flagged X, what made it fuzzy?\u201d is the whole move."));
+    s.appendChild(div("sub","Ask about one of these at dinner. Ask, don\u2019t quiz. Just say: \u201cYou said X was confusing. What made it hard?\u201d"));
   }
   /* Ownership */
   const gradList=MOVES.filter(m=>kid.moves[m.id].status==="graduated");
-  s.appendChild(div("mt",`<div class="field-lab">Ownership transferred</div>`));
+  s.appendChild(div("mt",`<div class="field-lab">Moves they now do on their own</div>`));
   const oc=div("rowcard");
   oc.innerHTML = gradList.length
-    ? `<div class="rd" style="margin:0"><b style="color:var(--ink)">${gradList.length} move${gradList.length!==1?"s":""} retired:</b> ${gradList.map(m=>esc(m.name)).join(", ")}. ${esc(kid.name)} runs these unprompted now. They\u2019re not the app\u2019s anymore.</div>`
-    : `<div class="rd" style="margin:0">None retired yet. A move retires when ${esc(kid.name)} runs it twice without being asked. That\u2019s the finish line for every one of them.</div>`;
+    ? `<div class="rd" style="margin:0"><b style="color:var(--ink)">${gradList.length} move${gradList.length!==1?"s":""} retired:</b> ${gradList.map(m=>esc(m.name)).join(", ")}. ${esc(kid.name)} now uses these on their own, without being asked.</div>`
+    : `<div class="rd" style="margin:0">None yet. A move retires once ${esc(kid.name)} uses it twice on their own, without being asked.</div>`;
   s.appendChild(oc);
   s.appendChild(div("mt",""));
   s.appendChild(phaser(phaseOf(kid)));
@@ -1399,16 +1413,16 @@ function Report(){
 function HowItWorks(){
   const s=div("scr"); s.appendChild(topbar(false));
   s.appendChild(div("boardhead",`<div class="eyebrow mb-s">How this works</div>
-    <h1 class="display">The job is to make the app unnecessary.</h1>
-    <div class="note mt">MOVE is a coaching protocol. It never explains content and never does the work. It hands the parent a script, hands the kid a retrieval attempt, and shows both of them the gap between what was guessed and what was got.</div>`));
-  s.appendChild(div("section-lab","The arc"));
+    <h1 class="display">Our goal: make this app something you stop needing.</h1>
+    <div class="note mt">MOVE is a coaching tool. It never explains the material and never does the work for your child. It gives you, the parent, the words to say. It gives your child a chance to test their memory. Then it shows you both the difference between what they guessed and what they actually knew.</div>`));
+  s.appendChild(div("section-lab","The plan"));
   s.appendChild(phaser(0));
-  s.appendChild(div("note mt","Every move has the same finish line: it retires when the kid runs it twice unprompted. Graduation is the product working."));
-  s.appendChild(div("section-lab","Why retrieval, why the bet"));
+  s.appendChild(div("note mt","Every move ends the same way: it stops being needed once your child uses it on their own, twice. That means it\u2019s working."));
+  s.appendChild(div("section-lab","Why testing yourself works, and why you guess first"));
   const cites=[
-    ["Practicing retrieval roughly 1.5x\u2019s what sticks a week later, versus rereading the same material.","Roediger & Karpicke 2006 \u00b7 confirmed at scale, Karpicke & Roediger, Science, 2008"],
-    ["Rereading and highlighting feel like learning and mostly aren\u2019t. Reviews rank them among the lowest-utility techniques students use.","Dunlosky et al. 2013"],
-    ["Students\u2019 loudest complaint is misreading their own knowledge: \u201cI felt ready and still failed.\u201d The fix is calibration, guessing your score before seeing it. That\u2019s the bet, and it opens every session.","Koriat & Bjork 2005 on the illusion of competence"]
+    ["Testing yourself helps you remember about 50% more a week later than just rereading does.","Roediger & Karpicke 2006 \u00b7 confirmed at scale, Karpicke & Roediger, Science, 2008"],
+    ["Rereading and highlighting feel like studying, but they don\u2019t work well. Research reviews rank them as some of the least helpful ways to study.","Dunlosky et al. 2013"],
+    ["Many students feel ready for a test and then do badly. The fix is called calibration: guessing your score before you see it. That\u2019s why every session starts with a guess.","Koriat & Bjork 2005 on the illusion of competence"]
   ];
   cites.forEach(c=>{
     const row=div("citerow");
@@ -1416,7 +1430,7 @@ function HowItWorks(){
     s.appendChild(row);
   });
   s.appendChild(div("section-lab","What this is not"));
-  s.appendChild(div("note","Not a tutor. Not an answer machine. Nothing here explains the material, on purpose: an app that does the studying leaves the skill in the app. If a kid still needs MOVE in a year, MOVE failed."));
+  s.appendChild(div("note","MOVE is not a tutor. It does not give answers or explain the material. This is on purpose. If the app did the studying, your child would not learn the skill. If your child still needs this app in a year, it has not worked."));
   s.appendChild(div("spacer"));
   const b=btn("btn btn-primary","Run a session"); b.onclick=()=>go(kidP()?"home":"coach"); s.appendChild(b);
   const b2=btn("tlink center mt","Browse all the moves and their sources"); b2.onclick=()=>go("library"); s.appendChild(b2);
@@ -1431,21 +1445,21 @@ function Capture(){
   s.appendChild(div(null,`<div style="margin-top:24px"><div class="eyebrow mb-s">Step one</div>
     <div class="prompt">What are you working on?</div></div>`));
   if(pendMove){
-    s.appendChild(div("note mt",`This session opens with <b>${pendMove.name}</b>, from the move you picked.`));
+    s.appendChild(div("note mt",`This session starts with <b>${pendMove.name}</b>, the move you picked.`));
   }
   const wrap=div(); wrap.style.marginTop="22px";
   wrap.innerHTML=`<div class="field-lab">Topic</div>`;
   const topic=document.createElement("input"); topic.type="text"; topic.placeholder="e.g. Photosynthesis, Chapter 4";
   wrap.appendChild(topic);
-  const lab2=div("field-lab"); lab2.style.marginTop="16px"; lab2.textContent="Paste your notes, or type the key bits";
+  const lab2=div("field-lab"); lab2.style.marginTop="16px"; lab2.textContent="Paste your notes, or type the main points";
   wrap.appendChild(lab2);
   const ta=document.createElement("textarea"); ta.placeholder="Paste your notes here. The more you give it, the better the questions."; ta.style.minHeight="160px";
   wrap.appendChild(ta);
   const micRow=div(); micRow.style.marginTop="10px";
-  micRow.appendChild(voiceButton(ta,"Dictate instead"));
+  micRow.appendChild(voiceButton(ta,"Speak instead"));
   wrap.appendChild(micRow);
   const phNote=div("note"); phNote.style.marginTop="16px";
-  phNote.innerHTML="Paste your notes, type the key bits, or dictate. Ten seconds is enough.";
+  phNote.innerHTML="Paste your notes, type the main points, or say them out loud. Even ten seconds of notes is enough.";
   wrap.appendChild(phNote);
   s.appendChild(wrap);
   s.appendChild(div("spacer"));
@@ -1469,7 +1483,7 @@ function Capture(){
     const simple=btn("btn btn-ghost","Use simple questions"); simple.style.margin="0";
     simple.onclick=()=>{
       const items=localItems(txt, topic.value.trim());
-      if(!items.length){ toast("Even simple questions need fuller sentences."); return; }
+      if(!items.length){ toast("Please write a few more full sentences first."); return; }
       commit(items, shape);
     };
     row.appendChild(simple);
@@ -1594,7 +1608,7 @@ function readBeat(s,m,ss){
       for(let i=1;i<=5;i++){ const b=document.createElement("button"); b.textContent=i; b.setAttribute("aria-pressed", i===ss.guess);
         b.onclick=()=>{ ss.guess=i; [...sc.children].forEach((c,j)=>c.setAttribute("aria-pressed", j+1===i)); }; sc.appendChild(b); }
       bb.appendChild(sc);
-      const ends=div("scale-ends"); ends.style.width="290px"; ends.innerHTML=`<span>no clue</span><span>easy</span>`; bb.appendChild(ends);
+      const ends=div("scale-ends"); ends.style.width="290px"; ends.innerHTML=`<span>no idea</span><span>easy</span>`; bb.appendChild(ends);
     }
     s.appendChild(bb);
   } else { ss.guess=null; }
@@ -1614,18 +1628,18 @@ function doBeat(s,m,ss){
   const isSketchMove = (m.id==="drawit" || m.id==="mapit" || m.id==="palace" || m.id==="crackword");
   if(m.id==="braindump"){
     const cap=div(); cap.style.marginTop="14px";
-    const ta=document.createElement("textarea"); ta.placeholder="Type what you remember… (or write on paper and tick it off after)";
+    const ta=document.createElement("textarea"); ta.placeholder="Type what you remember here. Or write on paper and check things off after.";
     cap.appendChild(ta); ss._ta=ta;
     const mr=div(); mr.style.marginTop="10px"; mr.appendChild(voiceButton(ta,"Speak it")); cap.appendChild(mr);
-    const sk=div(); sk.style.marginTop="8px"; sk.appendChild(sketchCapture(ss,"Or snap your paper")); cap.appendChild(sk);
+    const sk=div(); sk.style.marginTop="8px"; sk.appendChild(sketchCapture(ss,"Or take a photo of your paper")); cap.appendChild(sk);
     s.appendChild(cap);
   } else if(isSketchMove){
     const cap=div(); cap.style.marginTop="16px"; cap.style.display="flex"; cap.style.flexDirection="column"; cap.style.alignItems="center";
-    cap.appendChild(sketchCapture(ss, "Snap your sketch"));
-    cap.appendChild(div("faint center",`<div style="margin-top:8px;font-size:13px">Or just keep it on paper. The book stays closed.</div>`));
+    cap.appendChild(sketchCapture(ss, "Take a photo of your drawing"));
+    cap.appendChild(div("faint center",`<div style="margin-top:8px;font-size:13px">Or just leave it on paper. Keep the book closed.</div>`));
     s.appendChild(cap);
   } else {
-    s.appendChild(div("note center",`<div style="margin-top:18px;border:none">Do it on paper. The book stays closed.</div>`));
+    s.appendChild(div("note center",`<div style="margin-top:18px;border:none">Do it on paper. Keep the book closed.</div>`));
   }
   s.appendChild(div("spacer"));
   const done=btn("btn btn-primary","Done");
@@ -1656,15 +1670,15 @@ function doCued(s,m,ss){
   const items = m.id==="space" ? cardItems(dueCards(Math.max(3,ss.items.length))) : ss.items;
   ss._items = items;
   if(!items.length){
-    s.appendChild(div(null,`<div style="margin-top:40px" class="prompt">Nothing's due to come back yet.</div>`));
-    s.appendChild(div("lede mt","That's spacing working. Keep going, it'll fill up."));
+    s.appendChild(div(null,`<div style="margin-top:40px" class="prompt">Nothing is ready for review yet.</div>`));
+    s.appendChild(div("lede mt","That's how spacing works. Keep studying, and questions will show up here later."));
     s.appendChild(div("spacer"));
     const b=btn("btn btn-primary","Next"); b.onclick=()=>advanceMove(ss); s.appendChild(b); return s;
   }
   const it=items[ss.qIdx];
   s.appendChild(div(null,`<div style="margin-top:26px"></div>`));
   const card=div("qcard");
-  card.innerHTML=`<div class="qnum">Question ${ss.qIdx+1} of ${items.length}</div><div class="qtext">${esc(it.q)}</div>`;
+  card.innerHTML=`<div class="qnum">Question ${ss.qIdx+1} of ${items.length}${tierChip(it.t)}</div><div class="qtext">${esc(it.q)}</div>`;
   if(ss.showAnswer){
     const an=div("answer"); an.innerHTML=`<span class="alab">Answer</span>${esc(it.a)}`; card.appendChild(an);
   }
@@ -1697,7 +1711,7 @@ function markCued(ss,it,correct){
   if(ss.qIdx>=ss._items.length){ save(); ss.beat="reveal"; }
   render();
 }
-function cardItems(cards){ return cards.map(c=>({q:c.q,a:c.a,_card:c})); }
+function cardItems(cards){ return cards.map(c=>({q:c.q,a:c.a,t:c.tier||"R",_card:c})); }
 
 function revealBeat(s,m,ss){
   let got=0, max=1;
@@ -1712,7 +1726,7 @@ function revealBeat(s,m,ss){
       <div class="prompt">${m.cover||"Tick what you covered."}</div></div>`));
     const chips=div("chips"); chips.style.marginTop="16px";
     ss.items.forEach((it,i)=>{
-      const c=btn("cov", it.q.replace(/_____/g,"___")); c.setAttribute("aria-pressed", ss.cover.has(i));
+      const c=btn("cov"); c.innerHTML=esc(it.q.replace(/_____/g,"___"))+tierChip(it.t); c.setAttribute("aria-pressed", ss.cover.has(i));
       c.onclick=()=>{ ss.cover.has(i)?ss.cover.delete(i):ss.cover.add(i); c.setAttribute("aria-pressed", ss.cover.has(i)); updGap(); };
       chips.appendChild(c);
     });
@@ -1723,13 +1737,13 @@ function revealBeat(s,m,ss){
   } else {
     s.appendChild(div(null,`<div style="margin-top:30px"><div class="eyebrow mb-s">${m.name}</div>
       <div class="prompt">${m.reflectq||"What was the gap?"}</div></div>`));
-    const ta=document.createElement("textarea"); ta.placeholder="Name the part you couldn't do. That's tomorrow's start."; ta.style.marginTop="16px";
+    const ta=document.createElement("textarea"); ta.placeholder="Write down the part you couldn't do. You will start there next time."; ta.style.marginTop="16px";
     s.appendChild(ta);
     const mr=div(); mr.style.marginTop="10px"; mr.appendChild(voiceButton(ta,"Speak")); s.appendChild(mr); ss._reflect=ta;
   }
   if(m.kind==="free"){
     const miss=div("note"); miss.style.marginTop="14px";
-    miss.innerHTML="Whatever you left unticked is the bit to hit next time. Not a fail, just the next turn.";
+    miss.innerHTML="Anything you left unchecked is what to study next time. It's not a failure. It's just what comes next.";
     s.appendChild(miss);
   }
   if(S.coach) s.appendChild(coachGapCard(m));
@@ -1760,18 +1774,18 @@ function advanceMove(ss){
 }
 
 function muddiestBeat(s){
-  s.appendChild(div(null,`<div style="margin-top:32px"><div class="eyebrow mb-s">One thing before you close</div>
+  s.appendChild(div(null,`<div style="margin-top:32px"><div class="eyebrow mb-s">One last thing before you finish</div>
     <div class="prompt">What's still fuzzy?</div></div>`));
-  if(S.coach){ const cc=div("coachcard thin"); cc.style.marginTop="14px"; cc.innerHTML=`<div class="holder">Last coach line</div><div class="say">“What’s the one bit you’d struggle to explain to someone?” They say it, either of you types it.</div>`; s.appendChild(cc); }
-  else s.appendChild(div("lede mt","The part you'd struggle to explain. It comes back first next time."));
-  const ta=document.createElement("textarea"); ta.placeholder="Type or say the murky bit…"; ta.style.marginTop="18px";
+  if(S.coach){ const cc=div("coachcard thin"); cc.style.marginTop="14px"; cc.innerHTML=`<div class="holder">Last coach line</div><div class="say">“What’s the one part you would find hard to explain to someone?” They say it, and one of you types it.</div>`; s.appendChild(cc); }
+  else s.appendChild(div("lede mt","Think of the part you would find hard to explain. It will come back first next time."));
+  const ta=document.createElement("textarea"); ta.placeholder="Type or say the confusing part…"; ta.style.marginTop="18px";
   s.appendChild(ta);
   const mr=div(); mr.style.marginTop="10px"; mr.appendChild(voiceButton(ta,"Speak it")); s.appendChild(mr);
   s.appendChild(div("spacer"));
   const b=btn("btn btn-primary","Finish session");
   b.onclick=()=>{ if(ta.value.trim()) P().muddiest.unshift({t:Date.now(), text:ta.value.trim(), topic:(S.sess&&S.sess.topic)||""}); endSession(); };
   s.appendChild(b);
-  const skip=btn("tlink center","Nothing fuzzy, skip"); skip.style.marginTop="12px"; skip.onclick=endSession;
+  const skip=btn("tlink center","Nothing is fuzzy, skip"); skip.style.marginTop="12px"; skip.onclick=endSession;
   s.appendChild(skip);
   return s;
 }
@@ -1787,40 +1801,40 @@ function endSession(){
 function Summary(){
   const s=div("scr"); s.appendChild(topbar(false));
   const ss=S.sess||{queue:[]};
-  const sumHead = S.coach ? `Session ${P().coached} with ${esc(kidName())} done.` : `${ss.queue.length} move${ss.queue.length!==1?"s":""}, on your work.`;
+  const sumHead = S.coach ? `Session ${P().coached} with ${esc(kidName())} is done.` : `You did ${ss.queue.length} move${ss.queue.length!==1?"s":""} on your own material.`;
   s.appendChild(div(null,`<div style="margin-top:30px"><div class="eyebrow mb-s">Done</div>
     <h1 class="display">${sumHead}</h1></div>`));
-  if(S.coach && P().coached===1){ s.appendChild(div("note mt","That was the whole job: you read the script, they did the pulling-out. Three more like it and phase two unlocks, where they run it and you just read the report.")); }
+  if(S.coach && P().coached===1){ s.appendChild(div("note mt","That\u2019s the whole job: you read the script, and they do the remembering. Do this three more times, and phase two opens up. Then they run sessions on their own, and you just read the report.")); }
   const hist=P().gapHistory.slice(-12);
   if(hist.length>=2){
     s.appendChild(div("mt",`<div class="field-lab">How close your guesses are getting</div>`));
     const sp=div("spark");
     hist.forEach((h,i)=>{ const b=div("bar"+(i===hist.length-1?" last":"")); const closeness=Math.max(.08,1-h.gap); b.style.height=(closeness*100)+"%"; sp.appendChild(b); });
     s.appendChild(sp);
-    s.appendChild(div("sub",`Closer is better. You're reading yourself ${trendWord(hist)}.`));
+    s.appendChild(div("sub",`Closer is better. Your guesses are getting ${trendWord(hist)}.`));
   } else if(hist.length===1){
-    s.appendChild(div("note mt","First data point logged. The trend shows up once you've done a few."));
+    s.appendChild(div("note mt","That\u2019s your first result. You\u2019ll see a pattern after a few more sessions."));
   }
   const freshMud = (P().muddiest[0] && (Date.now()-P().muddiest[0].t < 3600000)) ? P().muddiest[0].text : null;
   const topic = ss.topic || "this";
   if(freshMud){
-    s.appendChild(div("mt",`<div class="field-lab">Carrying forward</div>`));
-    s.appendChild(div("rowcard",`<div class="rd" style="margin:0">You flagged <b style="color:var(--ink)">${esc(freshMud)}</b>. Start there next time, before anything easy.</div>`));
+    s.appendChild(div("mt",`<div class="field-lab">Still confusing</div>`));
+    s.appendChild(div("rowcard",`<div class="rd" style="margin:0">You said <b style="color:var(--ink)">${esc(freshMud)}</b> was still confusing. Start there next time.</div>`));
   }
   const shortMud = freshMud ? (freshMud.length>44 ? freshMud.slice(0,44).trim()+"…" : freshMud) : null;
   const plan = shortMud
-    ? `When you next open ${esc(topic)}, start with ${esc(shortMud)} before anything else.`
-    : `When you next sit down with ${esc(topic)}, close the book and dump what you remember before you read a thing.`;
+    ? `The next time you study ${esc(topic)}, start with ${esc(shortMud)} before anything else.`
+    : `The next time you study ${esc(topic)}, close the book first and write down everything you remember before you read anything.`;
   s.appendChild(div("mt",`<div class="field-lab">Your plan for next time</div>`));
   s.appendChild(div("rowcard",`<div style="margin:0;font-family:var(--display);font-size:20px;line-height:1.3;color:var(--ink)">${plan}</div>`));
   s.appendChild(div("spacer"));
   const grad=MOVES.filter(m=>P().moves[m.id].status==="active").length;
-  s.appendChild(div("center faint",`<div style="font-size:13px;margin-bottom:14px">${grad} move${grad!==1?"s":""} still being coached. When you catch yourself running one without the app asking, retire it yourself in the moves map.</div>`));
+  s.appendChild(div("center faint",`<div style="font-size:13px;margin-bottom:14px">${grad} move${grad!==1?"s":""} still being coached. When you notice yourself doing a move without the app asking, you can retire it yourself on the moves map.</div>`));
   if(S.coach){ const rb=btn("btn btn-primary mb",`Read ${esc(kidName())}’s gap report`); rb.onclick=()=>go("report"); s.appendChild(rb); }
   const b=btn(S.coach?"btn btn-ghost":"btn btn-primary","Back to start"); b.onclick=()=>go("home"); s.appendChild(b);
   return s;
 }
-function trendWord(h){ if(h.length<3) return "more each time"; const a=h.slice(0,Math.ceil(h.length/2)).reduce((x,y)=>x+y.gap,0); const b=h.slice(Math.ceil(h.length/2)).reduce((x,y)=>x+y.gap,0); return b<a?"better":"steadily"; }
+function trendWord(h){ if(h.length<3) return "closer each time"; const a=h.slice(0,Math.ceil(h.length/2)).reduce((x,y)=>x+y.gap,0); const b=h.slice(Math.ceil(h.length/2)).reduce((x,y)=>x+y.gap,0); return b<a?"better":"steadier"; }
 
 function recordGap(gFrac, rFrac){ /* placeholder used by cued; final write below */ }
 function recordGapFinal(guess, got, max, shape){
@@ -1840,7 +1854,7 @@ function gapViz(guess, got, max){
   track.appendChild(gPin); track.appendChild(rPin); track.appendChild(gl); track.appendChild(rl);
   g.appendChild(track);
   const diff=Math.abs(guess-got);
-  const msg = diff===0 ? "Dead on. You know what you know." : diff<=1 ? "Close. Your gut's getting accurate." : guess>got ? "You thought you had more. That gap is the fluency illusion, now you've seen it." : "You had more than you thought. Bank that.";
+  const msg = diff===0 ? "Right on target. You know what you know." : diff<=1 ? "Close. Your guesses are getting more accurate." : guess>got ? "You thought you knew more than you did. That's a common trick your brain plays. Now you've caught it." : "You knew more than you thought. That's good news.";
   g.appendChild(div("sub center",`<div style="margin-top:4px">${msg}</div>`));
   return g;
 }
@@ -1865,7 +1879,7 @@ function fmt(s){ s=Math.max(0,s); const m=Math.floor(s/60), x=s%60; return m+":"
 function voiceButton(target, label){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   const b=btn("mic"); b.innerHTML=`<span class="pulse"></span>${label}`;
-  if(!SR){ b.style.opacity=".4"; b.title="Voice not supported in this browser"; b.onclick=()=>toast("This browser doesn't do voice. Typing works."); return b; }
+  if(!SR){ b.style.opacity=".4"; b.title="Voice not supported in this browser"; b.onclick=()=>toast("This browser can't do voice. You can type instead."); return b; }
   let rec=null, on=false;
   b.onclick=()=>{
     if(on){ rec&&rec.stop(); return; }
@@ -1882,10 +1896,10 @@ function Material(){
   const s=div("scr"); s.appendChild(topbar(false));
   const p=P(); const t=today();
   s.appendChild(div("boardhead",`<div class="eyebrow mb-s">Your material</div>
-    <h1 class="display">Everything you've run.</h1>
-    <div class="note mt">Every topic you've studied, the questions built from it, and what you flagged as fuzzy. Nothing here is graded. It's yours to come back to.</div>`));
+    <h1 class="display">Everything you have studied here.</h1>
+    <div class="note mt">This page shows every topic you've studied, the questions made from it, and the parts you said were confusing. Nothing here is graded. You can come back to it any time.</div>`));
   if(!p.cards.length){
-    s.appendChild(div("lede mt","Nothing here yet. Run a session and your topics show up, ready to bring back."));
+    s.appendChild(div("lede mt","Nothing here yet. Run a session, and your topics will show up here."));
     s.appendChild(div("spacer"));
     const b=div("btn btn-primary"); b.textContent="Start a session"; b.onclick=()=>go("home"); s.appendChild(b);
     return s;
@@ -1905,11 +1919,11 @@ function Material(){
     const nextDue=Math.min.apply(null, cards.map(c=>c.due-t));
     const det=document.createElement("details"); det.className="rowcard";
     const sub = due
-      ? `${due} ready to bring back`
+      ? `${due} ready to review`
       : `next one comes back in ${Math.max(0,nextDue)} day${nextDue===1?"":"s"}`;
     det.innerHTML=`<summary><div class="rowhead"><div class="rt">${esc(name)}</div>
       <span class="tag ${due?'active':'dud'}">${cards.length} item${cards.length!==1?"s":""}</span></div>
-      <div class="rd">${sub}${settling?` \u00b7 ${settling} settling in`:""}</div></summary>`;
+      <div class="rd">${sub}${settling?` \u00b7 you know ${settling} well`:""}</div></summary>`;
     const body=div(); body.style.marginTop="12px";
     cards.forEach(c=>{
       const item=div(); item.style.cssText="padding:11px 0;border-top:1px solid var(--line)";
@@ -1921,7 +1935,7 @@ function Material(){
     s.appendChild(det);
   });
   if(p.muddiest && p.muddiest.length){
-    s.appendChild(div("section-lab","What you've flagged as fuzzy"));
+    s.appendChild(div("section-lab","Parts you said were confusing"));
     p.muddiest.slice(0,12).forEach(mud=>{
       const row=div("rowcard");
       const ds=new Date(mud.t).toLocaleDateString(undefined,{month:"short",day:"numeric"});
@@ -1938,8 +1952,8 @@ function Material(){
 function Library(){
   const s=div("scr"); s.appendChild(topbar(false));
   const head=div("boardhead",`<div class="eyebrow mb-s">Every move</div>
-    <h1 class="display">All ${window.MoveCube.count}, one at a time.</h1>
-    <div class="note mt" id="libNote">Drag to spin. Tap a family, then a move. Cards with a practice button run that move on your own notes.</div>`);
+    <h1 class="display">Here are all ${window.MoveCube.count} moves.</h1>
+    <div class="note mt" id="libNote">Drag to spin the cube. Tap a family, then tap a move. If a card has a practice button, you can try that move on your own notes.</div>`);
   s.appendChild(head);
 
   const toggle=div("libtoggle");
@@ -1952,8 +1966,8 @@ function Library(){
   s.appendChild(mapSection); s.appendChild(cubeSection);
 
   const libNote=head.querySelector("#libNote");
-  const NOTE_MAP="Each line is a different journey. Stations are moves. Every line changes at <b>Guess First</b>, and every material line ends at <b>Muddiest Point</b>. Tap a station to read it.";
-  const NOTE_CUBE="Drag to spin. Tap a family, then a move. Cards with a practice button run that move on your own notes.";
+  const NOTE_MAP="Each line is a path through the moves. The dots are stops. Every line passes through <b>Guess First</b>, and every line ends at <b>What's Still Fuzzy</b>. Tap a stop to read about it.";
+  const NOTE_CUBE="Drag to spin the cube. Tap a family, then tap a move. If a card has a practice button, you can try that move on your own notes.";
 
   function showMap(){
     bMap.setAttribute("aria-pressed","true"); bCube.setAttribute("aria-pressed","false");
@@ -1977,8 +1991,8 @@ function Library(){
   setTimeout(showCube, 0);
 
   const WRAP={
-    "Guess First":{desc:"Before any recall move, call your shot: predict how much you'll get, then find out. The gap between guess and got is the whole game.", src:"Make It Stick (calibration)"},
-    "Muddiest Point":{desc:"Before you close, name the one thing still fuzzy. It comes back first next time.", src:"Range (Lovett) \u00b7 Neuroteach (exit ticket)"},
+    "Guess First":{desc:"Before you try to remember, guess how much you will get right. Then find out. The difference between your guess and your real score shows you what to study next.", src:"Make It Stick (calibration)"},
+    "What's Still Fuzzy":{desc:"Before you finish, name the one thing that is still confusing. It will come back first next time.", src:"Range (Lovett) \u00b7 Neuroteach (exit ticket)"},
   };
   function libItem(name){
     const m=MOVES.find(x=>x.name===name); if(m){ const st=P().moves[m.id]&&P().moves[m.id].status; return {desc:m.what, src:m.source, status:st, id:m.id}; }
@@ -1989,32 +2003,32 @@ function Library(){
   }
   const HEX={learn:"#4a5fa5", keep:"#4e7d5b", exam:"#a35248", unstuck:"#b8863b", node:"#1A1D23"};
   const LINE={
-    learn:{name:"Learn It", desc:"New material, start to finish. Guess, take a swing before you\u2019ve studied, turn it into your own picture, pull it back cold."},
-    keep:{name:"Keep It", desc:"Bring old material back after a gap so it sticks. A short line: guess, space it, review, out."},
-    exam:{name:"Exam", desc:"Get ready for a test. Mix the types, hard-start the hard one, learn from the postmortem."},
-    unstuck:{name:"Unstuck", desc:"When you can\u2019t start or you stall. It runs from the door to Guess First, where the learning lines begin."},
+    learn:{name:"Learn It", desc:"For new material, start to finish. Guess first. Try it before you study. Turn it into your own picture. Then try to remember it without help."},
+    keep:{name:"Keep It", desc:"Bring back old material after some time so it stays in your memory. Guess, wait, then review."},
+    exam:{name:"Exam", desc:"Get ready for a test. Mix up the problem types. Start with the hardest question. Then learn from your mistakes."},
+    unstuck:{name:"Unstuck", desc:"For when you can\u2019t start or you\u2019re stuck. This line leads to Guess First, where the learning lines begin."},
   };
   const ORDER=[
-    ["Get Started","unstuck"],["Plan It","unstuck"],["Find the Hook","unstuck"],["Set a Process Goal","unstuck"],
-    ["Study Somewhere New","unstuck"],["Sprint and Break","unstuck"],["Walk It Off","unstuck"],["Steady the Nerves","unstuck"],
+    ["Get Started","unstuck"],["Plan It","unstuck"],["Find a Reason to Care","unstuck"],["Set a Goal You Control","unstuck"],
+    ["Study Somewhere New","unstuck"],["Work, Then Rest","unstuck"],["Take a Walk","unstuck"],["Calm Down First","unstuck"],
     ["Guess First","xchg"],
-    ["Space It Out","keep"],["Review As You Learn","keep"],
-    ["Mix It","exam"],["Hard-Start (exams)","exam"],["Exam Postmortem","exam"],
-    ["Try It First","learn"],["Draw It","learn"],["Sketchnote","learn"],["Map It","learn"],["Build a Palace","learn"],
-    ["Crack the Word","learn"],["Chunk It","learn"],["Brain Dump","learn"],["Tell Me Without Looking","learn"],
-    ["Teach It Dumber","learn"],["Self-Explain","learn"],["Use an Analogy","learn"],["Make It Concrete","learn"],["Elaborate","learn"],
-    ["Muddiest Point","term"],
+    ["Space It Out","keep"],["Look Back Today","keep"],
+    ["Mix Up the Problems","exam"],["Start With the Hard One","exam"],["Check Your Mistakes","exam"],
+    ["Try It First","learn"],["Draw It","learn"],["Draw Your Notes","learn"],["Map It","learn"],["Memory Walk","learn"],
+    ["Break the Word Apart","learn"],["Group It Together","learn"],["Write Everything Down","learn"],["Tell Me Without Looking","learn"],
+    ["Teach It Simple","learn"],["Explain Each Step","learn"],["Compare It to Something","learn"],["Make Your Own Example","learn"],["Connect It to What You Know","learn"],
+    ["What's Still Fuzzy","term"],
   ];
   const rowOf={}; ORDER.forEach((r,i)=>rowOf[r[0]]=i);
   const N=ORDER.length, rowH=46, y0=30, SPINE=44, KEEP=74, EXAM=104, LX=126;
   const yOf=i=>y0+i*rowH, H=y0+(N-1)*rowH+34;
-  const gf=rowOf["Guess First"], mp=rowOf["Muddiest Point"];
+  const gf=rowOf["Guess First"], mp=rowOf["What's Still Fuzzy"];
   const laneX={unstuck:SPINE, learn:SPINE, xchg:SPINE, term:SPINE, keep:KEEP, exam:EXAM};
   const strokes=[];
   strokes.push(`<line x1="${SPINE}" y1="${yOf(0)}" x2="${SPINE}" y2="${yOf(gf)}" stroke="${HEX.unstuck}" stroke-width="4" stroke-linecap="round"/>`);
   strokes.push(`<line x1="${SPINE}" y1="${yOf(gf)}" x2="${SPINE}" y2="${yOf(mp)}" stroke="${HEX.learn}" stroke-width="4" stroke-linecap="round"/>`);
-  strokes.push(`<path d="M ${SPINE} ${yOf(gf)} C ${SPINE} ${yOf(gf)+20}, ${KEEP} ${yOf(rowOf["Space It Out"])-20}, ${KEEP} ${yOf(rowOf["Space It Out"])} L ${KEEP} ${yOf(rowOf["Review As You Learn"])} L ${KEEP} ${yOf(mp)-24} C ${KEEP} ${yOf(mp)-6}, ${SPINE} ${yOf(mp)-12}, ${SPINE} ${yOf(mp)}" fill="none" stroke="${HEX.keep}" stroke-width="4" stroke-linecap="round"/>`);
-  strokes.push(`<path d="M ${SPINE} ${yOf(gf)} C ${SPINE} ${yOf(gf)+20}, ${EXAM} ${yOf(rowOf["Mix It"])-20}, ${EXAM} ${yOf(rowOf["Mix It"])} L ${EXAM} ${yOf(rowOf["Exam Postmortem"])} L ${EXAM} ${yOf(mp)-28} C ${EXAM} ${yOf(mp)-6}, ${SPINE} ${yOf(mp)-14}, ${SPINE} ${yOf(mp)}" fill="none" stroke="${HEX.exam}" stroke-width="4" stroke-linecap="round"/>`);
+  strokes.push(`<path d="M ${SPINE} ${yOf(gf)} C ${SPINE} ${yOf(gf)+20}, ${KEEP} ${yOf(rowOf["Space It Out"])-20}, ${KEEP} ${yOf(rowOf["Space It Out"])} L ${KEEP} ${yOf(rowOf["Look Back Today"])} L ${KEEP} ${yOf(mp)-24} C ${KEEP} ${yOf(mp)-6}, ${SPINE} ${yOf(mp)-12}, ${SPINE} ${yOf(mp)}" fill="none" stroke="${HEX.keep}" stroke-width="4" stroke-linecap="round"/>`);
+  strokes.push(`<path d="M ${SPINE} ${yOf(gf)} C ${SPINE} ${yOf(gf)+20}, ${EXAM} ${yOf(rowOf["Mix Up the Problems"])-20}, ${EXAM} ${yOf(rowOf["Mix Up the Problems"])} L ${EXAM} ${yOf(rowOf["Check Your Mistakes"])} L ${EXAM} ${yOf(mp)-28} C ${EXAM} ${yOf(mp)-6}, ${SPINE} ${yOf(mp)-14}, ${SPINE} ${yOf(mp)}" fill="none" stroke="${HEX.exam}" stroke-width="4" stroke-linecap="round"/>`);
   const dots=[], labels=[], hits=[], pos={};
   ORDER.forEach((r,i)=>{
     const name=r[0], lane=r[1], x=laneX[lane], y=yOf(i); pos[name]=[x,y];
@@ -2022,7 +2036,7 @@ function Library(){
     if(big){ dots.push(`<circle cx="${x}" cy="${y}" r="9" fill="#FFFFFF" stroke="${HEX.node}" stroke-width="3"/><circle cx="${x}" cy="${y}" r="3.4" fill="${HEX.node}"/>`); }
     else { dots.push(`<circle cx="${x}" cy="${y}" r="5.5" fill="#FFFFFF" stroke="${col}" stroke-width="3"/>`); }
     const it=libItem(name), retired=it.status==="graduated";
-    const sub = lane==="xchg" ? "interchange \u00b7 every line" : lane==="term" ? "terminus \u00b7 all lines end" : "";
+    const sub = lane==="xchg" ? "every line stops here" : lane==="term" ? "every line ends here" : "";
     labels.push(`<text x="${LX}" y="${sub?y-2:y+4.5}" fill="${big?HEX.node:'#1A1D23'}" font-family="Inter,system-ui,sans-serif" font-size="14" font-weight="${big?600:450}"${retired?' opacity="0.45"':''}>${name}${retired?'  \u2713':''}</text>`);
     if(sub) labels.push(`<text x="${LX}" y="${y+13}" fill="#5E636E" font-family="Inter,system-ui,sans-serif" font-size="10.5" letter-spacing="0.4">${sub}</text>`);
     hits.push(`<rect class="thit" data-st="${name}" x="0" y="${y-rowH/2}" width="360" height="${rowH}" fill="transparent"/>`);
@@ -2030,7 +2044,7 @@ function Library(){
   const halo=`<circle id="thalo" cx="-99" cy="-99" r="12" fill="none" stroke="#1A1D23" stroke-width="2"/>`;
   const svg=`<svg viewBox="0 0 360 ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MOVE lines and stations">${strokes.join("")}${halo}${dots.join("")}${labels.join("")}${hits.join("")}</svg>`;
   const mapWrap=div("tmap"); mapWrap.innerHTML=svg; mapSection.appendChild(mapWrap);
-  const laneName={unstuck:"Unstuck line", keep:"Keep It line", exam:"Exam line", learn:"Learn It line", xchg:"Interchange \u00b7 every line", term:"Terminus \u00b7 every line ends here"};
+  const laneName={unstuck:"Unstuck line", keep:"Keep It line", exam:"Exam line", learn:"Learn It line", xchg:"Every line stops here", term:"Every line ends here"};
   const laneOf={}; ORDER.forEach(r=>laneOf[r[0]]=r[1]);
   const sheet=div("sheet"); sheet.id="stationSheet"; mapSection.appendChild(sheet);
   function closeSheet(){ sheet.classList.remove("show"); const h=mapWrap.querySelector("#thalo"); if(h){h.setAttribute("cx","-99");h.setAttribute("cy","-99");} }
@@ -2053,7 +2067,7 @@ function Library(){
       rb.textContent="I run this on my own now";
       rb.onclick=()=>{ const ms=P().moves[mv.id]; ms.unprompted=(ms.unprompted||0)+1;
         if(ms.unprompted>=2){ ms.status="graduated"; save(); celebrate(mv); return; }
-        save(); toast(`Noted. One more time on your own and ${mv.name} retires.`); closeSheet(); render(); };
+        save(); toast(`Got it. Do it on your own one more time, and ${mv.name} will retire.`); closeSheet(); render(); };
       sheet.appendChild(rb);
     }
     const p=pos[name], h=mapWrap.querySelector("#thalo");
@@ -2070,17 +2084,17 @@ function Library(){
   });
   mapSection.appendChild(key);
   const laws=div("tlaws"); laws.appendChild(div("tkey-h","Why the lines work"));
-  laws.appendChild(div("tkey-ds","The physics under the network. Not stations, the reasons the routes run the way they do."));
+  laws.appendChild(div("tkey-ds","These are the reasons behind the map. They are not moves to do. They are facts about how learning works."));
   const lc=div("tlaw-chips");
   LIBRARY.why.forEach(w=>{ const c=document.createElement("button"); c.className="tlaw"; c.textContent=w.name; c.onclick=()=>openStation(w.name); lc.appendChild(c); });
   laws.appendChild(lc); mapSection.appendChild(laws);
-  const skip=div("tskip"); skip.appendChild(div("tskip-h","Not on the map \u00b7 feels like studying, isn\u2019t"));
+  const skip=div("tskip"); skip.appendChild(div("tskip-h","Not on the map \u00b7 these feel like studying but don\u2019t work"));
   const sc=div("tskip-chips");
   EXCLUDED.forEach(x=>{ const c=document.createElement("button"); c.className="d"; c.textContent=x.name; c.onclick=()=>openStation(x.name); sc.appendChild(c); });
   skip.appendChild(sc); mapSection.appendChild(skip);
   const proofNote=div("tskip"); proofNote.style.marginTop="26px";
   proofNote.appendChild(div("tskip-h","Why believe it"));
-  proofNote.appendChild(div("tkey-ds","None of this is opinion. Every move here beat the usual ones in controlled studies. Test yourself on something once and you remember about twice as much a week later as rereading it. Karpicke and Roediger, Science, 2008."));
+  proofNote.appendChild(div("tkey-ds","None of this is just opinion. Every move here beat the usual study habits in real studies. In one study, testing yourself once helped people remember about twice as much a week later as rereading did. Karpicke and Roediger, Science, 2008."));
   mapSection.appendChild(proofNote);
   s.appendChild(div("spacer"));
   const b=btn("btn btn-ghost mt","Back"); b.style.maxWidth="320px"; b.onclick=()=>go("home"); s.appendChild(b);
@@ -2091,7 +2105,7 @@ function celebrate(m){
   const s=div("scr");
   s.appendChild(div("spacer"));
   s.appendChild(div("celebrate",`<div class="big">${m.name}<br>retired.</div>
-    <div class="lede" style="margin:18px auto 0">Twice, unprompted, no app required. That's not luck, that's it sticking. Go spend the ten minutes you just got back on something else.</div>`));
+    <div class="lede" style="margin:18px auto 0">You used this move twice on your own, without the app asking. That means you really know it now. Enjoy the ten minutes you just saved.</div>`));
   s.appendChild(div("spacer"));
   const b=btn("btn btn-primary","Good"); b.onclick=()=>go("home");
   s.appendChild(b);
